@@ -5,6 +5,6 @@ import { Component } from '@angular/core';
     templateUrl: 'registration.component.html'
 })
 
-export class RegistrationComponent   {
+export class RegistrationComponent {
     constructor() { }
 }

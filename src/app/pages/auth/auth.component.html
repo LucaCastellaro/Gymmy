@@ -1,0 +1,16 @@
+<ng-template #flipTemplate>
+    <button (click)="flipCard()">
+        <i nz-icon nzType="rotate-right" nzTheme="outline" *ngIf="isLogin"></i>
+        <i nz-icon nzType="rotate-left" nzTheme="outline" *ngIf="!isLogin"></i>
+    </button>
+</ng-template>
+
+<div class="flipping-card w-full">
+    <nz-card nzTitle="login" class="hover:shadow-lg w-full" [nzExtra]="flipTemplate" *ngIf="isLogin">
+        <app-login></app-login>
+    </nz-card>
+    <nz-card nzTitle="registrazione" class="back hover:shadow-lg w-full" [nzExtra]="flipTemplate" *ngIf="!isLogin">
+        <app-registration></app-registration>
+    </nz-card>
+</div>
+  
