@@ -6,7 +6,9 @@ import { Component, Input } from '@angular/core';
 })
 
 export class ConfirmButtonComponent {
-    @Input() label: string = '';
+    @Input() label!: string;
+    @Input() isDisabled!: boolean;
 
-    constructor() { }
+    constructor() { 
+    }
 }

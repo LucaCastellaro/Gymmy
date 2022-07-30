@@ -1,5 +1,4 @@
-import { Component } from '@angular/core';
-import { NzCardComponent } from 'ng-zorro-antd/card';
+import { Component, EventEmitter, OnDestroy, OnInit } from '@angular/core';
 
 @Component({
     selector: 'pages-auth',
@@ -7,10 +6,25 @@ import { NzCardComponent } from 'ng-zorro-antd/card';
     styleUrls: ['auth.component.less']
 })
 
-export class AuthComponent   {
+export class AuthComponent implements OnInit, OnDestroy   {
     public isLogin: boolean = true;
+    public registrationEmitter: EventEmitter<boolean>;
+    public isRegistered: boolean = false;
 
-    constructor() { }
+    constructor() {
+        this.registrationEmitter = new EventEmitter<boolean>(false);
+    }
+    
+    ngOnDestroy(): void {
+        this.registrationEmitter.unsubscribe();
+    }
+
+    ngOnInit(): void {
+        this.registrationEmitter
+            .subscribe(value => {
+                this.isRegistered = value;
+            });
+    }
 
     public flipCard(): void {
         this.isLogin = !this.isLogin;

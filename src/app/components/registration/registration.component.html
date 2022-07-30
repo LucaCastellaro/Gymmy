@@ -1,10 +1,58 @@
-<form>
-    <app-input label="Nome" type="text"></app-input>
-    <app-input label="Cognome" type="text"></app-input>
-    <app-input label="Email" type="email"></app-input>
-    <app-input label="Conferma email" type="email"></app-input>
-    <app-input label="Password" type="password"></app-input>
-    <app-input label="Conferma password" type="password"></app-input>
-    
-    <app-confirm-button label="conferma"></app-confirm-button>
+<nz-spin nzSimple *ngIf="isLoading" class="text-center"></nz-spin>
+
+<form [formGroup]="form" (ngSubmit)="signUp()" *ngIf="!isLoading">
+    <div class="mb-5">
+        <label for="name" class="block text-sm font-medium text-gray-700">Nome</label>
+        <input nz-input formControlName="firstName" id="name" type="text" class="py-1 px-2 mt-1 border-2 outline-none block w-full rounded" />
+        <div *ngIf="form.controls['firstName'].touched && form.controls['firstName'].errors" class="text-red-500">
+            <span *ngIf="form.controls['firstName'].hasError('required')">Questo campo è obbligatorio.</span>
+            <span *ngIf="form.controls['firstName'].hasError('maxlength')">Testo troppo lungo.</span>
+        </div>
+    </div>
+    <div class="mb-5">
+        <label for="lastName" class="block text-sm font-medium text-gray-700">Cognome</label>
+        <input nz-input formControlName="lastName" id="lastName" type="text" class="py-1 px-2 mt-1 border-2 outline-none block w-full rounded" />
+        <div *ngIf="form.controls['lastName'].touched && form.controls['lastName'].errors" class="text-red-500">
+            <span *ngIf="form.controls['lastName'].hasError('required')">Questo campo è obbligatorio.</span>
+            <span *ngIf="form.controls['lastName'].hasError('maxlength')">Testo troppo lungo.</span>
+        </div>
+    </div>
+    <div class="mb-5">
+        <label for="email" class="block text-sm font-medium text-gray-700">Email</label>
+        <input nz-input formControlName="email" id="email" type="text" class="py-1 px-2 mt-1 border-2 outline-none block w-full rounded" />
+        <div *ngIf="form.controls['email'].touched && form.controls['email'].errors" class="text-red-500">
+            <span *ngIf="form.controls['email'].hasError('required')">Questo campo è obbligatorio.</span>
+            <span *ngIf="form.controls['email'].hasError('maxlength')">Testo troppo lungo (max 50 caratteri).</span>
+            <span *ngIf="form.controls['email'].hasError('email')">Mail non valida.</span>
+        </div>
+    </div>
+    <div class="mb-5">
+        <label for="emailConfirm" class="block text-sm font-medium text-gray-700">Conferma email</label>
+        <input nz-input formControlName="emailConfirm" id="emailConfirm" type="email" class="py-1 px-2 mt-1 border-2 outline-none block w-full rounded" />
+        <div *ngIf="form.controls['emailConfirm'].touched && form.controls['emailConfirm'].errors" class="text-red-500">
+            <span *ngIf="form.controls['emailConfirm'].hasError('required')">Questo campo è obbligatorio.</span>
+            <span *ngIf="form.controls['emailConfirm'].hasError('maxlength')">Testo troppo lungo (max 100 caratteri).</span>
+            <span *ngIf="form.controls['emailConfirm'].hasError('email')">Mail non valida.</span>
+        </div>
+    </div>
+    <div class="mb-5">
+        <label for="password" class="block text-sm font-medium text-gray-700">Password</label>
+        <input nz-input formControlName="password" id="password" type="password" class="py-1 px-2 mt-1 border-2 outline-none block w-full rounded" />
+        <div *ngIf="form.controls['password'].touched && form.controls['password'].errors" class="text-red-500">
+            <span *ngIf="form.controls['password'].hasError('required')">Questo campo è obbligatorio.</span>
+            <span *ngIf="form.controls['password'].hasError('maxlength')">Testo troppo lungo (max 100 caratteri).</span>
+            <span *ngIf="form.controls['password'].hasError('minlength')">Testo troppo corto (min. 8 caratteri).</span>
+        </div>
+    </div>
+    <div class="mb-5">
+        <label for="passwordConfirm" class="block text-sm font-medium text-gray-700">Conferma password</label>
+        <input nz-input formControlName="confirmPassword" id="passwordConfirm" type="password" class="py-1 px-2 mt-1 border-2 outline-none block w-full rounded" />
+        <div *ngIf="form.controls['confirmPassword'].touched && form.controls['confirmPassword'].errors" class="text-red-500">
+            <span *ngIf="form.controls['confirmPassword'].hasError('required')">Questo campo è obbligatorio.</span>
+            <span *ngIf="form.controls['confirmPassword'].hasError('maxlength')">Testo troppo lungo (max 100 caratteri).</span>
+            <span *ngIf="form.controls['confirmPassword'].hasError('minlength')">Testo troppo corto (min. 8 caratteri).</span>
+        </div>
+    </div>
+
+    <app-confirm-button label="conferma" [isDisabled]="!form.valid"></app-confirm-button>
 </form>
