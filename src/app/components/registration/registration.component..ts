@@ -14,8 +14,8 @@ export class RegistrationComponent {
     public isLoading: boolean = false;
 
     constructor(
-        private formBuilder: FormBuilder,
-        private firebaseService: FirebaseService
+        private readonly formBuilder: FormBuilder,
+        private readonly firebaseService: FirebaseService
     ) {
         this.form = this.formBuilder.group({
             firstName: formBuilder.control('', [Validators.required, Validators.maxLength(50)]),

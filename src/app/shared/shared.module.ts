@@ -3,6 +3,7 @@ import { FirebaseService } from './services/firebase.service';
 import { AuthModule } from '@angular/fire/auth';
 import { FirebaseAppModule, initializeApp } from '@angular/fire/app';
 import { environment } from 'src/environments/environment';
+import { LocalStorageService } from './services/localStorage.service';
 
 @NgModule({
     imports: [
@@ -11,7 +12,7 @@ import { environment } from 'src/environments/environment';
     ],
     exports: [],
     declarations: [],
-    providers: [FirebaseService],
+    providers: [FirebaseService, LocalStorageService],
 })
 export class SharedModule implements OnInit{
     ngOnInit(): void {

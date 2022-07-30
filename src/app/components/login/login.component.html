@@ -1,6 +1,21 @@
-<form>
-    <app-input label="Email" type="email"></app-input>
-    <app-input label="Password" type="password"></app-input>
+<nz-spin nzSimple *ngIf="isLoading" class="text-center"></nz-spin>
+
+<form [formGroup]="form" (ngSubmit)="signIn()" *ngIf="!isLoading">
+    <div class="mb-5">
+        <label for="email" class="block text-sm font-medium text-gray-700">Email</label>
+        <input nz-input formControlName="email" id="email" type="text" class="py-1 px-2 mt-1 border-2 outline-none block w-full rounded" />
+        <div *ngIf="form.controls['email'].touched && form.controls['email'].errors" class="text-red-500">
+            <span *ngIf="form.controls['email'].hasError('required')">Questo campo è obbligatorio.</span>
+            <span *ngIf="form.controls['email'].hasError('email')">Mail non valida.</span>
+        </div>
+    </div>
+    <div class="mb-5">
+        <label for="password" class="block text-sm font-medium text-gray-700">Password</label>
+        <input nz-input formControlName="password" id="password" type="password" class="py-1 px-2 mt-1 border-2 outline-none block w-full rounded" />
+        <div *ngIf="form.controls['password'].touched && form.controls['password'].errors" class="text-red-500">
+            <span *ngIf="form.controls['password'].hasError('required')">Questo campo è obbligatorio.</span>
+        </div>
+    </div>
     
-    <app-confirm-button label="conferma"></app-confirm-button>
+    <app-confirm-button label="conferma" [isDisabled]="!form.valid"></app-confirm-button>
 </form>
