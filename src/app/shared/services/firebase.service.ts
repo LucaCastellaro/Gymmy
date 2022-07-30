@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import {Auth, createUserWithEmailAndPassword, signInWithCredential, signInWithEmailAndPassword, updateProfile} from '@angular/fire/auth';
+import {Auth, createUserWithEmailAndPassword, signInWithCredential, signInWithEmailAndPassword, signOut, updateProfile} from '@angular/fire/auth';
 import { LocalStorageConstants } from '../constants/localStorage.constants';
 import { CreateUserDTO } from '../models/DTO/CreateUser.DTO';
 import { LocalStorageService } from './localStorage.service';
@@ -24,8 +24,23 @@ export class FirebaseService {
     }
 
     public async signIn(email: string, password: string): Promise<void>{
-        const credentials = await signInWithEmailAndPassword(this.auth, email, password);
-        
-        this.localStorageService.set(LocalStorageConstants.CurrentUser, credentials.user);
+        try{
+            const credentials = await signInWithEmailAndPassword(this.auth, email, password);
+            
+            this.localStorageService.set(LocalStorageConstants.CurrentUser, credentials.user);
+        }
+        catch(ex){
+            throw ex;
+        }
+    }
+
+    public async signOut(){
+        try{
+            await signOut(this.auth);
+            this.localStorageService.clear();
+        }
+        catch(ex){
+            throw ex;
+        }
     }
 }
