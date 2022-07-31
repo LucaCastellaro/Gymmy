@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { LocalStorageConstants } from '../constants/localStorage.constants';
 
 @Injectable()
 export class LocalStorageService {
@@ -17,5 +18,9 @@ export class LocalStorageService {
 
     public clear(): void {
         localStorage.clear();
+    }
+
+    public isLoggedIn(): boolean {
+        return !!localStorage.getItem(LocalStorageConstants.CurrentUser);
     }
 }

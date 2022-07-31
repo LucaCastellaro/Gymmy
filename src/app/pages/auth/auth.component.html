@@ -5,13 +5,15 @@
     </button>
 </ng-template>
 
-<div class="flipping-card w-full mt-5">
-    <nz-card nzTitle="login" class="hover:shadow-lg w-full" [nzExtra]="flipTemplate" *ngIf="isLogin">
-        <app-login></app-login>
-    </nz-card>
-    <nz-card nzTitle="registrazione" class="back hover:shadow-lg w-full" [nzExtra]="flipTemplate" *ngIf="!isLogin">
-        <app-registration [registrationEmitter]="registrationEmitter" *ngIf="!isRegistered"></app-registration>
-        <app-confirm-message *ngIf="isRegistered" label="Registrazione completata"></app-confirm-message>
-    </nz-card>
+<div class="flex justify-evenly">
+    <div class="flipping-card mt-5 xl:w-1/4 lg:w-1/3 md:w-1/2 sm:w-2/3 w-3/4">
+        <nz-card nzTitle="login" class="hover:shadow-lg w-full" [nzExtra]="flipTemplate" *ngIf="isLogin">
+            <app-login></app-login>
+        </nz-card>
+        <nz-card nzTitle="registrazione" class="back hover:shadow-lg w-full" [nzExtra]="flipTemplate" *ngIf="!isLogin">
+            <app-registration [registrationEmitter]="registrationEmitter" *ngIf="!isRegistered"></app-registration>
+            <app-confirm-message *ngIf="isRegistered" label="Registrazione completata"></app-confirm-message>
+        </nz-card>
+    </div>
 </div>
   

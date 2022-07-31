@@ -17,7 +17,18 @@ import { environment } from 'src/environments/environment';
 import { initializeApp, provideFirebaseApp } from '@angular/fire/app';
 import { provideFirestore, getFirestore } from '@angular/fire/firestore';
 import { provideAuth, getAuth } from '@angular/fire/auth';
+import { RouterModule, Routes } from '@angular/router';
+import { AuthComponent } from './pages/auth/auth.component';
+import { RoutesConstants } from './shared/constants/routes.constants';
+import { AuthGuard } from './shared/guards/auth.guard';
 
+const routes: Routes = [
+  {
+    component: AuthComponent,
+    path: RoutesConstants.Auth,
+    canActivate: [AuthGuard]
+  }
+];
 
 registerLocaleData(it);
 
@@ -37,6 +48,7 @@ registerLocaleData(it);
     provideFirebaseApp(() => initializeApp(environment.firebase)),
     provideFirestore(() => getFirestore()),
     provideAuth(() => getAuth()),
+    RouterModule.forRoot(routes)
   ],
   providers: [{ provide: NZ_I18N, useValue: it_IT }],
   bootstrap: [AppComponent]

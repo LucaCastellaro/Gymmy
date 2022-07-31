@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import {Auth, createUserWithEmailAndPassword, signInWithCredential, signInWithEmailAndPassword, signOut, updateProfile} from '@angular/fire/auth';
+import {Auth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, updateProfile} from '@angular/fire/auth';
 import { LocalStorageConstants } from '../constants/localStorage.constants';
 import { CreateUserDTO } from '../models/DTO/CreateUser.DTO';
 import { LocalStorageService } from './localStorage.service';
