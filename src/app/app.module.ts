@@ -21,13 +21,20 @@ import { RouterModule, Routes } from '@angular/router';
 import { AuthComponent } from './pages/auth/auth.component';
 import { RoutesConstants } from './shared/constants/routes.constants';
 import { AuthGuard } from './shared/guards/auth.guard';
+import { DashboardComponent } from './pages/dashboard/dashboard.component';
 
 const routes: Routes = [
   {
     component: AuthComponent,
     path: RoutesConstants.Auth,
     canActivate: [AuthGuard]
-  }
+  },
+  {
+    component: DashboardComponent,
+    path: RoutesConstants.Dashboard,
+    canActivate: [AuthGuard]
+  },
+
 ];
 
 registerLocaleData(it);

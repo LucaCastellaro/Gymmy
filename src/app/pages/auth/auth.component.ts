@@ -11,7 +11,8 @@ export class AuthComponent implements OnInit, OnDestroy   {
     public registrationEmitter: EventEmitter<boolean>;
     public isRegistered: boolean = false;
 
-    constructor() {
+    constructor(
+    ) {
         this.registrationEmitter = new EventEmitter<boolean>(false);
     }
     

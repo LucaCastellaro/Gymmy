@@ -1,5 +1,7 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
+import { RoutesConstants } from 'src/app/shared/constants/routes.constants';
 import { FirebaseService } from 'src/app/shared/services/firebase.service';
 
 @Component({
@@ -13,7 +15,8 @@ export class LoginComponent {
     
     constructor(
         private readonly formBuilder: FormBuilder,
-        private readonly firebaseService: FirebaseService
+        private readonly firebaseService: FirebaseService,
+        private readonly router: Router
     ) {
         this.form = this.formBuilder.group({
             email: formBuilder.control('', [Validators.required, Validators.email]),
@@ -22,6 +25,13 @@ export class LoginComponent {
     }
 
     public async signIn(){
-        await this.firebaseService.signIn(this.form.value.email, this.form.value.password);
+        try{
+            await this.firebaseService.signIn(this.form.value.email, this.form.value.password);
+            this.router.navigate([RoutesConstants.Dashboard]);
+
+        }
+        catch(ex){
+            throw ex;
+        }
     }
 }

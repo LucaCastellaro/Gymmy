@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { RoutesConstants } from './shared/constants/routes.constants';
+import { LocalStorageService } from './shared/services/localStorage.service';
 
 @Component({
   selector: 'app-root',
@@ -11,11 +12,15 @@ export class AppComponent implements OnInit {
   public title: string = 'Gymmy';
 
   constructor(
-    private readonly router: Router
+    private readonly router: Router,
+    private readonly localStorageService: LocalStorageService
   ){}
 
   ngOnInit(): void {
-    this.router.navigate([RoutesConstants.Auth]);
+    const route: string = this.localStorageService.isLoggedIn() 
+      ? RoutesConstants.Dashboard 
+      : RoutesConstants.Auth;
+    this.router.navigate([route]);
   }
 
 }
