@@ -1,4 +1,6 @@
 import { Component, Input } from '@angular/core';
+import { Router } from '@angular/router';
+import { RoutesConstants } from 'src/app/shared/constants/routes.constants';
 
 @Component({
     selector: 'app-exercise-list',
@@ -8,9 +10,9 @@ import { Component, Input } from '@angular/core';
 export class ExerciseListComponent {
     @Input() exercises!: any[];
 
-    constructor() { }
+    constructor(private readonly router: Router) { }
 
     public addExercise(): void {
-        console.log('ciao');
+        this.router.navigate([RoutesConstants.AddExercise]);
     }
 }

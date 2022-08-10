@@ -22,6 +22,7 @@ import { AuthComponent } from './pages/auth/auth.component';
 import { RoutesConstants } from './shared/constants/routes.constants';
 import { AuthGuard } from './shared/guards/auth.guard';
 import { DashboardComponent } from './pages/dashboard/dashboard.component';
+import { AddExerciseComponent } from './pages/add-exercise/add-exercise.component';
 
 const routes: Routes = [
   {
@@ -32,6 +33,11 @@ const routes: Routes = [
   {
     component: DashboardComponent,
     path: RoutesConstants.Dashboard,
+    canActivate: [AuthGuard]
+  },
+  {
+    component: AddExerciseComponent,
+    path: RoutesConstants.AddExercise,
     canActivate: [AuthGuard]
   },
 

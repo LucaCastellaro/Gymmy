@@ -1,0 +1,15 @@
+<div class="flex justify-evenly">
+    <nz-card class="mt-5 xl:w-1/2 lg:w-2/3 w-3/4" nzTitle="Aggiungi esercizio">
+        <form [formGroup]="form" (ngSubmit)="add()" *ngIf="!isLoading">
+            <div class="mb-5">
+                <label for="name" class="block text-sm font-medium text-gray-700">Nome esercizio</label>
+                <input nz-input formControlName="name" id="name" type="text" class="py-1 px-2 mt-1 border-2 outline-none block w-full rounded" />
+                <div *ngIf="form.controls['name'].touched && form.controls['name'].errors" class="text-red-500">
+                    <span *ngIf="form.controls['name'].hasError('required')">Questo campo è obbligatorio.</span>
+                </div>
+            </div>
+            
+            <app-confirm-button label="conferma" [isDisabled]="!form.valid"></app-confirm-button>
+        </form>
+    </nz-card>
+</div>

@@ -10,17 +10,22 @@ import { NzListModule } from 'ng-zorro-antd/list';
 import { NzIconModule } from 'ng-zorro-antd/icon';
 
 import { CheckCircleOutline, PlusOutline } from '@ant-design/icons-angular/icons';
+import { AddExerciseComponent } from './add-exercise/add-exercise.component';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 const icons = [ CheckCircleOutline, PlusOutline ];
 
 const components = [
     AuthComponent,
-    DashboardComponent
+    DashboardComponent,
+    AddExerciseComponent
 ];
 
 @NgModule({
     imports: [
         CommonModule,
+        FormsModule,
+        ReactiveFormsModule,
         ZorroModule,
         ComponentsModule,
         NzCardModule,
