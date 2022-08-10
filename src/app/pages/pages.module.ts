@@ -10,7 +10,6 @@ import { NzListModule } from 'ng-zorro-antd/list';
 import { NzIconModule } from 'ng-zorro-antd/icon';
 
 import { CheckCircleOutline, PlusOutline } from '@ant-design/icons-angular/icons';
-import { NzToolTipModule } from 'ng-zorro-antd/tooltip';
 
 const icons = [ CheckCircleOutline, PlusOutline ];
 

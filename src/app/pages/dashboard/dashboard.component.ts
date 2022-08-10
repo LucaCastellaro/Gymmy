@@ -10,10 +10,12 @@ export class DashboardComponent implements OnInit {
     {
       id: '1',
       name: 'Esercizio 1',
+      done: false
     },
     {
       id: '2',
       name: 'Esercizio 2',
+      done: true
     },
   ];
 

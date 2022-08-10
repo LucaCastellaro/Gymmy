@@ -1,0 +1,11 @@
+<nz-card class="w-full" nzTitle="Esercizi di oggi" [nzExtra]="extraTemplate">
+    <nz-list nzBordered>
+        <app-exercise-item-list *ngFor="let item of exercises" [exercise]="item"></app-exercise-item-list>
+    </nz-list>
+</nz-card>
+<ng-template #extraTemplate>
+    <nz-button-group>
+        <app-icon-button label="Nuovo esercizio" icon="plus" theme="outline" (click)="addExercise()"></app-icon-button>
+        <app-icon-button label="Segna tutti come già fatti" icon="check-circle" theme="outline"></app-icon-button>
+    </nz-button-group>
+</ng-template>
