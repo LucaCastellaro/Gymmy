@@ -5,13 +5,19 @@ import { NzCardModule } from 'ng-zorro-antd/card';
 import { NzIconModule } from 'ng-zorro-antd/icon';
 import { NzInputModule } from 'ng-zorro-antd/input';
 import { NzTypographyModule } from 'ng-zorro-antd/typography';
+import { NzSpinModule } from 'ng-zorro-antd/spin';
+import { NzToolTipModule } from 'ng-zorro-antd/tooltip';
+import { NzListModule } from 'ng-zorro-antd/list';
 
 const ngZorroModules = [
     NzButtonModule,
     NzInputModule,
     NzTypographyModule,
     NzCardModule,
-    NzIconModule
+    NzIconModule,
+    NzToolTipModule,
+    NzListModule,
+    NzSpinModule
   ];
 
 @NgModule({
