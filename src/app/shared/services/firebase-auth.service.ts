@@ -5,7 +5,7 @@ import { CreateUserDTO } from '../models/DTO/CreateUser.DTO';
 import { LocalStorageService } from './localStorage.service';
 
 @Injectable()
-export class FirebaseService {
+export class FirebaseAuthService {
     constructor(
         private readonly auth: Auth, 
         private readonly localStorageService: LocalStorageService

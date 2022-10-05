@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { RoutesConstants } from 'src/app/shared/constants/routes.constants';
-import { FirebaseService } from 'src/app/shared/services/firebase.service';
+import { FirebaseAuthService } from 'src/app/shared/services/firebase-auth.service';
 
 @Component({
     selector: 'app-login',
@@ -15,7 +15,7 @@ export class LoginComponent {
     
     constructor(
         private readonly formBuilder: FormBuilder,
-        private readonly firebaseService: FirebaseService,
+        private readonly firebaseService: FirebaseAuthService,
         private readonly router: Router
     ) {
         this.form = this.formBuilder.group({

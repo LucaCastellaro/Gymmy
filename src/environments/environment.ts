@@ -11,7 +11,8 @@ export const environment = {
     storageBucket: "gimmy-1075a.appspot.com",
     messagingSenderId: "188360367361",
     appId: "1:188360367361:web:5e2059c85c77d6d10b0f00",
-    measurementId: "G-N1ZNVQPXFM"
+    measurementId: "G-N1ZNVQPXFM",
+    databaseURL: "https://gimmy-1075a-default-rtdb.europe-west1.firebasedatabase.app"
   }
 };
 

@@ -23,6 +23,7 @@ import { RoutesConstants } from './shared/constants/routes.constants';
 import { AuthGuard } from './shared/guards/auth.guard';
 import { DashboardComponent } from './pages/dashboard/dashboard.component';
 import { AddExerciseComponent } from './pages/add-exercise/add-exercise.component';
+import { getDatabase, provideDatabase } from '@angular/fire/database';
 
 const routes: Routes = [
   {
@@ -59,7 +60,8 @@ registerLocaleData(it);
     BrowserAnimationsModule,
     SharedModule,
     provideFirebaseApp(() => initializeApp(environment.firebase)),
-    provideFirestore(() => getFirestore()),
+    // provideFirestore(() => getFirestore()),
+    provideDatabase(() => getDatabase()),
     provideAuth(() => getAuth()),
     RouterModule.forRoot(routes)
   ],

@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input } from '@angular/core';
 import { FormGroup, Validators, FormBuilder } from '@angular/forms';
-import { FirebaseService } from 'src/app/shared/services/firebase.service';
+import { FirebaseAuthService } from 'src/app/shared/services/firebase-auth.service';
 
 @Component({
     selector: 'app-registration',
@@ -15,7 +15,7 @@ export class RegistrationComponent {
 
     constructor(
         private readonly formBuilder: FormBuilder,
-        private readonly firebaseService: FirebaseService
+        private readonly firebaseService: FirebaseAuthService
     ) {
         this.form = this.formBuilder.group({
             firstName: formBuilder.control('', [Validators.required, Validators.maxLength(50)]),

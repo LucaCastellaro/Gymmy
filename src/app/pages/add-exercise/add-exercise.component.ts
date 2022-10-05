@@ -1,7 +1,11 @@
 import { Component } from '@angular/core';
+import { User } from '@angular/fire/auth';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { FirebaseService } from 'src/app/shared/services/firebase.service';
+import { LocalStorageConstants } from 'src/app/shared/constants/localStorage.constants';
+import { ExerciseDTO } from 'src/app/shared/models/DTO/ExerciseDTO';
+import { FirebaseExerciseService } from 'src/app/shared/services/firebase-exercise.service';
+import { LocalStorageService } from 'src/app/shared/services/localStorage.service';
 
 @Component({
     selector: 'app-add-exercise',
@@ -17,8 +21,10 @@ export class AddExerciseComponent {
     
     constructor(
         private readonly formBuilder: FormBuilder,
-        private readonly firebaseService: FirebaseService,
-        private readonly router: Router) {
+        private readonly firebaseExerciseService: FirebaseExerciseService,
+        private readonly localStorageService: LocalStorageService,
+        private readonly router: Router
+    ) {
             this.form = this.formBuilder.group({
                 name: formBuilder.control('', [Validators.required, Validators.maxLength(255)]),
                 series: formBuilder.control('', [Validators.required, Validators.min(0), Validators.max(255)]),
@@ -31,5 +37,24 @@ export class AddExerciseComponent {
             });
          }
 
-    public add(): void{}
+    public async add(): Promise<void>{
+        const user: User = this.localStorageService
+            .get(LocalStorageConstants.CurrentUser)!;
+
+        const model: ExerciseDTO = {
+            userId: user!.uid,
+            days: this.form.value['days'],
+            descr: this.form.value['descr'] ?? '',
+            link: this.form.value['link'] ?? '',
+            reps: this.form.value['reps'],
+            pauseSeconds: this.form.value['pauseSeconds'],
+            series: this.form.value['series'],
+            title: this.form.value['name'],
+            weight: this.form.value['weight'],
+            id: ''
+        };
+        console.log(model)
+
+        await this.firebaseExerciseService.add(model);
+    }
 }
