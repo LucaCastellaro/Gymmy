@@ -1,7 +1,7 @@
 <div class="flex justify-evenly">
     <div class="mt-5 xl:w-1/2 lg:w-2/3 w-3/4">
-        <nz-card class="hover:shadow-lg w-full" nzTitle="Aggiungi esercizio">
-            <form [formGroup]="form" (ngSubmit)="add()" *ngIf="!isLoading">
+        <nz-card class="hover:shadow-lg w-full" nzTitle="Aggiungi esercizio" [nzExtra]="extraTemplate">
+            <form [formGroup]="form" (ngSubmit)="add()">
                 <div class="mb-5">
                     <label for="name" class="block text-sm font-medium text-gray-700">Nome esercizio</label>
                     <input nz-input formControlName="name" id="name" type="text" maxlength="255" class="py-1 px-2 mt-1 border-2 outline-none block w-full rounded" />
@@ -76,8 +76,14 @@
                     </div>
                 </div>
                 
-                <app-confirm-button label="conferma" [isDisabled]="!form.valid"></app-confirm-button>
+                <app-confirm-button label="conferma" [isDisabled]="!form.valid || isLoading" [showLoader]="isLoading"></app-confirm-button>
             </form>
         </nz-card>
     </div>
 </div>
+
+<ng-template #extraTemplate>
+    <nz-button-group>
+        <app-icon-button label="Torna alla home" icon="home" theme="outline" (click)="goToDashboard()"></app-icon-button>
+    </nz-button-group>
+</ng-template>

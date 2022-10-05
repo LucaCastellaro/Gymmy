@@ -3,6 +3,7 @@ import { User } from '@angular/fire/auth';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { LocalStorageConstants } from 'src/app/shared/constants/localStorage.constants';
+import { RoutesConstants } from 'src/app/shared/constants/routes.constants';
 import { ExerciseDTO } from 'src/app/shared/models/DTO/ExerciseDTO';
 import { FirebaseExerciseService } from 'src/app/shared/services/firebase-exercise.service';
 import { LocalStorageService } from 'src/app/shared/services/localStorage.service';
@@ -38,6 +39,8 @@ export class AddExerciseComponent {
          }
 
     public async add(): Promise<void>{
+        this.isLoading = true;
+
         const user: User = this.localStorageService
             .get(LocalStorageConstants.CurrentUser)!;
 
@@ -51,10 +54,17 @@ export class AddExerciseComponent {
             series: this.form.value['series'],
             title: this.form.value['name'],
             weight: this.form.value['weight'],
+            done: null,
             id: ''
         };
-        console.log(model)
 
         await this.firebaseExerciseService.add(model);
+        this.isLoading = false;
+
+        this.goToDashboard();
+    }
+
+    public goToDashboard(){
+        this.router.navigate([RoutesConstants.Dashboard])
     }
 }

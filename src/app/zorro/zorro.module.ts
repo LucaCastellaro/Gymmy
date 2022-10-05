@@ -8,6 +8,7 @@ import { NzTypographyModule } from 'ng-zorro-antd/typography';
 import { NzSpinModule } from 'ng-zorro-antd/spin';
 import { NzToolTipModule } from 'ng-zorro-antd/tooltip';
 import { NzListModule } from 'ng-zorro-antd/list';
+import { NzEmptyModule } from 'ng-zorro-antd/empty';
 
 const ngZorroModules = [
     NzButtonModule,
@@ -17,7 +18,8 @@ const ngZorroModules = [
     NzIconModule,
     NzToolTipModule,
     NzListModule,
-    NzSpinModule
+    NzSpinModule,
+    NzEmptyModule
   ];
 
 @NgModule({

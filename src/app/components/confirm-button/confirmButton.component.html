@@ -1,1 +1,8 @@
-<button [disabled]="isDisabled" nz-button nzType="primary" class="rounded uppercase w-full">{{label}}</button>
+<div class="flex justify-center">
+    <button [disabled]="isDisabled" *ngIf="!showLoader;else loader" nz-button nzType="primary" class="rounded uppercase w-full">
+        {{label}}
+    </button>
+</div>
+<ng-template #loader>
+    <nz-spin nzSimple></nz-spin>
+</ng-template>

@@ -7,6 +7,7 @@ export interface ExerciseDTO {
 	weight: number,
 	pauseSeconds: number,
 	days: number[],
-	link: string | null,
-	descr: string | null
+	link?: string | null,
+	descr?: string | null,
+	done?: Date | null
 }

@@ -1,11 +1,16 @@
 <nz-card class="hover:shadow-lg w-full" nzTitle="Esercizi di oggi" [nzExtra]="extraTemplate">
-    <nz-list nzBordered>
+    <nz-list nzBordered *ngIf="exercises.length > 0;else noData">
         <app-exercise-item-list *ngFor="let item of exercises" [exercise]="item"></app-exercise-item-list>
     </nz-list>
 </nz-card>
+
 <ng-template #extraTemplate>
     <nz-button-group>
         <app-icon-button label="Nuovo esercizio" icon="plus" theme="outline" (click)="addExercise()"></app-icon-button>
         <app-icon-button label="Segna tutti come già fatti" icon="check-circle" theme="outline"></app-icon-button>
     </nz-button-group>
+</ng-template>
+
+<ng-template #noData>
+    <nz-empty nzNotFoundImage="simple"></nz-empty>
 </ng-template>

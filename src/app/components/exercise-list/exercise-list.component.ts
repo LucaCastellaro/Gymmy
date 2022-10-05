@@ -1,6 +1,7 @@
 import { Component, Input } from '@angular/core';
 import { Router } from '@angular/router';
 import { RoutesConstants } from 'src/app/shared/constants/routes.constants';
+import { ExerciseDTO } from 'src/app/shared/models/DTO/ExerciseDTO';
 
 @Component({
     selector: 'app-exercise-list',
@@ -8,7 +9,7 @@ import { RoutesConstants } from 'src/app/shared/constants/routes.constants';
 })
 
 export class ExerciseListComponent {
-    @Input() exercises!: any[];
+    @Input() exercises!: ExerciseDTO[];
 
     constructor(private readonly router: Router) { }
 

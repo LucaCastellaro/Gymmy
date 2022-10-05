@@ -8,6 +8,7 @@ import { Component, Input } from '@angular/core';
 export class ConfirmButtonComponent {
     @Input() label!: string;
     @Input() isDisabled!: boolean;
+    @Input() showLoader?: boolean | null;
 
     constructor() { 
     }
