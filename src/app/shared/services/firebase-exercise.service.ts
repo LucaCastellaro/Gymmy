@@ -35,7 +35,7 @@ export class FirebaseExerciseService {
     public async markAsDone(exercise: ExerciseDTO, isDone: boolean): Promise<ExerciseDTO> {
         const allExercises = await this.getAll(exercise.userId);
 
-        const index = allExercises.findIndex(exercise => exercise.id == exercise.id);
+        const index = allExercises.findIndex(item => item.id == exercise.id);
         if(index < 0) return exercise;
 
         allExercises[index].done = isDone 
