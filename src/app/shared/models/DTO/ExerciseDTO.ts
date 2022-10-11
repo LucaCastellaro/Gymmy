@@ -9,5 +9,5 @@ export interface ExerciseDTO {
 	days: string[],
 	link?: string | null,
 	descr?: string | null,
-	done?: Date | null
+	done?: string | null
 }

@@ -1,5 +1,5 @@
 import { Injectable, OnInit } from '@angular/core';
-import { ref, set, get, child, DataSnapshot, getDatabase } from "firebase/database";
+import { ref, set, get, child, DataSnapshot, getDatabase, remove } from "firebase/database";
 import { ExerciseDTO } from '../models/DTO/ExerciseDTO';
 import { Guid } from 'guid-typescript';
 import { Database } from '@angular/fire/database';
@@ -32,4 +32,28 @@ export class FirebaseExerciseService {
             .filter(exercise => exercise.days.some(exerciseDay => exerciseDay == Days[day]));
     }
     
+    public async markAsDone(exercise: ExerciseDTO, isDone: boolean): Promise<ExerciseDTO> {
+        const allExercises = await this.getAll(exercise.userId);
+
+        const index = allExercises.findIndex(exercise => exercise.id == exercise.id);
+        if(index < 0) return exercise;
+
+        allExercises[index].done = isDone 
+            ? new Date().toLocaleString('it-IT', {year: 'numeric', month: '2-digit', day: '2-digit'})
+            : null;
+
+        await remove(ref(this.db, `exercises/${exercise.userId}`));
+
+        await set(ref(this.db, `exercises/${exercise.userId}`), allExercises);
+
+        return allExercises[index];
+    }
+
+    public isDone(exercise: ExerciseDTO) {
+        if(!exercise.done) return false;
+
+        const today = new Date().toLocaleString('it-IT', {year: 'numeric', month: '2-digit', day: '2-digit'});
+
+        return today == exercise.done;
+    }
 }
