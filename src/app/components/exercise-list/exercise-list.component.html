@@ -1,7 +1,12 @@
 <nz-card class="hover:shadow-lg w-full" nzTitle="Esercizi di oggi" [nzExtra]="extraTemplate">
-    <nz-list nzBordered *ngIf="exercises.length > 0;else noData">
-        <app-exercise-item-list *ngFor="let item of exercises" [exercise]="item"></app-exercise-item-list>
-    </nz-list>
+    <div *ngIf="isLoading" class="w-full flex justify-center" >
+        <nz-spin nzSimple></nz-spin> 
+    </div>
+    <div *ngIf="!isLoading">
+        <nz-list nzBordered *ngIf="exercises.length > 0;else noData">
+            <app-exercise-item-list *ngFor="let item of exercises" [exercise]="item"></app-exercise-item-list>
+        </nz-list>
+    </div>
 </nz-card>
 
 <ng-template #extraTemplate>

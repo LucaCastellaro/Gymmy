@@ -5,6 +5,7 @@ import { Router } from '@angular/router';
 import { LocalStorageConstants } from 'src/app/shared/constants/localStorage.constants';
 import { RoutesConstants } from 'src/app/shared/constants/routes.constants';
 import { ExerciseDTO } from 'src/app/shared/models/DTO/ExerciseDTO';
+import { Days } from 'src/app/shared/models/enums/days.enum';
 import { FirebaseExerciseService } from 'src/app/shared/services/firebase-exercise.service';
 import { LocalStorageService } from 'src/app/shared/services/localStorage.service';
 
@@ -18,7 +19,7 @@ export class AddExerciseComponent {
     public isLoading: boolean = false;
     public selectedDays!: string[];
 
-    public readonly days: string[] = ['Lunedì', 'Martedì', 'Mercoledì', 'Giovedì', 'Venerdì', 'Sabato', 'Domenica'];
+    public readonly days: string[] = Object.keys(Days);
     
     constructor(
         private readonly formBuilder: FormBuilder,

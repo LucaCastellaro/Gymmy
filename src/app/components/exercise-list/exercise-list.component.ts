@@ -10,6 +10,7 @@ import { ExerciseDTO } from 'src/app/shared/models/DTO/ExerciseDTO';
 
 export class ExerciseListComponent {
     @Input() exercises!: ExerciseDTO[];
+    @Input() isLoading!: boolean;
 
     constructor(private readonly router: Router) { }
 
