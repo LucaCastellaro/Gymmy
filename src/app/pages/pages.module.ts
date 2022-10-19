@@ -12,13 +12,15 @@ import { NzSelectModule } from 'ng-zorro-antd/select';
 import { CheckCircleOutline, PlusOutline, HomeOutline, ControlOutline } from '@ant-design/icons-angular/icons';
 import { AddExerciseComponent } from './add-exercise/add-exercise.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { ExerciseDetailComponent } from './exercise-detail/exercise-detail.component';
 
 const icons = [ CheckCircleOutline, PlusOutline, HomeOutline, ControlOutline ];
 
 const components = [
     AuthComponent,
     DashboardComponent,
-    AddExerciseComponent
+    AddExerciseComponent,
+    ExerciseDetailComponent
 ];
 
 @NgModule({

@@ -15,7 +15,6 @@ import { PagesModule } from './pages/pages.module';
 import { SharedModule } from './shared/shared.module';
 import { environment } from 'src/environments/environment';
 import { initializeApp, provideFirebaseApp } from '@angular/fire/app';
-import { provideFirestore, getFirestore } from '@angular/fire/firestore';
 import { provideAuth, getAuth } from '@angular/fire/auth';
 import { RouterModule, Routes } from '@angular/router';
 import { AuthComponent } from './pages/auth/auth.component';
@@ -24,6 +23,7 @@ import { AuthGuard } from './shared/guards/auth.guard';
 import { DashboardComponent } from './pages/dashboard/dashboard.component';
 import { AddExerciseComponent } from './pages/add-exercise/add-exercise.component';
 import { getDatabase, provideDatabase } from '@angular/fire/database';
+import { ExerciseDetailComponent } from './pages/exercise-detail/exercise-detail.component';
 
 const routes: Routes = [
   {
@@ -37,9 +37,14 @@ const routes: Routes = [
     canActivate: [AuthGuard]
   },
   {
-    component: AddExerciseComponent,
-    path: RoutesConstants.AddExercise,
-    canActivate: [AuthGuard]
+      component: AddExerciseComponent,
+      path: RoutesConstants.AddExercise,
+      canActivate: [AuthGuard]
+  },
+  {
+      component: ExerciseDetailComponent,
+      path: `${RoutesConstants.ExerciseDetail}/:exerciseId`,
+      canActivate: [AuthGuard]
   },
 
 ];
@@ -60,7 +65,6 @@ registerLocaleData(it);
     BrowserAnimationsModule,
     SharedModule,
     provideFirebaseApp(() => initializeApp(environment.firebase)),
-    // provideFirestore(() => getFirestore()),
     provideDatabase(() => getDatabase()),
     provideAuth(() => getAuth()),
     RouterModule.forRoot(routes)

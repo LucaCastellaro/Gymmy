@@ -1,0 +1,7 @@
+<div *ngIf="!isLoading;else loader">
+    {{exercise?.title}}
+</div>
+
+<ng-template #loader>
+    <nz-spin nzSimple></nz-spin>
+</ng-template>

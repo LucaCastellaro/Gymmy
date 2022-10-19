@@ -31,6 +31,13 @@ export class FirebaseExerciseService {
         return allExercises
             .filter(exercise => exercise.days.some(exerciseDay => exerciseDay == Days[day]));
     }
+
+    public async getById(userId: string, exerciseId: string): Promise<ExerciseDTO> {
+        const allExercises = await this.getAll(userId);
+        return allExercises
+            .find(xx => xx.id == exerciseId) 
+            ?? {} as ExerciseDTO;
+    }
     
     public async markAsDone(exercise: ExerciseDTO, isDone: boolean): Promise<ExerciseDTO> {
         const allExercises = await this.getAll(exercise.userId);
