@@ -8,6 +8,7 @@
                         <th>Ripetizioni</th>
                         <th>Peso</th>
                         <th>Pausa</th>
+                        <th>Peso totale</th>
                         <th>Fatto</th>
                       </tr>
                     </thead>
@@ -16,6 +17,7 @@
                         <td>{{data.reps}}</td>
                         <td>{{data.weight}}</td>
                         <td>{{data.pause}}</td>
+                        <td>{{calculateTotalWeight(data)}}</td>
                         <td><label nz-checkbox></label></td>
                       </tr>
                     </tbody>
