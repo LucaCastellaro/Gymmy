@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
-import { ReactiveFormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { SharedModule } from '../shared/shared.module';
 import { ZorroModule } from '../zorro/zorro.module';
 import { ConfirmButtonComponent } from './confirm-button/confirmButton.component';
@@ -12,6 +12,7 @@ import { IconButtonComponent } from './icon-button/icon-button.component';
 import { ExerciseListComponent } from './exercise-list/exercise-list.component';
 import { ExerciseItemListComponent } from './exercise-item-list/exercise-item-list.component';
 import { AddSeriesComponent } from './add-series/add-series.component';
+import { AddExerciseComponent } from './add-exercise/add-exercise.component';
 
 const components = [
   InputComponent,
@@ -22,7 +23,8 @@ const components = [
   IconButtonComponent,
   ExerciseListComponent,
   ExerciseItemListComponent,
-  AddSeriesComponent
+  AddSeriesComponent,
+  AddExerciseComponent
 ];
 
 @NgModule({
@@ -31,7 +33,8 @@ const components = [
     CommonModule,
     ZorroModule,
     SharedModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    FormsModule
   ],
   providers: [],
   bootstrap: [],

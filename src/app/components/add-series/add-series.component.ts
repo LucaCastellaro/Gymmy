@@ -19,9 +19,6 @@ export class AddSeriesComponent {
     private readonly formBuilder: FormBuilder,
     private readonly exerciseService: FirebaseExerciseService
   ) { 
-    console.debug(this.userId);
-    console.debug(this.exerciseId);
-
     this.seriesForm = this.formBuilder.group({
       reps: this.formBuilder.control(0, [Validators.required, Validators.min(1)]),
       weight: this.formBuilder.control(0, [Validators.required, Validators.min(1)]),
@@ -30,8 +27,6 @@ export class AddSeriesComponent {
   }
 
   public addSeries(): void {
-    console.debug('insert series');
-
     this.exerciseService.addSeries(this.userId, this.exerciseId, {
       pause: this.seriesForm.value['pause'],
       reps: this.seriesForm.value['reps'],

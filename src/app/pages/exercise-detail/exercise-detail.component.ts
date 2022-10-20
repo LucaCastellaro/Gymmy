@@ -32,7 +32,6 @@ export class ExerciseDetailComponent implements OnInit {
           .get(LocalStorageConstants.CurrentUser)!;
 
       this.exercise = await this.exerciseService.getById(user.uid, params['exerciseId']);
-      console.debug('detail', this.exercise);
       this.isLoading = false;
     });
   }

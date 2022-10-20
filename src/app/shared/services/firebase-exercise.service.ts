@@ -11,10 +11,12 @@ export class FirebaseExerciseService {
     constructor(private readonly db: Database) {
     }
 
-    public async add(model: ExerciseDTO): Promise<void> {
+    public async addExercise(model: ExerciseDTO): Promise<ExerciseDTO> {
         model.id = Guid.create().toString();
 
         await set(ref(this.db, `exercises/${model.userId}/${model.id}`), model);
+
+        return await this.getById(model.userId, model.id);
     }
 
     public async getAll(userId: string): Promise<Map<string, ExerciseDTO>> {
@@ -35,8 +37,7 @@ export class FirebaseExerciseService {
 
         const result: ExerciseDTO[] = [];
         for(let item of allExercises.values()) {
-            if(item.days.some(exerciseDay => exerciseDay == Days[day]))
-                result.push(item);
+            if(item.days.some(exerciseDay => exerciseDay == Days[day])) result.push(item);
         }
 
         return result;
@@ -45,10 +46,7 @@ export class FirebaseExerciseService {
     public async getById(userId: string, exerciseId: string): Promise<ExerciseDTO> {
         const snapshot: DataSnapshot = await get(ref(this.db, `exercises/${userId}/${exerciseId}`));
         
-        if(snapshot.exists()) {
-            console.debug('getById', snapshot.val());
-            return snapshot.val() as ExerciseDTO;
-        }
+        if(snapshot.exists()) return snapshot.val() as ExerciseDTO;
         return {} as ExerciseDTO;
     }
     

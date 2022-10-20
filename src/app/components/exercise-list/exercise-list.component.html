@@ -9,9 +9,11 @@
     </div>
 </nz-card>
 
+<app-add-exercise [isDrawerOpen]="isDrawerOpen" [closeDrawer]="closeDrawer" [userId]="userId" (onAdd)="addExercise($event)"></app-add-exercise>
+
 <ng-template #extraTemplate>
     <nz-button-group>
-        <app-icon-button label="Nuovo esercizio" icon="plus" theme="outline" (click)="addExercise()"></app-icon-button>
+        <app-icon-button label="Nuovo esercizio" icon="plus" theme="outline" (click)="openDrawer()"></app-icon-button>
         <app-icon-button label="Segna tutti come già fatti" icon="check-circle" theme="outline" (click)="markAllAsDone()"></app-icon-button>
     </nz-button-group>
 </ng-template>

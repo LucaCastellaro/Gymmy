@@ -21,7 +21,6 @@ import { AuthComponent } from './pages/auth/auth.component';
 import { RoutesConstants } from './shared/constants/routes.constants';
 import { AuthGuard } from './shared/guards/auth.guard';
 import { DashboardComponent } from './pages/dashboard/dashboard.component';
-import { AddExerciseComponent } from './pages/add-exercise/add-exercise.component';
 import { getDatabase, provideDatabase } from '@angular/fire/database';
 import { ExerciseDetailComponent } from './pages/exercise-detail/exercise-detail.component';
 
@@ -35,11 +34,6 @@ const routes: Routes = [
     component: DashboardComponent,
     path: RoutesConstants.Dashboard,
     canActivate: [AuthGuard]
-  },
-  {
-      component: AddExerciseComponent,
-      path: RoutesConstants.AddExercise,
-      canActivate: [AuthGuard]
   },
   {
       component: ExerciseDetailComponent,

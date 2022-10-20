@@ -13,6 +13,7 @@ import { NzTableModule } from 'ng-zorro-antd/table';
 import { NzCheckboxModule } from 'ng-zorro-antd/checkbox';
 import { NzDrawerModule } from 'ng-zorro-antd/drawer';
 import { NzFormModule } from 'ng-zorro-antd/form';
+import { NzSelectModule } from 'ng-zorro-antd/select';
 
 const ngZorroModules = [
     NzButtonModule,
@@ -27,7 +28,8 @@ const ngZorroModules = [
     NzTableModule,
     NzCheckboxModule,
     NzDrawerModule,
-    NzFormModule
+    NzFormModule,
+    NzSelectModule
   ];
 
 @NgModule({
