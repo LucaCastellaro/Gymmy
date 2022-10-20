@@ -2,7 +2,7 @@
     <div class="flex justify-evenly">
         <div class="mt-5 xl:w-1/2 lg:w-2/3 w-3/4">
             <nz-card class="hover:shadow-lg w-full" [nzTitle]="exercise!.title"  [nzExtra]="goToHome">
-                <nz-table #basicTable [nzData]="exercise!.series">
+                <nz-table #basicTable nzBordered [nzData]="exercise!.series" [nzShowPagination]="false" [nzFooter]="footer">
                     <thead>
                       <tr>
                         <th>Ripetizioni</th>
@@ -17,7 +17,7 @@
                         <td>{{data.reps}}</td>
                         <td>{{data.weight}}</td>
                         <td>{{data.pause}}</td>
-                        <td>{{calculateTotalWeight(data)}}</td>
+                        <td>{{calculateSeriesTotalWeight(data)}}</td>
                         <td><label nz-checkbox></label></td>
                       </tr>
                     </tbody>
@@ -38,4 +38,8 @@
         <app-icon-button label="Aggiungi serie" icon="plus" theme="outline" (click)="openDrawer()"></app-icon-button>
         <app-icon-button label="Torna alla home" icon="home" theme="outline" (click)="goToDashboard()"></app-icon-button>
     </nz-button-group>
+</ng-template>
+
+<ng-template #footer>
+  Peso totale esercizio: {{calculateExerciseTotalWeight()}}
 </ng-template>

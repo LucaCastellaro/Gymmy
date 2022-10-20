@@ -53,7 +53,13 @@ export class ExerciseDetailComponent implements OnInit {
     this.exercise.series = value;
   }
 
-  public calculateTotalWeight(series: SeriesDTO): number {
+  public calculateSeriesTotalWeight(series: SeriesDTO): number {
     return series.reps * series.weight;
+  }
+
+  public calculateExerciseTotalWeight(): number {
+    return this.exercise.series
+      .map(item => item.reps * item.weight)
+      .reduce((acc, curr) => acc += curr);
   }
 }
