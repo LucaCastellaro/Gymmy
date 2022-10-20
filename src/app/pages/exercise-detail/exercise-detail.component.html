@@ -13,7 +13,7 @@
   </div>
 
     <div class="lg:flex justify-evenly" *ngIf="exercise!.series && exercise!.series.length > 0;else noData">
-      <nz-card *ngFor="let item of exercise!.series">
+      <nz-card *ngFor="let item of exercise!.series; let i = index" [nzTitle]="getSeriesTitle(i)">
         <app-exercise-numbers title="Ripetizioni" [value]="item.reps"></app-exercise-numbers>
         <app-exercise-numbers title="Carico" [value]="item.weight"></app-exercise-numbers>
         <app-exercise-numbers title="Pausa" [value]="item.pause"></app-exercise-numbers>

@@ -62,4 +62,8 @@ export class ExerciseDetailComponent implements OnInit {
       .map(item => item.reps * item.weight)
       .reduce((acc, curr) => acc += curr);
   }
+
+  public getSeriesTitle(index: number): string {
+    return `Serie ${index + 1}`;
+  }
 }
