@@ -1,29 +1,31 @@
 <div *ngIf="!isLoading;else loader">
-    <div class="flex justify-evenly">
-        <div class="mt-5 xl:w-1/2 lg:w-2/3 w-3/4">
-            <nz-card class="hover:shadow-lg w-full" [nzTitle]="exercise!.title"  [nzExtra]="goToHome">
-                <nz-table #basicTable nzBordered [nzData]="exercise!.series" [nzShowPagination]="false" [nzFooter]="footer">
-                    <thead>
-                      <tr>
-                        <th>Ripetizioni</th>
-                        <th>Peso</th>
-                        <th>Pausa</th>
-                        <th>Peso totale</th>
-                        <th>Fatto</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr *ngFor="let data of basicTable.data">
-                        <td>{{data.reps}}</td>
-                        <td>{{data.weight}}</td>
-                        <td>{{data.pause}}</td>
-                        <td>{{calculateSeriesTotalWeight(data)}}</td>
-                        <td><label nz-checkbox></label></td>
-                      </tr>
-                    </tbody>
-                  </nz-table>
-            </nz-card>
+  <div class="mt-4 mx-4 flex justify-between align-middle">
+    <div>
+      <h1 nz-typography class="uppercase mb-0 overflow-ellipsis">
+        {{exercise!.title}}
+      </h1>
+    </div>
+    
+    <nz-button-group>
+      <app-icon-button class="h-12 w-12" label="Aggiungi serie" icon="plus" theme="outline" (click)="openDrawer()"></app-icon-button>
+      <app-icon-button class="h-12 w-12" label="Torna alla home" icon="home" theme="outline" (click)="goToDashboard()"></app-icon-button>
+    </nz-button-group>
+  </div>
+
+    <div class="lg:flex justify-evenly">
+      <nz-card class="hover:shadow-lg rounded-md w-full text-lg mb-4 lg:mx-4" *ngFor="let item of exercise!.series">
+        <app-exercise-numbers title="Ripetizioni" [value]="item.reps"></app-exercise-numbers>
+        <app-exercise-numbers title="Carico" [value]="item.weight"></app-exercise-numbers>
+        <app-exercise-numbers title="Pausa" [value]="item.pause"></app-exercise-numbers>
+        <app-exercise-numbers title="Peso totale" [value]="calculateSeriesTotalWeight(item)"></app-exercise-numbers>
+        
+        <div class="flex justify-between">
+          <span>Fatto</span>
+          <span>
+            <label nz-checkbox></label>
+          </span>
         </div>
+      </nz-card>
     </div>
 
     <app-add-series [isDrawerOpen]="isDrawerOpen" [closeDrawer]="closeDrawer" [userId]="exercise.userId" [exerciseId]="exercise.id" (onAdd)="addSeries($event)"></app-add-series>
