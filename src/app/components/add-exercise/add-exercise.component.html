@@ -57,8 +57,8 @@
 </nz-drawer>
 
 <ng-template #footerTpl>
-    <div class="flex justify-end">
-        <button nz-button style="margin-right: 8px;" (click)="closeDrawer()">Cancel</button>
+    <div class="flex justify-between">
+        <button nz-button class="mr-4 uppercase" (click)="closeDrawer()">Annulla</button>
         <app-confirm-button (click)="addExercise()" label="conferma" [isDisabled]="!form.valid || isLoading" [showLoader]="isLoading"></app-confirm-button>
     </div>
 </ng-template>

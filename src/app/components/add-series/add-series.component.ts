@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { SeriesDTO } from 'src/app/shared/models/DTO/SeriesDTO';
 import { FirebaseExerciseService } from 'src/app/shared/services/firebase-exercise.service';
@@ -12,8 +12,10 @@ export class AddSeriesComponent {
   @Input() closeDrawer!: () => void;
   @Input() userId!: string;
   @Input() exerciseId!: string;
+  @Output() onAdd: EventEmitter<SeriesDTO[]> = new EventEmitter<SeriesDTO[]>();
 
   public seriesForm!: FormGroup;
+  public isLoading: boolean = false;
 
   constructor(
     private readonly formBuilder: FormBuilder,
@@ -26,12 +28,20 @@ export class AddSeriesComponent {
     });
   }
 
-  public addSeries(): void {
-    this.exerciseService.addSeries(this.userId, this.exerciseId, {
+  public async addSeries(): Promise<void> {
+    this.isLoading = true;
+
+    const newSeries: SeriesDTO = {
       pause: this.seriesForm.value['pause'],
       reps: this.seriesForm.value['reps'],
       weight: this.seriesForm.value['weight'],
-    } as SeriesDTO);
+    };
+
+    const series = await this.exerciseService.addSeries(this.userId, this.exerciseId, newSeries);
+
+    this.onAdd.emit(series);
+
+    this.isLoading = false;
 
     this.closeDrawer();
   }

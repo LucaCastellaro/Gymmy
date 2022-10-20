@@ -70,7 +70,7 @@ export class FirebaseExerciseService {
         return today == exercise.done;
     }
 
-    public async addSeries(userId: string, exerciseId: string, series: SeriesDTO): Promise<ExerciseDTO> {
+    public async addSeries(userId: string, exerciseId: string, series: SeriesDTO): Promise<SeriesDTO[]> {
         const exercise = await this.getById(userId, exerciseId);
         
         if(!exercise.series) exercise.series = [];
@@ -79,6 +79,6 @@ export class FirebaseExerciseService {
 
         await update(ref(this.db, `exercises/${userId}/${exerciseId}`), exercise);
 
-        return exercise
+        return exercise.series;
     }
 }

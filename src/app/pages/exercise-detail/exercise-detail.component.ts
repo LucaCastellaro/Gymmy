@@ -6,6 +6,7 @@ import { FirebaseExerciseService } from 'src/app/shared/services/firebase-exerci
 import { LocalStorageService } from 'src/app/shared/services/localStorage.service';
 import { User } from '@angular/fire/auth';
 import { RoutesConstants } from 'src/app/shared/constants/routes.constants';
+import { SeriesDTO } from 'src/app/shared/models/DTO/SeriesDTO';
 
 @Component({
   selector: 'app-exercise-detail',
@@ -46,5 +47,9 @@ export class ExerciseDetailComponent implements OnInit {
 
   public closeDrawer(): void {
     this.isDrawerOpen = false;
+  }
+
+  public addSeries(value: SeriesDTO[]): void {
+    this.exercise.series = value;
   }
 }

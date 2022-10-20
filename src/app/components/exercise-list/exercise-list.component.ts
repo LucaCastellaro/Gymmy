@@ -14,12 +14,9 @@ export class ExerciseListComponent {
     public isDrawerOpen: boolean = false;
     public userId!: string;
 
-    public eventEmitter!: EventEmitter<ExerciseDTO>;
-
     constructor(
         private readonly exerciseService: FirebaseExerciseService
-    ) {
-     }
+    ) { }
 
     public openDrawer(): void {
         this.isDrawerOpen = true;
@@ -37,6 +34,5 @@ export class ExerciseListComponent {
 
     public closeDrawer(): void {
         this.isDrawerOpen = false;
-        this.eventEmitter.unsubscribe();
     }
 }
