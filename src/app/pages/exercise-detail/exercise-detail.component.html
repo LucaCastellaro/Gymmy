@@ -28,7 +28,7 @@
       </nz-card>
     </div>
 
-    <app-add-series [isDrawerOpen]="isDrawerOpen" [closeDrawer]="closeDrawer" [userId]="exercise.userId" [exerciseId]="exercise.id" (onAdd)="addSeries($event)"></app-add-series>
+    <app-add-series [isDrawerOpen]="isDrawerOpen" (onClose)="closeDrawer()" [userId]="exercise.userId" [exerciseId]="exercise.id" (onAdd)="addSeries($event)"></app-add-series>
 </div>
 
 <ng-template #loader>

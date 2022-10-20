@@ -13,9 +13,9 @@ import { LocalStorageService } from 'src/app/shared/services/localStorage.servic
 })
 export class AddExerciseComponent {
   @Input() isDrawerOpen!: boolean;
-  @Input() closeDrawer!: () => void;
   @Input() userId!: string;
   @Output() onAdd: EventEmitter<ExerciseDTO> = new EventEmitter<ExerciseDTO>();
+  @Output() onClose: EventEmitter<void> = new EventEmitter<void>();
 
   public form!: FormGroup;
   public isLoading: boolean = false;
@@ -60,6 +60,10 @@ export class AddExerciseComponent {
       this.isLoading = false;
 
       this.closeDrawer();
+  }
+
+  public closeDrawer(): void {
+    this.onClose.emit();
   }
 
 }

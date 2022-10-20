@@ -9,10 +9,10 @@ import { FirebaseExerciseService } from 'src/app/shared/services/firebase-exerci
 })
 export class AddSeriesComponent {
   @Input() isDrawerOpen!: boolean;
-  @Input() closeDrawer!: () => void;
   @Input() userId!: string;
   @Input() exerciseId!: string;
   @Output() onAdd: EventEmitter<SeriesDTO[]> = new EventEmitter<SeriesDTO[]>();
+  @Output() onClose: EventEmitter<void> = new EventEmitter<void>();
 
   public seriesForm!: FormGroup;
   public isLoading: boolean = false;
@@ -44,6 +44,10 @@ export class AddSeriesComponent {
     this.isLoading = false;
 
     this.closeDrawer();
+  }
+
+  public closeDrawer(): void {
+    this.onClose.emit();
   }
 
 }

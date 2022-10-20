@@ -37,11 +37,11 @@ export class ExerciseDetailComponent implements OnInit {
     });
   }
 
-  public goToDashboard(){
+  public goToDashboard(): void {
       this.router.navigate([RoutesConstants.Dashboard])
   }
 
-  public openDrawer(){
+  public openDrawer(): void {
     this.isDrawerOpen = true;
   }
 
