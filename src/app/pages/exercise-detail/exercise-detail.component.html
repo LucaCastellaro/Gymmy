@@ -13,7 +13,7 @@
   </div>
 
     <div class="lg:flex justify-evenly">
-      <nz-card class="hover:shadow-lg rounded-md w-full text-lg mb-4 lg:mx-4" *ngFor="let item of exercise!.series">
+      <nz-card *ngFor="let item of exercise!.series">
         <app-exercise-numbers title="Ripetizioni" [value]="item.reps"></app-exercise-numbers>
         <app-exercise-numbers title="Carico" [value]="item.weight"></app-exercise-numbers>
         <app-exercise-numbers title="Pausa" [value]="item.pause"></app-exercise-numbers>
