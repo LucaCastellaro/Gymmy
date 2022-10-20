@@ -12,7 +12,7 @@
     </nz-button-group>
   </div>
 
-    <div class="lg:flex justify-evenly">
+    <div class="lg:flex justify-evenly" *ngIf="exercise!.series && exercise!.series.length > 0;else noData">
       <nz-card *ngFor="let item of exercise!.series">
         <app-exercise-numbers title="Ripetizioni" [value]="item.reps"></app-exercise-numbers>
         <app-exercise-numbers title="Carico" [value]="item.weight"></app-exercise-numbers>
@@ -44,4 +44,8 @@
 
 <ng-template #footer>
   Peso totale esercizio: {{calculateExerciseTotalWeight()}}
+</ng-template>
+
+<ng-template #noData>
+  <nz-empty nzNotFoundImage="simple"></nz-empty>
 </ng-template>
