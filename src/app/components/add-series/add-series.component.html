@@ -1,0 +1,48 @@
+<nz-drawer
+    [nzBodyStyle]="{ overflow: 'auto' }"
+    [nzMaskClosable]="false"
+    [nzWidth]="720"
+    [nzVisible]="isDrawerOpen"
+    nzTitle="Aggiungi serie"
+    [nzFooter]="footerTpl"
+    (nzOnClose)="closeDrawer()"
+>
+    <form nz-form *nzDrawerContent [formGroup]="seriesForm" (ngSubmit)="addSeries()">
+
+        <!-- Ripetizioni -->
+        <div>
+            <label for="reps" class="mt-5 block text-sm font-medium text-gray-700">Ripetizioni</label>
+            <input nz-input formControlName="reps" id="reps" type="number" class="py-1 px-2 mt-1 border-2 outline-none block w-full rounded" />
+            <div *ngIf="seriesForm.controls['reps'].touched && seriesForm.controls['reps'].errors" class="text-red-500">
+                <span *ngIf="seriesForm.controls['reps'].hasError('required')">Questo campo è obbligatorio.</span>
+                <span *ngIf="seriesForm.controls['reps'].hasError('min')">Il valore minimo è 1.</span>
+            </div>
+        </div>
+
+        <!-- Peso -->
+        <div>
+            <label for="weight" class="mt-5 block text-sm font-medium text-gray-700">Peso</label>
+            <input nz-input formControlName="weight" id="weight" type="number" class="py-1 px-2 mt-1 border-2 outline-none block w-full rounded" />
+            <div *ngIf="seriesForm.controls['weight'].touched && seriesForm.controls['weight'].errors" class="text-red-500">
+                <span *ngIf="seriesForm.controls['weight'].hasError('required')">Questo campo è obbligatorio.</span>
+                <span *ngIf="seriesForm.controls['weight'].hasError('min')">Il valore minimo è 1.</span>
+            </div>
+        </div>
+
+        <!-- Pausa -->
+        <div>
+            <label for="pause" class="mt-5 block text-sm font-medium text-gray-700">Pausa (secondi)</label>
+            <input nz-input formControlName="pause" id="pause" type="number" class="py-1 px-2 mt-1 border-2 outline-none block w-full rounded" />
+            <div *ngIf="seriesForm.controls['pause'].touched && seriesForm.controls['pause'].errors" class="text-red-500">
+                <span *ngIf="seriesForm.controls['pause'].hasError('required')">Questo campo è obbligatorio.</span>
+            </div>
+        </div>
+    </form>
+</nz-drawer>
+
+<ng-template #footerTpl>
+    <div style="float: right">
+        <button nz-button style="margin-right: 8px;" (click)="closeDrawer()">Cancel</button>
+        <button nz-button nzType="primary" (click)="addSeries()">Submit</button>
+    </div>
+</ng-template>

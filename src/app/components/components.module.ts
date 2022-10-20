@@ -11,6 +11,7 @@ import { RegistrationComponent } from './registration/registration.component.';
 import { IconButtonComponent } from './icon-button/icon-button.component';
 import { ExerciseListComponent } from './exercise-list/exercise-list.component';
 import { ExerciseItemListComponent } from './exercise-item-list/exercise-item-list.component';
+import { AddSeriesComponent } from './add-series/add-series.component';
 
 const components = [
   InputComponent,
@@ -20,7 +21,8 @@ const components = [
   ConfirmMessageComponent,
   IconButtonComponent,
   ExerciseListComponent,
-  ExerciseItemListComponent
+  ExerciseItemListComponent,
+  AddSeriesComponent
 ];
 
 @NgModule({

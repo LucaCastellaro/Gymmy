@@ -7,3 +7,7 @@ export enum Days {
     Sabato = 'Sabato',
     Domenica = 'Domenica'
 }
+
+export const Today = () => {
+    return Object.keys(Days)[new Date().getDay() - 1];
+}

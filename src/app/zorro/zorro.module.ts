@@ -9,6 +9,10 @@ import { NzSpinModule } from 'ng-zorro-antd/spin';
 import { NzToolTipModule } from 'ng-zorro-antd/tooltip';
 import { NzListModule } from 'ng-zorro-antd/list';
 import { NzEmptyModule } from 'ng-zorro-antd/empty';
+import { NzTableModule } from 'ng-zorro-antd/table';
+import { NzCheckboxModule } from 'ng-zorro-antd/checkbox';
+import { NzDrawerModule } from 'ng-zorro-antd/drawer';
+import { NzFormModule } from 'ng-zorro-antd/form';
 
 const ngZorroModules = [
     NzButtonModule,
@@ -19,7 +23,11 @@ const ngZorroModules = [
     NzToolTipModule,
     NzListModule,
     NzSpinModule,
-    NzEmptyModule
+    NzEmptyModule,
+    NzTableModule,
+    NzCheckboxModule,
+    NzDrawerModule,
+    NzFormModule
   ];
 
 @NgModule({

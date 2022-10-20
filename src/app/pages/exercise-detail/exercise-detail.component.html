@@ -1,7 +1,39 @@
 <div *ngIf="!isLoading;else loader">
-    {{exercise?.title}}
+    <div class="flex justify-evenly">
+        <div class="mt-5 xl:w-1/2 lg:w-2/3 w-3/4">
+            <nz-card class="hover:shadow-lg w-full" [nzTitle]="exercise!.title"  [nzExtra]="goToHome">
+                <nz-table #basicTable [nzData]="exercise!.series">
+                    <thead>
+                      <tr>
+                        <th>Ripetizioni</th>
+                        <th>Peso</th>
+                        <th>Pausa</th>
+                        <th>Fatto</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr *ngFor="let data of basicTable.data">
+                        <td>{{data.reps}}</td>
+                        <td>{{data.weight}}</td>
+                        <td>{{data.pause}}</td>
+                        <td><label nz-checkbox></label></td>
+                      </tr>
+                    </tbody>
+                  </nz-table>
+            </nz-card>
+        </div>
+    </div>
+
+    <app-add-series [isDrawerOpen]="isDrawerOpen" [closeDrawer]="closeDrawer" [userId]="exercise.userId" [exerciseId]="exercise.id"></app-add-series>
 </div>
 
 <ng-template #loader>
     <nz-spin nzSimple></nz-spin>
+</ng-template>
+
+<ng-template #goToHome>
+    <nz-button-group>
+        <app-icon-button label="Aggiungi serie" icon="plus" theme="outline" (click)="openDrawer()"></app-icon-button>
+        <app-icon-button label="Torna alla home" icon="home" theme="outline" (click)="goToDashboard()"></app-icon-button>
+    </nz-button-group>
 </ng-template>

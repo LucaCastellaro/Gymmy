@@ -2,6 +2,8 @@
     <div class="mt-5 xl:w-1/2 lg:w-2/3 w-3/4">
         <nz-card class="hover:shadow-lg w-full" nzTitle="Aggiungi esercizio" [nzExtra]="extraTemplate">
             <form [formGroup]="form" (ngSubmit)="add()">
+
+                <!-- Nome esercizio -->
                 <div class="mb-5">
                     <label for="name" class="block text-sm font-medium text-gray-700">Nome esercizio</label>
                     <input nz-input formControlName="name" id="name" type="text" maxlength="255" class="py-1 px-2 mt-1 border-2 outline-none block w-full rounded" />
@@ -10,42 +12,8 @@
                         <span *ngIf="form.controls['link'].hasError('maxLength')">La lunghezza massima è 255.</span>
                     </div>
                 </div>
-                <div class="mb-5">
-                    <label for="series" class="block text-sm font-medium text-gray-700">Numero serie</label>
-                    <input nz-input formControlName="series" id="series" type="number" min="0" max="255" class="py-1 px-2 mt-1 border-2 outline-none block w-full rounded" />
-                    <div *ngIf="form.controls['series'].touched && form.controls['series'].errors" class="text-red-500">
-                        <span *ngIf="form.controls['series'].hasError('required')">Questo campo è obbligatorio.</span>
-                        <span *ngIf="form.controls['series'].hasError('min')">Il valore minimo è 0.</span>
-                        <span *ngIf="form.controls['series'].hasError('max')">Il valore massimo è 255.</span>
-                    </div>
-                </div>
-                <div class="mb-5">
-                    <label for="reps" class="block text-sm font-medium text-gray-700">Numero ripetizioni</label>
-                    <input nz-input formControlName="reps" id="reps" type="number" min="0" max="255" class="py-1 px-2 mt-1 border-2 outline-none block w-full rounded" />
-                    <div *ngIf="form.controls['reps'].touched && form.controls['reps'].errors" class="text-red-500">
-                        <span *ngIf="form.controls['reps'].hasError('required')">Questo campo è obbligatorio.</span>
-                        <span *ngIf="form.controls['reps'].hasError('min')">Il valore minimo è 0.</span>
-                        <span *ngIf="form.controls['reps'].hasError('max')">Il valore massimo è 255.</span>
-                    </div>
-                </div>
-                <div class="mb-5">
-                    <label for="weight" class="block text-sm font-medium text-gray-700">Peso (Kg)</label>
-                    <input nz-input formControlName="weight" id="weight" type="number" min="0" max="255" class="py-1 px-2 mt-1 border-2 outline-none block w-full rounded" />
-                    <div *ngIf="form.controls['weight'].touched && form.controls['weight'].errors" class="text-red-500">
-                        <span *ngIf="form.controls['weight'].hasError('required')">Questo campo è obbligatorio.</span>
-                        <span *ngIf="form.controls['weight'].hasError('min')">Il valore minimo è 0.</span>
-                        <span *ngIf="form.controls['weight'].hasError('max')">Il valore massimo è 255.</span>
-                    </div>
-                </div>
-                <div class="mb-5">
-                    <label for="days" class="block text-sm font-medium text-gray-700">Pausa (secondi)</label>
-                    <input nz-input formControlName="pauseSeconds" id="pauseSeconds" type="number" min="0" max="255" class="py-1 px-2 mt-1 border-2 outline-none block w-full rounded" />
-                    <div *ngIf="form.controls['pauseSeconds'].touched && form.controls['pauseSeconds'].errors" class="text-red-500">
-                        <span *ngIf="form.controls['pauseSeconds'].hasError('required')">Questo campo è obbligatorio.</span>
-                        <span *ngIf="form.controls['pauseSeconds'].hasError('min')">Il valore minimo è 0.</span>
-                        <span *ngIf="form.controls['pauseSeconds'].hasError('max')">Il valore massimo è 255.</span>
-                    </div>
-                </div>
+
+                <!-- Giorni -->
                 <div class="mb-5">
                     <label for="days" class="block text-sm font-medium text-gray-700">Giorni</label>
                     <nz-select formControlName="days" id="days" 
@@ -61,6 +29,8 @@
                     </div>
                   <ng-template #tagPlaceHolder let-selectedList>e altri {{ selectedList.length }}</ng-template>
                 </div>
+
+                <!-- Descrizione -->
                 <div class="mb-5">
                     <label for="description" class="block text-sm font-medium text-gray-700">Descrizione</label>
                     <input nz-input formControlName="description" id="description" maxlength="255" type="text" class="py-1 px-2 mt-1 border-2 outline-none block w-full rounded" />
@@ -68,6 +38,8 @@
                         <span *ngIf="form.controls['description'].hasError('maxLength')">La lunghezza massima è 255.</span>
                     </div>
                 </div>
+
+                <!-- Link -->
                 <div class="mb-5">
                     <label for="link" class="block text-sm font-medium text-gray-700">Link</label>
                     <input nz-input formControlName="link" id="link" type="text" maxlength="255" class="py-1 px-2 mt-1 border-2 outline-none block w-full rounded" />
@@ -75,7 +47,7 @@
                         <span *ngIf="form.controls['link'].hasError('maxLength')">La lunghezza massima è 255.</span>
                     </div>
                 </div>
-                
+
                 <app-confirm-button label="conferma" [isDisabled]="!form.valid || isLoading" [showLoader]="isLoading"></app-confirm-button>
             </form>
         </nz-card>
