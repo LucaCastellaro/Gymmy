@@ -14,6 +14,7 @@ import { ExerciseItemListComponent } from './exercise-item-list/exercise-item-li
 import { AddSeriesComponent } from './add-series/add-series.component';
 import { AddExerciseComponent } from './add-exercise/add-exercise.component';
 import { ExerciseNumbersComponent } from './exercise-numbers/exercise-numbers.component';
+import { CancelButtonComponent } from './cancel-button/cancel-button.component';
 
 const components = [
   InputComponent,
@@ -26,7 +27,8 @@ const components = [
   ExerciseItemListComponent,
   AddSeriesComponent,
   AddExerciseComponent,
-  ExerciseNumbersComponent
+  ExerciseNumbersComponent,
+  CancelButtonComponent
 ];
 
 @NgModule({
