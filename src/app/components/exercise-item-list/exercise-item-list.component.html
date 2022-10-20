@@ -1,4 +1,46 @@
-<nz-list-item>
+<div class="flex justify-between text-lg items-center">
+    <span class="uppercase">{{exercise.title}}</span>
+
+    <nz-button-group>
+        <app-icon-button 
+            class="w-12 h-12"
+            label="Elimina" 
+            icon="delete" 
+            theme="outline"
+            nz-popconfirm
+            nzPopconfirmTitle="Sei sicuro di voler elimiare questo esercizio?"
+            nzPopconfirmPlacement="left"
+            (nzOnConfirm)="delete()"
+        ></app-icon-button>
+
+        <app-icon-button 
+            class="w-12 h-12"
+            (click)="goToDetails()" 
+            label="Dettagli" 
+            icon="control" 
+            theme="outline">
+        </app-icon-button>
+
+        <app-icon-button
+            class="w-12 h-12"
+            (click)="markAsDone(true)"
+            *ngIf="!isDone"
+            label="Segna come già fatto"
+            icon="check-circle"
+            theme="outline">
+        </app-icon-button>
+        <app-icon-button 
+            (click)="markAsDone(false)"
+            *ngIf="isDone"
+            label="Segna come non fatto"
+            icon="check-circle"
+            theme="fill">
+        </app-icon-button>
+    </nz-button-group>
+</div>
+
+
+<!-- <nz-list-item>
     <ul nz-list-item-actions>
         <nz-list-item-action>
             <nz-button-group>
@@ -37,4 +79,4 @@
         </nz-list-item-action>
     </ul>
     <span>{{exercise.title}}</span>
-</nz-list-item>
+</nz-list-item> -->
