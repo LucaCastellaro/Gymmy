@@ -35,4 +35,8 @@ export class ExerciseListComponent {
     public closeDrawer(): void {
         this.isDrawerOpen = false;
     }
+
+    public deleteExercise(value: ExerciseDTO): void {
+        this.exercises = this.exercises.filter(item => item.id != value.id);
+    }
 }

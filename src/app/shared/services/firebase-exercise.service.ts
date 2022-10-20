@@ -11,6 +11,12 @@ export class FirebaseExerciseService {
     constructor(private readonly db: Database) {
     }
 
+    public async deleteExercise(model: ExerciseDTO): Promise<ExerciseDTO> {
+        await remove(ref(this.db,`exercises/${model.userId}/${model.id}`));
+
+        return model;
+    }
+
     public async addExercise(model: ExerciseDTO): Promise<ExerciseDTO> {
         model.id = Guid.create().toString();
 

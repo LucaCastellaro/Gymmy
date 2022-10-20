@@ -14,6 +14,7 @@ import { NzCheckboxModule } from 'ng-zorro-antd/checkbox';
 import { NzDrawerModule } from 'ng-zorro-antd/drawer';
 import { NzFormModule } from 'ng-zorro-antd/form';
 import { NzSelectModule } from 'ng-zorro-antd/select';
+import { NzPopconfirmModule } from 'ng-zorro-antd/popconfirm';
 
 const ngZorroModules = [
     NzButtonModule,
@@ -29,7 +30,8 @@ const ngZorroModules = [
     NzCheckboxModule,
     NzDrawerModule,
     NzFormModule,
-    NzSelectModule
+    NzSelectModule,
+    NzPopconfirmModule
   ];
 
 @NgModule({

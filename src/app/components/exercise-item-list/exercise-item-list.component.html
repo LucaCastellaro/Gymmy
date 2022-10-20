@@ -2,10 +2,37 @@
     <ul nz-list-item-actions>
         <nz-list-item-action>
             <nz-button-group>
-                <app-icon-button (click)="goToDetails()" label="Dettagli" icon="control" theme="outline"></app-icon-button>
+                <app-icon-button 
+                    label="Elimina" 
+                    icon="delete" 
+                    theme="outline"
+                    nz-popconfirm
+                    nzPopconfirmTitle="Sei sicuro di voler elimiare questo esercizio?"
+                    nzPopconfirmPlacement="left"
+                    (nzOnConfirm)="delete()"
+                ></app-icon-button>
 
-                <app-icon-button (click)="markAsDone(true)" *ngIf="!isDone" label="Segna come già fatto" icon="check-circle" theme="outline"></app-icon-button>
-                <app-icon-button (click)="markAsDone(false)" *ngIf="isDone" label="Segna come non fatto" icon="check-circle" theme="fill"></app-icon-button>
+                <app-icon-button 
+                    (click)="goToDetails()" 
+                    label="Dettagli" 
+                    icon="control" 
+                    theme="outline">
+                </app-icon-button>
+
+                <app-icon-button
+                    (click)="markAsDone(true)"
+                    *ngIf="!isDone"
+                    label="Segna come già fatto"
+                    icon="check-circle"
+                    theme="outline">
+                </app-icon-button>
+                <app-icon-button 
+                    (click)="markAsDone(false)"
+                    *ngIf="isDone"
+                    label="Segna come non fatto"
+                    icon="check-circle"
+                    theme="fill">
+                </app-icon-button>
             </nz-button-group>
         </nz-list-item-action>
     </ul>

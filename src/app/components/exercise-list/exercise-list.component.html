@@ -4,7 +4,11 @@
     </div>
     <div *ngIf="!isLoading">
         <nz-list nzBordered *ngIf="exercises.length > 0;else noData">
-            <app-exercise-item-list *ngFor="let item of exercises" [exercise]="item"></app-exercise-item-list>
+            <app-exercise-item-list 
+                *ngFor="let item of exercises" 
+                [exercise]="item"
+                (onDelete)="deleteExercise($event)">
+            </app-exercise-item-list>
         </nz-list>
     </div>
 </nz-card>
