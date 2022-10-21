@@ -14,20 +14,15 @@
 
   <app-series-list [exercise]="exercise!"></app-series-list>
 
-  <app-add-series [isDrawerOpen]="isDrawerOpen" (onClose)="closeDrawer()" [userId]="exercise.userId" [exerciseId]="exercise.id" (onAdd)="addSeries($event)"></app-add-series>
+  <app-add-series 
+    [isDrawerOpen]="isDrawerOpen" 
+    (onClose)="closeDrawer()" 
+    [userId]="exercise.userId" 
+    [exerciseId]="exercise.id" 
+    (onAdd)="addSeries($event)">
+  </app-add-series>
 </div>
 
 <ng-template #loader>
     <nz-spin nzSimple></nz-spin>
-</ng-template>
-
-<ng-template #goToHome>
-    <nz-button-group>
-        <app-icon-button label="Aggiungi serie" icon="plus" theme="outline" (click)="openDrawer()"></app-icon-button>
-        <app-icon-button label="Torna alla home" icon="home" theme="outline" (click)="goToDashboard()"></app-icon-button>
-    </nz-button-group>
-</ng-template>
-
-<ng-template #footer>
-  Peso totale esercizio: {{calculateExerciseTotalWeight()}}
 </ng-template>

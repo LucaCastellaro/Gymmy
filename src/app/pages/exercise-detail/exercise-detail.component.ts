@@ -52,18 +52,4 @@ export class ExerciseDetailComponent implements OnInit {
   public addSeries(value: SeriesDTO[]): void {
     this.exercise.series = value;
   }
-
-  public calculateSeriesTotalWeight(series: SeriesDTO): number {
-    return series.reps * series.weight;
-  }
-
-  public calculateExerciseTotalWeight(): number {
-    return this.exercise.series
-      .map(item => item.reps * item.weight)
-      .reduce((acc, curr) => acc += curr);
-  }
-
-  public getSeriesTitle(index: number): string {
-    return `Serie ${index + 1}`;
-  }
 }

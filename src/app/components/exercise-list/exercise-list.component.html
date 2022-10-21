@@ -13,12 +13,12 @@
 
 <div *ngIf="!isLoading;else loader">
     <div *ngIf="exercises.length > 0;else noData" class="lg:flex">
-        <app-exercise-item-list 
+        <app-exercise-list-item
             class="w-full mb-4 lg:mx-4 lg:w-1/4" 
             *ngFor="let item of exercises"
             [exercise]="item"
             (onDelete)="deleteExercise($event)">
-        </app-exercise-item-list>
+        </app-exercise-list-item>
     </div>
 </div>
 
@@ -28,13 +28,6 @@
     <div *ngIf="isLoading" class="w-full flex justify-center" >
         <nz-spin nzSimple></nz-spin> 
     </div>
-</ng-template>
-
-<ng-template #extraTemplate>
-    <nz-button-group>
-        <app-icon-button label="Nuovo esercizio" icon="plus" theme="outline" (click)="openDrawer()"></app-icon-button>
-        <app-icon-button label="Segna tutti come già fatti" icon="check-circle" theme="outline" (click)="markAllAsDone()"></app-icon-button>
-    </nz-button-group>
 </ng-template>
 
 <ng-template #noData>

@@ -5,11 +5,11 @@ import { FirebaseExerciseService } from 'src/app/shared/services/firebase-exerci
 import { RoutesConstants } from "../../shared/constants/routes.constants";
 
 @Component({
-    selector: 'app-exercise-item-list',
-    templateUrl: 'exercise-item-list.component.html'
+    selector: 'app-exercise-list-item',
+    templateUrl: 'exercise-list-item.component.html'
 })
 
-export class ExerciseItemListComponent implements OnInit {
+export class ExerciseListItemComponent implements OnInit {
     @Input() exercise!: ExerciseDTO;
     @Output() onDelete: EventEmitter<ExerciseDTO> = new EventEmitter<ExerciseDTO>();
 
