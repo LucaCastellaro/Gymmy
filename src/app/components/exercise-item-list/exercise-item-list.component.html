@@ -3,7 +3,6 @@
 
     <nz-button-group>
         <app-icon-button 
-            class="w-12 h-12"
             label="Elimina" 
             icon="delete" 
             theme="outline"
@@ -14,7 +13,6 @@
         ></app-icon-button>
 
         <app-icon-button
-            class="w-12 h-12"
             (click)="markAsDone(true)"
             *ngIf="!isDone"
             label="Segna come già fatto"
@@ -22,7 +20,6 @@
             theme="outline">
         </app-icon-button>
         <app-icon-button 
-            class="w-12 h-12"
             (click)="markAsDone(false)"
             *ngIf="isDone"
             label="Segna come non fatto"

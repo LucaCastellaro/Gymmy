@@ -1,0 +1,12 @@
+<div class="lg:flex justify-evenly" *ngIf="exercise.series && exercise.series.length > 0;else noData">
+    <app-series-list-item 
+        class="w-full mb-4 lg:mx-4 lg:last:ml-0"
+        *ngFor="let item of exercise.series; let i = index"
+        [series]="item" 
+        [index]="i">
+    </app-series-list-item>
+</div>
+
+<ng-template #noData>
+    <nz-empty nzNotFoundImage="simple"></nz-empty>
+</ng-template>

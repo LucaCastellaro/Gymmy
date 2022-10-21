@@ -1,0 +1,13 @@
+<nz-card [nzTitle]="title">
+    <app-exercise-numbers title="Ripetizioni" [value]="series.reps"></app-exercise-numbers>
+    <app-exercise-numbers title="Carico" [value]="series.weight"></app-exercise-numbers>
+    <app-exercise-numbers title="Pausa" [value]="series.pause"></app-exercise-numbers>
+    <app-exercise-numbers title="Peso totale" [value]="totalWeight"></app-exercise-numbers>
+    
+    <div class="flex justify-between">
+        <span>Fatto</span>
+        <span>
+            <label nz-checkbox></label>
+        </span>
+    </div>
+</nz-card>
