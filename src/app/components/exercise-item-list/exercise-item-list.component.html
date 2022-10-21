@@ -1,30 +1,32 @@
-<div class="flex justify-between text-lg items-center cursor-pointer" (click)="goToDetails()">
-    <span class="uppercase">{{exercise.title}}</span>
+<nz-card>
+    <div class="flex justify-between items-center" >
+        <span class="uppercase font-bold cursor-pointer" (click)="goToDetails()">{{exercise.title}}</span>
 
-    <nz-button-group>
-        <app-icon-button 
-            label="Elimina" 
-            icon="delete" 
-            theme="outline"
-            nz-popconfirm
-            nzPopconfirmTitle="Sei sicuro di voler elimiare questo esercizio?"
-            nzPopconfirmPlacement="left"
-            (nzOnConfirm)="delete()"
-        ></app-icon-button>
+        <nz-button-group>
+            <app-icon-button 
+                label="Elimina" 
+                icon="delete" 
+                theme="outline"
+                nz-popconfirm
+                nzPopconfirmTitle="Sei sicuro di voler elimiare questo esercizio?"
+                nzPopconfirmPlacement="left"
+                (nzOnConfirm)="delete()"
+            ></app-icon-button>
 
-        <app-icon-button
-            (click)="markAsDone(true)"
-            *ngIf="!isDone"
-            label="Segna come già fatto"
-            icon="check-circle"
-            theme="outline">
-        </app-icon-button>
-        <app-icon-button 
-            (click)="markAsDone(false)"
-            *ngIf="isDone"
-            label="Segna come non fatto"
-            icon="check-circle"
-            theme="fill">
-        </app-icon-button>
-    </nz-button-group>
-</div>
+            <app-icon-button
+                (click)="markAsDone(true)"
+                *ngIf="!isDone"
+                label="Segna come già fatto"
+                icon="check-circle"
+                theme="outline">
+            </app-icon-button>
+            <app-icon-button 
+                (click)="markAsDone(false)"
+                *ngIf="isDone"
+                label="Segna come non fatto"
+                icon="check-circle"
+                theme="fill">
+            </app-icon-button>
+        </nz-button-group>
+    </div>
+</nz-card>

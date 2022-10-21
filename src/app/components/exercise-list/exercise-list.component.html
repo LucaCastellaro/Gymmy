@@ -13,15 +13,12 @@
 
 <div *ngIf="!isLoading;else loader">
     <div *ngIf="exercises.length > 0;else noData" class="lg:flex">
-        <nz-card 
+        <app-exercise-item-list 
             class="w-full mb-4 lg:mx-4 lg:w-1/4" 
             *ngFor="let item of exercises"
-        >
-            <app-exercise-item-list 
-                [exercise]="item"
-                (onDelete)="deleteExercise($event)">
-            </app-exercise-item-list>
-        </nz-card>
+            [exercise]="item"
+            (onDelete)="deleteExercise($event)">
+        </app-exercise-item-list>
     </div>
 </div>
 
