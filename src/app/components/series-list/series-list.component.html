@@ -1,14 +1,14 @@
 <div 
     class="lg:flex justify-evenly" 
-    *ngIf="exercise.series && exercise.series.length > 0;else noData"
+    *ngIf="hasSeries;else noData"
 >
-    <app-series-list-item 
-        class="w-full mb-4 lg:mx-4 lg:last:ml-0"
-        *ngFor="let item of exercise.series; let i = index"
-        [series]="item" 
-        [index]="i"
-        (onEdit)="editSeries($event, i)">
-    </app-series-list-item>
+<app-series-list-item 
+    class="w-full mb-4 lg:mx-4 lg:last:ml-0"
+    *ngFor="let key of keys; let i = index"
+    [series]="exercise.series[key]" 
+    [index]="i"
+    (onEdit)="editSeries($event)">
+</app-series-list-item>
 </div>
 
 <ng-template #noData>

@@ -21,6 +21,13 @@
 <ng-template #actions>
     <nz-button-group>
         <app-icon-button 
+            label="Elimina" 
+            icon="delete" 
+            theme="outline" 
+            (click)="delete()">
+        </app-icon-button>
+
+        <app-icon-button 
             label="Modifica" 
             icon="edit" 
             theme="outline" 

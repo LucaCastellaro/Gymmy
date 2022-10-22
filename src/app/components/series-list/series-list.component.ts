@@ -1,7 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { ExerciseDTO } from 'src/app/shared/models/DTO/ExerciseDTO';
 import { SeriesDTO } from 'src/app/shared/models/DTO/SeriesDTO';
-import { FirebaseExerciseService } from 'src/app/shared/services/firebase-exercise.service';
 
 @Component({
   selector: 'app-series-list',
@@ -10,13 +9,18 @@ import { FirebaseExerciseService } from 'src/app/shared/services/firebase-exerci
 export class SeriesListComponent {
   @Input() exercise!: ExerciseDTO;
 
-  constructor(
-    private readonly exerciseService: FirebaseExerciseService
-  ) { }
+  constructor( ) { }
 
-  public async editSeries(value: SeriesDTO, seriesIndex: number): Promise<void> {
-    this.exercise.series[seriesIndex] = value;
+  public async editSeries(value: SeriesDTO): Promise<void> {
+    this.exercise.series[value.id] = value;
+  }
 
-    await this.exerciseService.updateExercise(this.exercise);
+  public get hasSeries(): boolean {
+    return this.exercise.series
+      && Object.keys(this.exercise.series).length > 0;
+  }
+
+  public get keys(): string[] {
+    return Object.keys(this.exercise.series);
   }
 }

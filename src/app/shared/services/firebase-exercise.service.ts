@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { ref, set, get, DataSnapshot, remove, update } from "firebase/database";
-import { ExerciseDTO } from '../models/DTO/ExerciseDTO';
+import { ExerciseDTO, KeyValuePair } from '../models/DTO/ExerciseDTO';
 import { Guid } from 'guid-typescript';
-import { Database } from '@angular/fire/database';
+import { Database, object } from '@angular/fire/database';
 import { Days } from '../models/enums/days.enum';
 import { SeriesDTO } from '../models/DTO/SeriesDTO';
 
@@ -76,16 +76,32 @@ export class FirebaseExerciseService {
         return today == exercise.done;
     }
 
-    public async addSeries(userId: string, exerciseId: string, series: SeriesDTO): Promise<SeriesDTO[]> {
+    public async addSeries(userId: string, exerciseId: string, series: SeriesDTO): Promise<KeyValuePair<SeriesDTO>> {
         const exercise = await this.getById(userId, exerciseId);
         
-        if(!exercise.series) exercise.series = [];
+        if(!exercise.series) exercise.series = {} as KeyValuePair<SeriesDTO>;
 
-        exercise.series.push(series);
+        series.id = Guid.create().toString();
 
-        await update(ref(this.db, `exercises/${userId}/${exerciseId}`), exercise);
+        await update(ref(this.db, `exercises/${userId}/${exerciseId}/series/${series.id}`), series);
 
         return exercise.series;
+    }
+
+    public async deleteSeries(series: SeriesDTO): Promise<KeyValuePair<SeriesDTO>> {
+        const exercise = await this.getById(series.userId, series.exerciseId);
+        
+        if(!exercise.series) return {} as KeyValuePair<SeriesDTO>;
+
+        await remove(ref(this.db, `exercises/${series.userId}/${series.exerciseId}/series/${series.id}`))
+
+        return exercise.series;
+    }
+
+    public async updateSeries(series: SeriesDTO): Promise<SeriesDTO> {
+        await update(ref(this.db, `exercises/${series.userId}/${series.exerciseId}/series/${series.id}`), series)
+
+        return series;
     }
 
     public async updateExercise(exercise: ExerciseDTO): Promise<ExerciseDTO> {

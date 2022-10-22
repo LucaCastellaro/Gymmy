@@ -35,6 +35,8 @@ export class DashboardComponent implements OnInit {
     today = today.charAt(0).toUpperCase() + today.slice(1);
     this.exercises = await this.exerciseService.getDaily(user.uid, Days[today as unknown as Days]);
 
+    console.debug(this.exercises)
+
     this.isLoading = false;
   }
 

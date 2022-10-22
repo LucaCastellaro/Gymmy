@@ -2,7 +2,8 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { User } from '@angular/fire/auth';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { LocalStorageConstants } from 'src/app/shared/constants/localStorage.constants';
-import { ExerciseDTO } from 'src/app/shared/models/DTO/ExerciseDTO';
+import { ExerciseDTO, KeyValuePair } from 'src/app/shared/models/DTO/ExerciseDTO';
+import { SeriesDTO } from 'src/app/shared/models/DTO/SeriesDTO';
 import { Days, Today } from 'src/app/shared/models/enums/days.enum';
 import { FirebaseExerciseService } from 'src/app/shared/services/firebase-exercise.service';
 import { LocalStorageService } from 'src/app/shared/services/localStorage.service';
@@ -50,7 +51,7 @@ export class AddExerciseComponent {
           days: this.form.value['days'],
           descr: this.form.value['descr'] ?? '',
           link: this.form.value['link'] ?? '',
-          series: [],
+          series: {} as KeyValuePair<SeriesDTO>,
           title: this.form.value['name'],
           done: null,
           id: ''

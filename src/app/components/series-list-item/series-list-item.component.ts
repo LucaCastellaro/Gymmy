@@ -1,6 +1,7 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { SeriesDTO } from 'src/app/shared/models/DTO/SeriesDTO';
+import { FirebaseExerciseService } from 'src/app/shared/services/firebase-exercise.service';
 
 @Component({
   selector: 'app-series-list-item',
@@ -11,13 +12,17 @@ export class SeriesListItemComponent {
   public isDrawerOpen: boolean = false;
   public done: boolean = false;
 
+  @Input() userId!: string;
+  @Input() exerciseId!: string;
   @Input() series!: SeriesDTO;
   @Input() index!: number;
 
   @Output() onEdit: EventEmitter<SeriesDTO> = new EventEmitter<SeriesDTO>();
 
   constructor(
-    private readonly message: NzMessageService,  ) { }
+    private readonly message: NzMessageService,
+    private readonly exerciseService: FirebaseExerciseService  
+  ) { }
 
   public get title(): string {
     return `Serie ${this.index + 1}`;
@@ -25,6 +30,10 @@ export class SeriesListItemComponent {
 
   public get totalWeight(): number {
     return this.series.reps * this.series.weight;
+  }
+
+  public async delete(): Promise<void> {
+    const result = this.exerciseService.deleteSeries(this.series);
   }
 
   public openDrawer(): void {

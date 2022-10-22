@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { LocalStorageConstants } from 'src/app/shared/constants/localStorage.constants';
-import { ExerciseDTO } from 'src/app/shared/models/DTO/ExerciseDTO';
+import { ExerciseDTO, KeyValuePair } from 'src/app/shared/models/DTO/ExerciseDTO';
 import { FirebaseExerciseService } from 'src/app/shared/services/firebase-exercise.service';
 import { LocalStorageService } from 'src/app/shared/services/localStorage.service';
 import { User } from '@angular/fire/auth';
@@ -49,7 +49,7 @@ export class ExerciseDetailComponent implements OnInit {
     this.isDrawerOpen = false;
   }
 
-  public addSeries(value: SeriesDTO[]): void {
+  public addSeries(value: KeyValuePair<SeriesDTO>): void {
     this.exercise.series = value;
   }
 }

@@ -1,6 +1,7 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { SeriesDTO } from 'src/app/shared/models/DTO/SeriesDTO';
+import { FirebaseExerciseService } from 'src/app/shared/services/firebase-exercise.service';
 
 @Component({
   selector: 'app-edit-series',
@@ -16,7 +17,8 @@ export class EditSeriesComponent implements OnInit {
   public isLoading: boolean = false;
 
   constructor(
-    private readonly formBuilder: FormBuilder
+    private readonly formBuilder: FormBuilder,
+    private readonly exerciseSerivce: FirebaseExerciseService
   ) {
   }
   ngOnInit(): void {
@@ -30,11 +32,18 @@ export class EditSeriesComponent implements OnInit {
   public edit(): void {
     this.isLoading = true;
 
-    this.onClose.emit({
+    const seriesToUpdate: SeriesDTO = {
       pause: this.form.value['pause'],
       reps: this.form.value['reps'],
       weight: this.form.value['weight'],
-    } as SeriesDTO);
+      exerciseId: this.series.exerciseId,
+      id: this.series.id,
+      userId: this.series.userId
+    };
+
+    this.exerciseSerivce.updateSeries(seriesToUpdate);
+
+    this.onClose.emit(seriesToUpdate);
 
     this.isLoading = false;
   }
