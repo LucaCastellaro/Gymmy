@@ -8,7 +8,7 @@ export class FirebaseSeriesService {
     constructor(private readonly db: Database) {
     }
 
-    public async add(userId: string, exerciseId: string, series: SeriesDTO): Promise<boolean> {
+    public async add(userId: string, exerciseId: number, series: SeriesDTO): Promise<boolean> {
         series.id = Guid.create().toString();
 
         await update(ref(this.db, `exercises/${userId}/${exerciseId}/series/${series.id}`), series);

@@ -54,7 +54,7 @@ export class AddExerciseComponent {
           series: {} as KeyValuePair<SeriesDTO>,
           title: this.form.value['name'],
           done: null,
-          id: ''
+          id: 0
       };
 
       this.onAdd.emit(await this.exerciseService.add(model));

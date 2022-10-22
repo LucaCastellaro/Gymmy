@@ -10,7 +10,7 @@ import { FirebaseSeriesService } from 'src/app/shared/services/firebase-series.s
 export class AddSeriesComponent {
   @Input() isDrawerOpen!: boolean;
   @Input() userId!: string;
-  @Input() exerciseId!: string;
+  @Input() exerciseId!: number;
   @Output() onAdd: EventEmitter<SeriesDTO> = new EventEmitter<SeriesDTO>();
   @Output() onClose: EventEmitter<void> = new EventEmitter<void>();
 

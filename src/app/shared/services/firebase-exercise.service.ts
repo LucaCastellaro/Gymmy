@@ -17,24 +17,36 @@ export class FirebaseExerciseService {
     }
 
     public async add(model: ExerciseDTO): Promise<ExerciseDTO> {
-        model.id = Guid.create().toString();
+        model.id = Date.now();
+
+        console.debug('exercise.add', model);
 
         await set(ref(this.db, `exercises/${model.userId}/${model.id}`), model);
 
         return await this.getById(model.userId, model.id);
     }
 
-    public async getAll(userId: string): Promise<Map<string, ExerciseDTO>> {
+    public async getAll(userId: string): Promise<Map<number, ExerciseDTO>> {
         const snapshot: DataSnapshot = await get(ref(this.db, `exercises/${userId}`));
         if(snapshot.exists()) {
-            const result = new Map<string, ExerciseDTO>();
+            const result = new Map<number, ExerciseDTO>();
+
+            const temp: ExerciseDTO[] = [];
+
             snapshot.forEach(item => {
                 const value = item.val() as ExerciseDTO;
+                temp.push(value);
                 result.set(value.id, value);
             })
+
+            temp.sort(item => item.id)
+                .forEach(item => {
+                    result.set(item.id, item);
+                });
+
             return result;
         }
-        return new Map<string, ExerciseDTO>();
+        return new Map<number, ExerciseDTO>();
     }
 
     public async getDaily(userId: string, day: Days): Promise<ExerciseDTO[]> {
@@ -48,7 +60,7 @@ export class FirebaseExerciseService {
         return result;
     }
 
-    public async getById(userId: string, exerciseId: string): Promise<ExerciseDTO> {
+    public async getById(userId: string, exerciseId: number): Promise<ExerciseDTO> {
         const snapshot: DataSnapshot = await get(ref(this.db, `exercises/${userId}/${exerciseId}`));
         
         if(snapshot.exists()) return snapshot.val() as ExerciseDTO;

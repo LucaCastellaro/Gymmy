@@ -1,7 +1,7 @@
 import { SeriesDTO } from "./SeriesDTO";
 
 export interface ExerciseDTO {
-	id: string,
+	id: number,
 	userId: string,
 	title: string,
 	series: KeyValuePair<SeriesDTO>,
