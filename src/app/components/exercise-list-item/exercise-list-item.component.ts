@@ -13,6 +13,8 @@ export class ExerciseListItemComponent implements OnInit {
     @Input() exercise!: ExerciseDTO;
     @Output() onDelete: EventEmitter<ExerciseDTO> = new EventEmitter<ExerciseDTO>();
 
+    public isDrawerOpen: boolean = false;
+
     constructor(
         private readonly exerciseService: FirebaseExerciseService,
         private readonly router: Router
@@ -36,5 +38,17 @@ export class ExerciseListItemComponent implements OnInit {
         const deleted = await this.exerciseService.delete(this.exercise);
 
         this.onDelete.emit(deleted);
+    }
+
+    public closeDrawer(): void {
+        this.isDrawerOpen = false;
+    }
+
+    public openDrawer(): void {
+        this.isDrawerOpen = true;
+    }
+
+    public edit(value: ExerciseDTO): void {
+        this.exercise = value;
     }
 }

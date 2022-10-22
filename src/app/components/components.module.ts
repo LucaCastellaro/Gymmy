@@ -17,6 +17,7 @@ import { SeriesListComponent } from './series-list/series-list.component';
 import { SeriesListItemComponent } from './series-list-item/series-list-item.component';
 import { ExerciseListItemComponent } from './exercise-list-item/exercise-list-item.component';
 import { EditSeriesComponent } from './edit-series/edit-series.component';
+import { EditExerciseComponent } from './edit-exercise/edit-exercise.component';
 
 const components = [
   ConfirmButtonComponent,
@@ -32,7 +33,8 @@ const components = [
   CancelButtonComponent,
   SeriesListComponent,
   SeriesListItemComponent,
-  EditSeriesComponent
+  EditSeriesComponent,
+  EditExerciseComponent
 ];
 
 @NgModule({

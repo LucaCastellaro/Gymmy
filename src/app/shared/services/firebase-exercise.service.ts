@@ -88,6 +88,11 @@ export class FirebaseExerciseService {
     }
 
     public async update(exercise: ExerciseDTO): Promise<ExerciseDTO> {
+        if(!exercise.series) exercise.series = [];
+        if(!exercise.done) exercise.done = null;
+        if(!exercise.link) exercise.link = null;
+
+
         await update(ref(this.db, `exercises/${exercise.userId}/${exercise.id}`), exercise);
         return exercise;
     }

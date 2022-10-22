@@ -2,20 +2,20 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { User } from '@angular/fire/auth';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { LocalStorageConstants } from 'src/app/shared/constants/localStorage.constants';
-import { ExerciseDTO, KeyValuePair } from 'src/app/shared/models/DTO/ExerciseDTO';
-import { SeriesDTO } from 'src/app/shared/models/DTO/SeriesDTO';
-import { Days, Today } from 'src/app/shared/models/enums/days.enum';
+import { ExerciseDTO } from 'src/app/shared/models/DTO/ExerciseDTO';
+import { Days } from 'src/app/shared/models/enums/days.enum';
 import { FirebaseExerciseService } from 'src/app/shared/services/firebase-exercise.service';
 import { LocalStorageService } from 'src/app/shared/services/localStorage.service';
 
 @Component({
-  selector: 'app-add-exercise',
-  templateUrl: 'add-exercise.component.html'
+  selector: 'app-edit-exercise',
+  templateUrl: 'edit-exercise.component.html'
 })
-export class AddExerciseComponent implements OnInit {
+export class EditExerciseComponent implements OnInit {
   @Input() isDrawerOpen!: boolean;
-  @Input() userId!: string;
-  @Output() onAdd: EventEmitter<ExerciseDTO> = new EventEmitter<ExerciseDTO>();
+  @Input() exercise!: ExerciseDTO;
+
+  @Output() onEdit: EventEmitter<ExerciseDTO> = new EventEmitter<ExerciseDTO>();
   @Output() onClose: EventEmitter<void> = new EventEmitter<void>();
 
   public form!: FormGroup;
@@ -34,34 +34,34 @@ export class AddExerciseComponent implements OnInit {
   ngOnInit(): void {
     this.days = Object.keys(Days);
 
-    this.selectedDays = [Today()];
+    this.selectedDays = this.exercise.days;
     
     this.form = this.formBuilder.group({
-      name: this.formBuilder.control('', [Validators.required, Validators.maxLength(255)]),
-      days: this.formBuilder.control(this.selectedDays, [Validators.required]),
-      description: this.formBuilder.control('', [Validators.maxLength(255)]),
-      link: this.formBuilder.control('', [Validators.maxLength(255)]),
+      name: this.formBuilder.control(this.exercise.title, [Validators.required, Validators.maxLength(255)]),
+      days: this.formBuilder.control(this.exercise.days, [Validators.required]),
+      description: this.formBuilder.control(this.exercise.descr, [Validators.maxLength(255)]),
+      link: this.formBuilder.control(this.exercise.link, [Validators.maxLength(255)]),
     });
   }
 
-  public async addExercise(): Promise<void>{
+  public async editExercise(): Promise<void>{
       this.isLoading = true;
 
       const user: User = this.localStorageService
           .get(LocalStorageConstants.CurrentUser)!;
 
       const model: ExerciseDTO = {
-          userId: user!.uid,
+          userId: this.exercise.userId,
           days: this.form.value['days'],
           descr: this.form.value['descr'] ?? '',
           link: this.form.value['link'] ?? '',
-          series: {} as KeyValuePair<SeriesDTO>,
+          series: this.exercise.series,
           title: this.form.value['name'],
-          done: null,
-          id: 0
+          done: this.exercise.done,
+          id: this.exercise.id
       };
 
-      this.onAdd.emit(await this.exerciseService.add(model));
+      this.onEdit.emit(await this.exerciseService.update(model));
       this.isLoading = false;
 
       this.closeDrawer();

@@ -21,6 +21,13 @@
                 (nzOnConfirm)="delete()"
             ></app-icon-button>
 
+            <app-icon-button 
+                label="Modifica" 
+                icon="edit" 
+                theme="outline"
+                (click)="openDrawer()"
+            ></app-icon-button>
+
             <app-icon-button
                 (click)="markAsDone(true)"
                 *ngIf="!isDone"
@@ -38,3 +45,10 @@
         </nz-button-group>
     </div>
 </nz-card>
+
+<app-edit-exercise 
+    [isDrawerOpen]="isDrawerOpen" 
+    (onClose)="closeDrawer()" 
+    [exercise]="exercise" 
+    (onEdit)="edit($event)">
+</app-edit-exercise>
