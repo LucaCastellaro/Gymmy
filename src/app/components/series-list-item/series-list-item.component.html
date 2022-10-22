@@ -1,13 +1,30 @@
-<nz-card [nzTitle]="title">
+<nz-card [nzTitle]="title" [nzExtra]="actions">
     <app-exercise-numbers title="Ripetizioni" [value]="series.reps"></app-exercise-numbers>
     <app-exercise-numbers title="Carico" [value]="series.weight"></app-exercise-numbers>
     <app-exercise-numbers title="Pausa" [value]="series.pause"></app-exercise-numbers>
-    <app-exercise-numbers title="Peso totale" [value]="totalWeight"></app-exercise-numbers>
+    <app-exercise-numbers title="Volume" [value]="totalWeight"></app-exercise-numbers>
     
     <div class="flex justify-between">
         <span>Fatto</span>
         <span>
-            <label nz-checkbox></label>
+            <label nz-checkbox [(ngModel)]="done"></label>
         </span>
     </div>
 </nz-card>
+
+<app-edit-series
+    [isDrawerOpen]="isDrawerOpen"
+    [series]="series"
+    (onClose)="editSeries($event)"
+></app-edit-series>
+
+<ng-template #actions>
+    <nz-button-group>
+        <app-icon-button 
+            label="Modifica" 
+            icon="edit" 
+            theme="outline" 
+            (click)="openDrawer()">
+        </app-icon-button>
+    </nz-button-group>
+</ng-template>

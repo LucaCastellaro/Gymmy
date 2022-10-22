@@ -22,7 +22,12 @@
     </div>
 </div>
 
-<app-add-exercise [isDrawerOpen]="isDrawerOpen" (onClose)="closeDrawer()" [userId]="userId" (onAdd)="addExercise($event)"></app-add-exercise>
+<app-add-exercise 
+    [isDrawerOpen]="isDrawerOpen" 
+    (onClose)="closeDrawer()" 
+    [userId]="userId" 
+    (onAdd)="addExercise($event)">
+</app-add-exercise>
 
 <ng-template #loader>
     <div *ngIf="isLoading" class="w-full flex justify-center" >

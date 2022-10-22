@@ -87,4 +87,9 @@ export class FirebaseExerciseService {
 
         return exercise.series;
     }
+
+    public async updateExercise(exercise: ExerciseDTO): Promise<ExerciseDTO> {
+        await update(ref(this.db, `exercises/${exercise.userId}/${exercise.id}`), exercise);
+        return exercise;
+    }
 }

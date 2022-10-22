@@ -6,7 +6,8 @@
         class="w-full mb-4 lg:mx-4 lg:last:ml-0"
         *ngFor="let item of exercise.series; let i = index"
         [series]="item" 
-        [index]="i">
+        [index]="i"
+        (onEdit)="editSeries($event, i)">
     </app-series-list-item>
 </div>
 
