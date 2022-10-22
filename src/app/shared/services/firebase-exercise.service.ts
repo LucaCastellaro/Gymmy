@@ -77,15 +77,13 @@ export class FirebaseExerciseService {
     }
 
     public async addSeries(userId: string, exerciseId: string, series: SeriesDTO): Promise<KeyValuePair<SeriesDTO>> {
-        const exercise = await this.getById(userId, exerciseId);
-        
-        if(!exercise.series) exercise.series = {} as KeyValuePair<SeriesDTO>;
-
         series.id = Guid.create().toString();
 
         await update(ref(this.db, `exercises/${userId}/${exerciseId}/series/${series.id}`), series);
 
-        return exercise.series;
+        const exercise = await this.getById(userId, exerciseId);
+
+        return exercise.series as unknown as KeyValuePair<SeriesDTO>;
     }
 
     public async deleteSeries(series: SeriesDTO): Promise<KeyValuePair<SeriesDTO>> {

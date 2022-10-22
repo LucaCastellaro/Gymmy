@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { ExerciseDTO } from 'src/app/shared/models/DTO/ExerciseDTO';
+import { ExerciseDTO, KeyValuePair } from 'src/app/shared/models/DTO/ExerciseDTO';
 import { SeriesDTO } from 'src/app/shared/models/DTO/SeriesDTO';
 
 @Component({
@@ -22,5 +22,15 @@ export class SeriesListComponent {
 
   public get keys(): string[] {
     return Object.keys(this.exercise.series);
+  }
+
+  public deleteSeries(value: SeriesDTO): void {
+    const newSeries: KeyValuePair<SeriesDTO> = {} as KeyValuePair<SeriesDTO>;
+
+    for(const key of Object.keys(this.exercise.series)){
+      if(key != value.id) newSeries[key] = this.exercise.series[key];
+    }
+    
+    this.exercise.series = newSeries;
   }
 }

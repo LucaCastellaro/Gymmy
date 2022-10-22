@@ -18,6 +18,7 @@ export class SeriesListItemComponent {
   @Input() index!: number;
 
   @Output() onEdit: EventEmitter<SeriesDTO> = new EventEmitter<SeriesDTO>();
+  @Output() onDelete: EventEmitter<SeriesDTO> = new EventEmitter<SeriesDTO>();
 
   constructor(
     private readonly message: NzMessageService,
@@ -33,7 +34,10 @@ export class SeriesListItemComponent {
   }
 
   public async delete(): Promise<void> {
-    const result = this.exerciseService.deleteSeries(this.series);
+    await this.exerciseService.deleteSeries(this.series);
+    this.onDelete.emit(this.series)
+
+    this.message.success('Serie eliminata.');
   }
 
   public openDrawer(): void {
@@ -48,5 +52,4 @@ export class SeriesListItemComponent {
       this.message.success('Serie aggiornata.');
     }
   }
-
 }

@@ -1,4 +1,4 @@
-<nz-card [nzTitle]="title" [nzExtra]="actions">
+<nz-card [nzTitle]="title" [nzExtra]="actions" class="mb-4">
     <app-exercise-numbers title="Ripetizioni" [value]="series.reps"></app-exercise-numbers>
     <app-exercise-numbers title="Carico" [value]="series.weight"></app-exercise-numbers>
     <app-exercise-numbers title="Pausa" [value]="series.pause"></app-exercise-numbers>
@@ -24,7 +24,10 @@
             label="Elimina" 
             icon="delete" 
             theme="outline" 
-            (click)="delete()">
+            nz-popconfirm
+            nzPopconfirmTitle="Sei sicuro di voler elimiare questa serie?"
+            nzPopconfirmPlacement="left"
+            (nzOnConfirm)="delete()">
         </app-icon-button>
 
         <app-icon-button 
