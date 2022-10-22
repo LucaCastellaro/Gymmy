@@ -1,10 +1,11 @@
 <div 
-    class="lg:flex" 
+    class="lg:grid lg:grid-cols-4 mx-4" 
     *ngIf="hasSeries;else noData"
 >
-    <app-series-list-item 
-        class="md:w-96 w-full lg:mx-4"
+    <app-series-list-item
         *ngFor="let key of keys; let i = index"
+        class="w-full mb-4" 
+        [ngClass]="{'lg:pr-4': (i+1)%4!=0}"
         [series]="exercise.series[key]" 
         [index]="i"
         (onEdit)="editSeries($event)"

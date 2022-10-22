@@ -12,5 +12,5 @@ export interface ExerciseDTO {
 }
 
 export interface KeyValuePair<T> extends Iterable<T> {
-	[key:string]: T
+	[key:number]: T
 }

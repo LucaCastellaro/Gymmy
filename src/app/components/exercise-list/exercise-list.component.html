@@ -12,10 +12,11 @@
 </div>
 
 <div *ngIf="!isLoading;else loader">
-    <div *ngIf="exercises.length > 0;else noData" class="lg:flex">
+    <div *ngIf="exercises.length > 0;else noData" class="lg:grid lg:grid-cols-4 mx-4">
         <app-exercise-list-item
-            class="w-full mb-4 lg:mx-4 lg:w-1/4" 
-            *ngFor="let item of exercises"
+            *ngFor="let item of exercises;let i = index"
+            class="w-full mb-4" 
+            [ngClass]="{'lg:pr-4': (i+1)%4!=0}"
             [exercise]="item"
             (onDelete)="deleteExercise($event)">
         </app-exercise-list-item>

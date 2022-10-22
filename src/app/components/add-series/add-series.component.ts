@@ -35,12 +35,12 @@ export class AddSeriesComponent {
       pause: this.seriesForm.value['pause'],
       reps: this.seriesForm.value['reps'],
       weight: this.seriesForm.value['weight'],
-      id: '',
+      id: 0,
       exerciseId: this.exerciseId,
       userId: this.userId
     };
 
-    await this.seriesService.add(this.userId, this.exerciseId, newSeries);
+    newSeries.id = await this.seriesService.add(this.userId, this.exerciseId, newSeries);
 
     this.onAdd.emit(newSeries);
 

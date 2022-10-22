@@ -1,5 +1,5 @@
 export interface SeriesDTO {
-    id: string,
+    id: number,
     exerciseId: number,
     userId: string,
     weight: number,

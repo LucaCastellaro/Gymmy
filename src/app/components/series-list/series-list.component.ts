@@ -20,14 +20,19 @@ export class SeriesListComponent {
       && Object.keys(this.exercise.series).length > 0;
   }
 
-  public get keys(): string[] {
-    return Object.keys(this.exercise.series);
+  public get keys(): number[] {
+    return Object
+      .keys(this.exercise.series)
+      .map(item => +item);
   }
 
   public deleteSeries(value: SeriesDTO): void {
     const newSeries: KeyValuePair<SeriesDTO> = {} as KeyValuePair<SeriesDTO>;
 
-    for(const key of Object.keys(this.exercise.series)){
+    const keys = Object
+      .keys(this.exercise.series)
+      .map(item => +item);
+    for(const key of keys){
       if(key != value.id) newSeries[key] = this.exercise.series[key];
     }
     

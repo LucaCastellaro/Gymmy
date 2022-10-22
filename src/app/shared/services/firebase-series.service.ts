@@ -8,12 +8,12 @@ export class FirebaseSeriesService {
     constructor(private readonly db: Database) {
     }
 
-    public async add(userId: string, exerciseId: number, series: SeriesDTO): Promise<boolean> {
-        series.id = Guid.create().toString();
+    public async add(userId: string, exerciseId: number, series: SeriesDTO): Promise<number> {
+        series.id = Date.now()
 
         await update(ref(this.db, `exercises/${userId}/${exerciseId}/series/${series.id}`), series);
 
-        return true;
+        return series.id;
     }
 
     public async delete(series: SeriesDTO): Promise<boolean> {
