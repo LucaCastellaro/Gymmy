@@ -50,6 +50,7 @@ export class ExerciseDetailComponent implements OnInit {
   }
 
   public addSeries(value: SeriesDTO): void {
+    if(!this.exercise.series) this.exercise.series = [];
     this.exercise.series[value.id] = value;
   }
 }
