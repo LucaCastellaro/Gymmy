@@ -19,24 +19,24 @@ import { NzDividerModule } from 'ng-zorro-antd/divider';
 import { NzMessageModule } from 'ng-zorro-antd/message';
 
 const ngZorroModules = [
-    NzButtonModule,
-    NzInputModule,
-    NzTypographyModule,
-    NzCardModule,
-    NzIconModule,
-    NzToolTipModule,
-    NzListModule,
-    NzSpinModule,
-    NzEmptyModule,
-    NzTableModule,
-    NzCheckboxModule,
-    NzDrawerModule,
-    NzFormModule,
-    NzSelectModule,
-    NzPopconfirmModule,
-    NzDividerModule,
-    NzMessageModule
-  ];
+  NzIconModule,
+  NzButtonModule,
+  NzInputModule,
+  NzTypographyModule,
+  NzCardModule,
+  NzToolTipModule,
+  NzListModule,
+  NzSpinModule,
+  NzEmptyModule,
+  NzTableModule,
+  NzCheckboxModule,
+  NzDrawerModule,
+  NzFormModule,
+  NzSelectModule,
+  NzPopconfirmModule,
+  NzDividerModule,
+  NzMessageModule
+];
 
 @NgModule({
     imports: [

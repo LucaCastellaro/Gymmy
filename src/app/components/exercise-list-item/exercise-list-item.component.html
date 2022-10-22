@@ -4,6 +4,14 @@
 
         <nz-button-group>
             <app-icon-button 
+                label="Link" 
+                icon="link" 
+                theme="outline"
+                *ngIf="exercise.link && exercise.link.length > 0"
+                (click)="markAsDone(true)"
+            ></app-icon-button>
+
+            <app-icon-button 
                 label="Elimina" 
                 icon="delete" 
                 theme="outline"
