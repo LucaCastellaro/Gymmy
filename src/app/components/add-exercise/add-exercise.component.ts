@@ -57,7 +57,7 @@ export class AddExerciseComponent {
           id: ''
       };
 
-      this.onAdd.emit(await this.exerciseService.addExercise(model));
+      this.onAdd.emit(await this.exerciseService.add(model));
       this.isLoading = false;
 
       this.closeDrawer();

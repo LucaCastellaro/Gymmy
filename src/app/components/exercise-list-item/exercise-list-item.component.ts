@@ -33,7 +33,7 @@ export class ExerciseListItemComponent implements OnInit {
     }
 
     public async delete(): Promise<void> {
-        const deleted = await this.exerciseService.deleteExercise(this.exercise);
+        const deleted = await this.exerciseService.delete(this.exercise);
 
         this.onDelete.emit(deleted);
     }

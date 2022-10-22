@@ -1,8 +1,7 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { KeyValuePair } from 'src/app/shared/models/DTO/ExerciseDTO';
 import { SeriesDTO } from 'src/app/shared/models/DTO/SeriesDTO';
-import { FirebaseExerciseService } from 'src/app/shared/services/firebase-exercise.service';
+import { FirebaseSeriesService } from 'src/app/shared/services/firebase-series.service';
 
 @Component({
   selector: 'app-add-series',
@@ -12,7 +11,7 @@ export class AddSeriesComponent {
   @Input() isDrawerOpen!: boolean;
   @Input() userId!: string;
   @Input() exerciseId!: string;
-  @Output() onAdd: EventEmitter<KeyValuePair<SeriesDTO>> = new EventEmitter<KeyValuePair<SeriesDTO>>();
+  @Output() onAdd: EventEmitter<SeriesDTO> = new EventEmitter<SeriesDTO>();
   @Output() onClose: EventEmitter<void> = new EventEmitter<void>();
 
   public seriesForm!: FormGroup;
@@ -20,7 +19,7 @@ export class AddSeriesComponent {
 
   constructor(
     private readonly formBuilder: FormBuilder,
-    private readonly exerciseService: FirebaseExerciseService
+    private readonly seriesService: FirebaseSeriesService
   ) { 
     this.seriesForm = this.formBuilder.group({
       reps: this.formBuilder.control(0, [Validators.required, Validators.min(1)]),
@@ -41,9 +40,9 @@ export class AddSeriesComponent {
       userId: this.userId
     };
 
-    const series = await this.exerciseService.addSeries(this.userId, this.exerciseId, newSeries);
+    await this.seriesService.add(this.userId, this.exerciseId, newSeries);
 
-    this.onAdd.emit(series);
+    this.onAdd.emit(newSeries);
 
     this.isLoading = false;
 

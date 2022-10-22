@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { SeriesDTO } from 'src/app/shared/models/DTO/SeriesDTO';
-import { FirebaseExerciseService } from 'src/app/shared/services/firebase-exercise.service';
+import { FirebaseSeriesService } from 'src/app/shared/services/firebase-series.service';
 
 @Component({
   selector: 'app-series-list-item',
@@ -22,7 +22,7 @@ export class SeriesListItemComponent {
 
   constructor(
     private readonly message: NzMessageService,
-    private readonly exerciseService: FirebaseExerciseService  
+    private readonly seriesService: FirebaseSeriesService 
   ) { }
 
   public get title(): string {
@@ -34,7 +34,12 @@ export class SeriesListItemComponent {
   }
 
   public async delete(): Promise<void> {
-    await this.exerciseService.deleteSeries(this.series);
+    var isDeleted = await this.seriesService.delete(this.series);
+    if(!isDeleted) {
+      this.message.error('La serie non è stata eliminata. Riprova tra qualche minuto.');
+      return;
+    }
+
     this.onDelete.emit(this.series)
 
     this.message.success('Serie eliminata.');

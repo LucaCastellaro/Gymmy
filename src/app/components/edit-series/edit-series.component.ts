@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { SeriesDTO } from 'src/app/shared/models/DTO/SeriesDTO';
-import { FirebaseExerciseService } from 'src/app/shared/services/firebase-exercise.service';
+import { FirebaseSeriesService } from 'src/app/shared/services/firebase-series.service';
 
 @Component({
   selector: 'app-edit-series',
@@ -18,9 +18,9 @@ export class EditSeriesComponent implements OnInit {
 
   constructor(
     private readonly formBuilder: FormBuilder,
-    private readonly exerciseSerivce: FirebaseExerciseService
-  ) {
-  }
+    private readonly seriesService: FirebaseSeriesService
+  ) { }
+  
   ngOnInit(): void {
       this.form = this.formBuilder.group({
         reps: this.formBuilder.control(this.series?.reps ?? 0, [Validators.required, Validators.min(1)]),
@@ -41,7 +41,7 @@ export class EditSeriesComponent implements OnInit {
       userId: this.series.userId
     };
 
-    this.exerciseSerivce.updateSeries(seriesToUpdate);
+    this.seriesService.update(seriesToUpdate);
 
     this.onClose.emit(seriesToUpdate);
 

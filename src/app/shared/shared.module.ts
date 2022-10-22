@@ -8,6 +8,7 @@ import { AuthGuard } from './guards/auth.guard';
 import { getDatabase } from "firebase/database";
 import { FirebaseExerciseService } from './services/firebase-exercise.service';
 import { DatabaseModule } from '@angular/fire/database';
+import { FirebaseSeriesService } from './services/firebase-series.service';
 
 
 @NgModule({
@@ -18,7 +19,13 @@ import { DatabaseModule } from '@angular/fire/database';
     ],
     exports: [],
     declarations: [],
-    providers: [FirebaseAuthService, LocalStorageService, AuthGuard, FirebaseExerciseService],
+    providers: [
+        FirebaseAuthService, 
+        LocalStorageService, 
+        AuthGuard, 
+        FirebaseExerciseService,
+        FirebaseSeriesService,
+    ],
 })
 export class SharedModule implements OnInit{
     ngOnInit(): void {

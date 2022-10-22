@@ -1,23 +1,22 @@
 import { Injectable } from '@angular/core';
 import { ref, set, get, DataSnapshot, remove, update } from "firebase/database";
-import { ExerciseDTO, KeyValuePair } from '../models/DTO/ExerciseDTO';
+import { ExerciseDTO } from '../models/DTO/ExerciseDTO';
 import { Guid } from 'guid-typescript';
-import { Database, object } from '@angular/fire/database';
+import { Database } from '@angular/fire/database';
 import { Days } from '../models/enums/days.enum';
-import { SeriesDTO } from '../models/DTO/SeriesDTO';
 
 @Injectable()
 export class FirebaseExerciseService {
     constructor(private readonly db: Database) {
     }
 
-    public async deleteExercise(model: ExerciseDTO): Promise<ExerciseDTO> {
+    public async delete(model: ExerciseDTO): Promise<ExerciseDTO> {
         await remove(ref(this.db,`exercises/${model.userId}/${model.id}`));
 
         return model;
     }
 
-    public async addExercise(model: ExerciseDTO): Promise<ExerciseDTO> {
+    public async add(model: ExerciseDTO): Promise<ExerciseDTO> {
         model.id = Guid.create().toString();
 
         await set(ref(this.db, `exercises/${model.userId}/${model.id}`), model);
@@ -76,33 +75,7 @@ export class FirebaseExerciseService {
         return today == exercise.done;
     }
 
-    public async addSeries(userId: string, exerciseId: string, series: SeriesDTO): Promise<KeyValuePair<SeriesDTO>> {
-        series.id = Guid.create().toString();
-
-        await update(ref(this.db, `exercises/${userId}/${exerciseId}/series/${series.id}`), series);
-
-        const exercise = await this.getById(userId, exerciseId);
-
-        return exercise.series as unknown as KeyValuePair<SeriesDTO>;
-    }
-
-    public async deleteSeries(series: SeriesDTO): Promise<KeyValuePair<SeriesDTO>> {
-        const exercise = await this.getById(series.userId, series.exerciseId);
-        
-        if(!exercise.series) return {} as KeyValuePair<SeriesDTO>;
-
-        await remove(ref(this.db, `exercises/${series.userId}/${series.exerciseId}/series/${series.id}`))
-
-        return exercise.series;
-    }
-
-    public async updateSeries(series: SeriesDTO): Promise<SeriesDTO> {
-        await update(ref(this.db, `exercises/${series.userId}/${series.exerciseId}/series/${series.id}`), series)
-
-        return series;
-    }
-
-    public async updateExercise(exercise: ExerciseDTO): Promise<ExerciseDTO> {
+    public async update(exercise: ExerciseDTO): Promise<ExerciseDTO> {
         await update(ref(this.db, `exercises/${exercise.userId}/${exercise.id}`), exercise);
         return exercise;
     }
