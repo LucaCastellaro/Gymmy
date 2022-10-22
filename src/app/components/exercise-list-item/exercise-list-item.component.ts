@@ -51,4 +51,9 @@ export class ExerciseListItemComponent implements OnInit {
     public edit(value: ExerciseDTO): void {
         this.exercise = value;
     }
+
+    public navigate(): void {
+        if(this.exercise.link)
+            document.location.href = this.exercise.link!;
+    }
 }
