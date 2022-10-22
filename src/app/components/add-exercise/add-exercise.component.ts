@@ -34,11 +34,9 @@ export class AddExerciseComponent implements OnInit {
   ngOnInit(): void {
     this.days = Object.keys(Days);
 
-    this.selectedDays = [Today()];
-    
     this.form = this.formBuilder.group({
       name: this.formBuilder.control('', [Validators.required, Validators.maxLength(255)]),
-      days: this.formBuilder.control(this.selectedDays, [Validators.required]),
+      days: this.formBuilder.control([Today()], [Validators.required]),
       description: this.formBuilder.control('', [Validators.maxLength(255)]),
       link: this.formBuilder.control('', [Validators.maxLength(255)]),
     });
