@@ -1,4 +1,5 @@
 import { Component, EventEmitter, Input } from '@angular/core';
+import { NzMessageService } from 'ng-zorro-antd/message';
 import { ExerciseDTO } from 'src/app/shared/models/DTO/ExerciseDTO';
 import { FirebaseExerciseService } from 'src/app/shared/services/firebase-exercise.service';
 
@@ -15,7 +16,8 @@ export class ExerciseListComponent {
     public userId!: string;
 
     constructor(
-        private readonly exerciseService: FirebaseExerciseService
+        private readonly exerciseService: FirebaseExerciseService,
+        private readonly message: NzMessageService
     ) { }
 
     public openDrawer(): void {
@@ -38,5 +40,7 @@ export class ExerciseListComponent {
 
     public deleteExercise(value: ExerciseDTO): void {
         this.exercises = this.exercises.filter(item => item.id != value.id);
+
+        this.message.success(`${value.title.toUpperCase()} eliminato`)
     }
 }
