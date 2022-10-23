@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { SeriesDTO } from 'src/app/shared/models/DTO/SeriesDTO';
 import { FirebaseSeriesService } from 'src/app/shared/services/firebase-series.service';
@@ -7,12 +7,14 @@ import { FirebaseSeriesService } from 'src/app/shared/services/firebase-series.s
   selector: 'app-series-list-item',
   templateUrl: './series-list-item.component.html',
 })
-export class SeriesListItemComponent {
+export class SeriesListItemComponent implements OnInit {
 
   public waitingForPauseToStop: boolean = false;
   public isInPause: boolean = false;
   public isDrawerOpen: boolean = false;
   public done: boolean = false;
+
+  private readonly pauseSound = new Audio('https://www.online-timer.net/audio/alarm-ring.mp3');
 
   @Input() userId!: string;
   @Input() exerciseId!: string;
@@ -26,6 +28,11 @@ export class SeriesListItemComponent {
     private readonly message: NzMessageService,
     private readonly seriesService: FirebaseSeriesService 
   ) { }
+
+  ngOnInit(): void {
+    this.pauseSound.loop = true;
+    this.pauseSound.load();
+  }
 
   public get title(): string {
     return `Serie ${this.index + 1}`;
@@ -64,11 +71,13 @@ export class SeriesListItemComponent {
     this.isInPause = true;
     setTimeout(() => {
       this.isInPause = false;
+      this.pauseSound.play();
       this.waitingForPauseToStop = true;
     }, this.series.pause * 1000);
   }
 
   public endPause(): void {
+    this.pauseSound.pause();
     this.waitingForPauseToStop = false;
     this.message.info(`Fine pause per serie ${this.index + 1}`);
   }
