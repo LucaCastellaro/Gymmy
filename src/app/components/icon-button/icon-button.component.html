@@ -1,10 +1,11 @@
 <button 
     nz-button 
-    nzType="default" 
+    [nzType]="primary ? 'primary' : 'default'" 
     class="h-12 w-12" 
     nz-tooltip 
     [nzTooltipTitle]="label" 
     nzTooltipPlacement="bottom"
+    [disabled]="disabled"
 >
     <span nz-icon [nzType]="icon" [nzTheme]="theme" [nzSpin]="spin"></span>
 </button>

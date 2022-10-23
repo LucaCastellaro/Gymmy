@@ -11,4 +11,6 @@ export class IconButtonComponent  {
     @Input() icon!: string;
     @Input() theme!: ThemeType;
     @Input() spin: boolean | undefined;
+    @Input() disabled: boolean | undefined;
+    @Input() primary: boolean | undefined;
 }

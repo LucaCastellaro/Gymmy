@@ -9,6 +9,7 @@ import { FirebaseSeriesService } from 'src/app/shared/services/firebase-series.s
 })
 export class SeriesListItemComponent {
 
+  public waitingForPauseToStop: boolean = false;
   public isInPause: boolean = false;
   public isDrawerOpen: boolean = false;
   public done: boolean = false;
@@ -59,11 +60,16 @@ export class SeriesListItemComponent {
     }
   }
 
-  public pause(): void {
+  public startPause(): void {
     this.isInPause = true;
     setTimeout(() => {
       this.isInPause = false;
-      this.message.info(`Fine pause per serie ${this.index + 1}`);
+      this.waitingForPauseToStop = true;
     }, this.series.pause * 1000);
+  }
+
+  public endPause(): void {
+    this.waitingForPauseToStop = false;
+    this.message.info(`Fine pause per serie ${this.index + 1}`);
   }
 }

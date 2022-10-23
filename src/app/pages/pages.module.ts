@@ -17,6 +17,7 @@ import {
   ControlOutline,
   LinkOutline,
   HourglassOutline,
+  CheckOutline
 } from '@ant-design/icons-angular/icons';
 
 const icons = [ 
@@ -26,6 +27,7 @@ const icons = [
   ControlOutline,
   LinkOutline,
   HourglassOutline,
+  CheckOutline
 ];
 
 const components = [

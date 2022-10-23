@@ -16,6 +16,8 @@
 
 <ng-template #actions>
     <nz-button-group>
+        
+        <!-- Elimina -->
         <app-icon-button 
             label="Elimina" 
             icon="delete" 
@@ -26,6 +28,7 @@
             (nzOnConfirm)="delete()">
         </app-icon-button>
 
+        <!-- Modifica -->
         <app-icon-button 
             label="Modifica" 
             icon="edit" 
@@ -33,19 +36,24 @@
             (click)="openDrawer()">
         </app-icon-button>
 
+        <!-- Pausa -->
         <app-icon-button 
             label="Pausa" 
             icon="hourglass" 
             theme="outline" 
-            *ngIf="!isInPause"
-            (click)="pause()">
+            [disabled]="isInPause"
+            [spin]="isInPause"
+            *ngIf="!waitingForPauseToStop"
+            (click)="startPause()">
         </app-icon-button>
         <app-icon-button 
-            label="In pausa..." 
-            icon="hourglass" 
+            label="Fine pausa" 
+            icon="check" 
             theme="outline" 
-            [spin]="true"
-            *ngIf="isInPause">
+            class="animate-pulse"
+            [primary]="true"
+            *ngIf="waitingForPauseToStop"
+            (click)="endPause()">
         </app-icon-button>
     </nz-button-group>
 </ng-template>
