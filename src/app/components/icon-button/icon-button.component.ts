@@ -10,4 +10,5 @@ export class IconButtonComponent  {
     @Input() label!: string;
     @Input() icon!: string;
     @Input() theme!: ThemeType;
+    @Input() spin: boolean | undefined;
 }

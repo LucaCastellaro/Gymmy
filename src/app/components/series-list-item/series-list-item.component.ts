@@ -9,6 +9,7 @@ import { FirebaseSeriesService } from 'src/app/shared/services/firebase-series.s
 })
 export class SeriesListItemComponent {
 
+  public isInPause: boolean = false;
   public isDrawerOpen: boolean = false;
   public done: boolean = false;
 
@@ -49,12 +50,20 @@ export class SeriesListItemComponent {
     this.isDrawerOpen = true;
   }
 
-  editSeries(value: SeriesDTO | undefined): void {
+  public editSeries(value: SeriesDTO | undefined): void {
     this.isDrawerOpen = false;
 
     if(value) {
       this.onEdit.emit(value);
       this.message.success('Serie aggiornata.');
     }
+  }
+
+  public pause(): void {
+    this.isInPause = true;
+    setTimeout(() => {
+      this.isInPause = false;
+      this.message.info(`Fine pause per serie ${this.index + 1}`);
+    }, this.series.pause * 1000);
   }
 }

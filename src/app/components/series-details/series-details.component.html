@@ -1,0 +1,6 @@
+<div class="flex justify-between">
+    <span>{{title}}</span>
+    <span *ngIf="value != undefined">{{value}}</span>
+    <ng-content></ng-content>
+</div>
+<nz-divider *ngIf="showDivider"></nz-divider>

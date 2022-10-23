@@ -11,13 +11,13 @@ import { IconButtonComponent } from './icon-button/icon-button.component';
 import { ExerciseListComponent } from './exercise-list/exercise-list.component';
 import { AddSeriesComponent } from './add-series/add-series.component';
 import { AddExerciseComponent } from './add-exercise/add-exercise.component';
-import { ExerciseNumbersComponent } from './exercise-numbers/exercise-numbers.component';
 import { CancelButtonComponent } from './cancel-button/cancel-button.component';
 import { SeriesListComponent } from './series-list/series-list.component';
 import { SeriesListItemComponent } from './series-list-item/series-list-item.component';
 import { ExerciseListItemComponent } from './exercise-list-item/exercise-list-item.component';
 import { EditSeriesComponent } from './edit-series/edit-series.component';
 import { EditExerciseComponent } from './edit-exercise/edit-exercise.component';
+import { SeriesDetailsComponent } from './series-details/series-details.component';
 
 const components = [
   ConfirmButtonComponent,
@@ -29,12 +29,12 @@ const components = [
   ExerciseListItemComponent,
   AddSeriesComponent,
   AddExerciseComponent,
-  ExerciseNumbersComponent,
   CancelButtonComponent,
   SeriesListComponent,
   SeriesListItemComponent,
   EditSeriesComponent,
-  EditExerciseComponent
+  EditExerciseComponent,
+  SeriesDetailsComponent
 ];
 
 @NgModule({
