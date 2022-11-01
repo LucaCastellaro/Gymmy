@@ -12,7 +12,16 @@
 @tailwind components;
 @tailwind utilities;
 
-@primary-color: rgb(249 115 22);
+@background-color: #242321;
+@accent-dark: #393837;
+@primary-color: #FCA311;
+@accent-light: #E5E5E5;
+@highlight: #FFFFFF;
+
+html, body {
+    background: @background-color !important;
+    color: @accent-light;
+}
 
 .ant-select-item {
     @apply text-lg;
@@ -27,9 +36,96 @@
 }
 
 .ant-card {
-    @apply rounded-md border-gray-300 hover:shadow-lg text-lg;
+    @apply rounded-md text-lg shadow-md shadow-black;
+    border: 0;
+    background: @accent-dark;
+    color: @accent-light;
+}
+
+.ant-card-head {
+    @apply border-b-0;
 }
 
 .ant-card-head-title {
-    @apply uppercase font-bold text-lg;
+    @apply uppercase font-bold text-2xl;
+    color: @accent-light;
+}
+
+.dark-button, .dark-button:focus {
+    background-color: @primary-color;
+    border-color: @primary-color;
+    color: @accent-dark;
+}
+
+.dark-button:hover, .dark-button:active, .dark-button[disabled], .dark-button[disabled]:hover {
+    background-color: @accent-dark;
+    border-color: @primary-color;
+    color: @primary-color;
+}
+
+.ant-popover-inner {
+    @apply rounded-md text-lg shadow-md shadow-black;
+    background-color: @accent-dark;
+}
+
+.ant-popover-arrow-content::before {
+    @apply shadow-md shadow-black;
+    background-color: @accent-dark;
+}
+
+.ant-popover-message-title {
+    color: @accent-light;
+}
+
+.ant-drawer-content, .ant-drawer-header, .ant-drawer-title, .ant-drawer-close, .ant-drawer-close:hover, .ant-drawer-close:focus {
+    background-color: @background-color;
+    color: @highlight;
+}
+
+.ant-drawer-header {
+    border-bottom: 1px solid @accent-dark;
+}
+
+.input-label {
+    @apply text-lg;
+    color: @accent-light;
+}
+
+.input-field {
+    @apply py-1 px-2 mt-1 text-lg border-2 outline-none block w-full rounded-md;
+    color: @accent-light;
+    background: @accent-dark !important;
+    border: 1px solid @accent-dark;
+}
+
+.ant-select-selector {
+    @apply py-1 px-2 mt-1 !text-lg border-2 outline-none block w-full !rounded-md;
+    color: @accent-light;
+    background: @accent-dark !important;
+    border: 1px solid @accent-dark !important;
+}
+
+.ant-select-selection-item {
+    background: @primary-color !important;
+    border: 1px solid @primary-color !important;
+    color: @accent-dark;
+}
+
+.ant-select-dropdown {
+    @apply rounded-md;
+    background: @accent-dark !important;
+    color: @accent-light;
+}
+
+.ant-select-item-option {
+    color: @accent-light !important;
+}
+
+.ant-select-item-option-active, .ant-select-item-option-selected {
+    color: @accent-dark !important;
+    background: @primary-color !important;
+}
+
+.ant-drawer-footer {
+    border-top: 1px solid @accent-dark;
 }

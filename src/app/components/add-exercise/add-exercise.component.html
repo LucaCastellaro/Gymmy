@@ -10,8 +10,8 @@
 
         <!-- Nome esercizio -->
         <div class="mb-5">
-            <span class="text-lg text-gray-700">Nome esercizio</span>
-            <input nz-input formControlName="name" id="name" type="text" maxlength="255" class="py-1 px-2 mt-1 text-lg border-2 outline-none block w-full rounded-md" />
+            <span class="input-label">Nome esercizio</span>
+            <input nz-input formControlName="name" id="name" type="text" maxlength="255" class="input-field" />
             <div *ngIf="form.controls['name'].touched && form.controls['name'].errors" class="text-red-500 text-lg">
                 <span *ngIf="form.controls['name'].hasError('required')">Questo campo è obbligatorio.</span>
                 <span *ngIf="form.controls['link'].hasError('maxLength')">La lunghezza massima è 255.</span>
@@ -20,7 +20,7 @@
 
         <!-- Giorni -->
         <div class="mb-5">
-            <span class="text-lg text-gray-700">Giorni</span>
+            <span class="input-label">Giorni</span>
             <nz-select formControlName="days" id="days" 
                        class="outline-none block w-full text-lg rounded-md"
                        [nzMaxTagCount]="3" 
@@ -37,8 +37,8 @@
 
         <!-- Descrizione -->
         <div class="mb-5">
-            <span class="text-lg text-gray-700">Descrizione</span>
-            <input nz-input formControlName="description" id="description" maxlength="255" type="text" class="py-1 px-2 text-lg mt-1 border-2 outline-none block w-full rounded-md" />
+            <span class="input-label">Descrizione</span>
+            <input nz-input formControlName="description" id="description" maxlength="255" type="text" class="input-field" />
             <div *ngIf="form.controls['description'].touched && form.controls['description'].errors" class="text-red-500 text-lg">
                 <span *ngIf="form.controls['description'].hasError('maxLength')">La lunghezza massima è 255.</span>
             </div>
@@ -46,8 +46,8 @@
 
         <!-- Link -->
         <div class="mb-5">
-            <span class="text-lg text-gray-700">Link</span>
-            <input nz-input formControlName="link" id="link" type="text" maxlength="255" class="py-1 px-2 mt-1 border-2 text-lg outline-none block w-full rounded-md" />
+            <span class="input-label">Link</span>
+            <input nz-input formControlName="link" id="link" type="text" maxlength="255" class="input-field" />
             <div *ngIf="form.controls['link'].touched && form.controls['link'].errors" class="text-red-500 text-lg">
                 <span *ngIf="form.controls['link'].hasError('maxLength')">La lunghezza massima è 255.</span>
             </div>

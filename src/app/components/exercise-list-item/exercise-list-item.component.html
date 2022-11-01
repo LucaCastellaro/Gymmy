@@ -1,8 +1,8 @@
 <nz-card class="mb-4">
     <div class="flex justify-between items-center">
-        <span class="uppercase font-bold cursor-pointer" (click)="goToDetails()">{{exercise.title}}</span>
+        <span class="uppercase font-bold cursor-pointer text-2xl" (click)="goToDetails()">{{exercise.title}}</span>
 
-        <nz-button-group>
+        <nz-button-group class="rounded-md">
             <app-icon-button 
                 label="Link" 
                 icon="link" 
@@ -16,7 +16,7 @@
                 icon="delete" 
                 theme="outline"
                 nz-popconfirm
-                nzPopconfirmTitle="Sei sicuro di voler elimiare questo esercizio?"
+                nzPopconfirmTitle="Sei sicuro di voler eliminare questo esercizio?"
                 nzPopconfirmPlacement="left"
                 (nzOnConfirm)="delete()"
             ></app-icon-button>

@@ -10,8 +10,8 @@
 
         <!-- Ripetizioni -->
         <div>
-            <span class="mt-5 text-lg text-gray-700">Ripetizioni</span>
-            <input nz-input formControlName="reps" id="reps" type="number" class="py-1 px-2 mt-1 border-2 outline-none block w-full rounded-md text-lg" />
+            <span class="mt-5 input-label">Ripetizioni</span>
+            <input nz-input formControlName="reps" id="reps" type="number" class="input-field" />
             <div *ngIf="form.controls['reps'].touched && form.controls['reps'].errors" class="text-red-500 text-lg">
                 <span *ngIf="form.controls['reps'].hasError('required')">Questo campo è obbligatorio.</span>
                 <span *ngIf="form.controls['reps'].hasError('min')">Il valore minimo è 1.</span>
@@ -20,8 +20,8 @@
 
         <!-- Peso -->
         <div>
-            <span class="mt-5 text-lg text-gray-700">Peso</span>
-            <input nz-input formControlName="weight" id="weight" type="number" class="py-1 px-2 mt-1 border-2 outline-none block w-full rounded-md text-lg" />
+            <span class="mt-5 input-label">Peso</span>
+            <input nz-input formControlName="weight" id="weight" type="number" class="input-field" />
             <div *ngIf="form.controls['weight'].touched && form.controls['weight'].errors" class="text-red-500 text-lg">
                 <span *ngIf="form.controls['weight'].hasError('required')">Questo campo è obbligatorio.</span>
                 <span *ngIf="form.controls['weight'].hasError('min')">Il valore minimo è 1.</span>
@@ -30,8 +30,8 @@
 
         <!-- Pausa -->
         <div>
-            <span class="mt-5 text-lg text-gray-700">Pausa (secondi)</span>
-            <input nz-input formControlName="pause" id="pause" type="number" class="py-1 px-2 mt-1 border-2 outline-none block w-full rounded-md text-lg" />
+            <span class="mt-5 input-label">Pausa (secondi)</span>
+            <input nz-input formControlName="pause" id="pause" type="number" class="input-field" />
             <div *ngIf="form.controls['pause'].touched && form.controls['pause'].errors" class="text-red-500 text-lg">
                 <span *ngIf="form.controls['pause'].hasError('required')">Questo campo è obbligatorio.</span>
             </div>
