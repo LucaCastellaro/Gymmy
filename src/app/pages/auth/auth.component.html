@@ -1,8 +1,18 @@
 <ng-template #flipTemplate>
-    <button (click)="flipCard()">
-        <i nz-icon nzType="rotate-right" nzTheme="outline" *ngIf="isLogin"></i>
-        <i nz-icon nzType="rotate-left" nzTheme="outline" *ngIf="!isLogin"></i>
-    </button>
+    <app-icon-button 
+        label="" 
+        icon="rotate-right" 
+        theme="outline" 
+        *ngIf="isLogin"
+        (click)="flipCard()">
+    </app-icon-button>
+    <app-icon-button 
+        label="" 
+        icon="rotate-left" 
+        theme="outline" 
+        *ngIf="!isLogin"
+        (click)="flipCard()">
+    </app-icon-button>
 </ng-template>
 
 <div class="flex justify-evenly">

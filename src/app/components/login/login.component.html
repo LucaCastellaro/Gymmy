@@ -2,16 +2,16 @@
 
 <form [formGroup]="form" (ngSubmit)="signIn()" *ngIf="!isLoading">
     <div class="mb-5">
-        <label for="email" class="block text-sm font-medium text-gray-700">Email</label>
-        <input nz-input formControlName="email" id="email" type="text" class="py-1 px-2 mt-1 border-2 outline-none block w-full rounded" />
+        <label for="email" class="input-label">Email</label>
+        <input nz-input formControlName="email" id="email" type="text" class="input-field-dark" />
         <div *ngIf="form.controls['email'].touched && form.controls['email'].errors" class="text-red-500">
             <span *ngIf="form.controls['email'].hasError('required')">Questo campo è obbligatorio.</span>
             <span *ngIf="form.controls['email'].hasError('email')">Mail non valida.</span>
         </div>
     </div>
     <div class="mb-5">
-        <label for="password" class="block text-sm font-medium text-gray-700">Password</label>
-        <input nz-input formControlName="password" id="password" type="password" class="py-1 px-2 mt-1 border-2 outline-none block w-full rounded" />
+        <label for="password" class="input-label">Password</label>
+        <input nz-input formControlName="password" id="password" type="password" class="input-field-dark" />
         <div *ngIf="form.controls['password'].touched && form.controls['password'].errors" class="text-red-500">
             <span *ngIf="form.controls['password'].hasError('required')">Questo campo è obbligatorio.</span>
         </div>
