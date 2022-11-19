@@ -1,8 +1,10 @@
 <div class="my-4 mx-4 flex justify-between items-center">
-    <div>
-        <span class="text-4xl uppercase font-bold mb-0 overflow-ellipsis">
-            Scheda
-        </span>
+    <div class="w-full">
+        <app-dropdown [values]="days" (onSelect)="onSelect($event)"></app-dropdown>
+
+            <!-- <nz-select class="w-full" [(ngModel)]="selectedDay">
+                <nz-option *ngFor="let day of days" [nzLabel]="day" [nzValue]="day"></nz-option>
+            </nz-select> -->
     </div>
 
     <nz-button-group>

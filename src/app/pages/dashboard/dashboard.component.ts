@@ -24,18 +24,26 @@ export class DashboardComponent implements OnInit {
     this.loadExercises();
   }
 
-  private async loadExercises(): Promise<void> {
+  private async loadExercises(selectedDay?: Days): Promise<void> {
     this.isLoading = true;
 
     const user: User = this.localStorageService
         .get(LocalStorageConstants.CurrentUser)!;
 
-    // TODO: Dare la possibilità di caricare giorno successivo?
-    let today: string = new Date().toLocaleString('it-IT', {weekday:'long'}); 
-    today = today.charAt(0).toUpperCase() + today.slice(1);
-    this.exercises = await this.exerciseService.getDaily(user.uid, Days[today as unknown as Days]);
-
+    if(!!selectedDay)
+    {
+      this.exercises = await this.exerciseService.getDaily(user.uid, selectedDay );
+    }
+    else {
+        let today: string = new Date().toLocaleString('it-IT', {weekday:'long'}); 
+        today = today.charAt(0).toUpperCase() + today.slice(1);
+        this.exercises = await this.exerciseService.getDaily(user.uid, Days[today as unknown as Days]);
+    }
     this.isLoading = false;
+  }
+
+  public async onSelectDay(day: string) {
+    this.loadExercises(day as unknown as Days);
   }
 
 }

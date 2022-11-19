@@ -17,6 +17,7 @@ import { NzSelectModule } from 'ng-zorro-antd/select';
 import { NzPopconfirmModule } from 'ng-zorro-antd/popconfirm';
 import { NzDividerModule } from 'ng-zorro-antd/divider';
 import { NzMessageModule } from 'ng-zorro-antd/message';
+import { NzDropDownModule } from 'ng-zorro-antd/dropdown';
 
 const ngZorroModules = [
   NzIconModule,
@@ -35,7 +36,8 @@ const ngZorroModules = [
   NzSelectModule,
   NzPopconfirmModule,
   NzDividerModule,
-  NzMessageModule
+  NzMessageModule,
+  NzDropDownModule
 ];
 
 @NgModule({

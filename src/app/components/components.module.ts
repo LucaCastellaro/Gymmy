@@ -18,6 +18,7 @@ import { ExerciseListItemComponent } from './exercise-list-item/exercise-list-it
 import { EditSeriesComponent } from './edit-series/edit-series.component';
 import { EditExerciseComponent } from './edit-exercise/edit-exercise.component';
 import { SeriesDetailsComponent } from './series-details/series-details.component';
+import { DropdownComponent } from './dropdown/dropdown.component';
 
 const components = [
   ConfirmButtonComponent,
@@ -34,7 +35,8 @@ const components = [
   SeriesListItemComponent,
   EditSeriesComponent,
   EditExerciseComponent,
-  SeriesDetailsComponent
+  SeriesDetailsComponent,
+  DropdownComponent
 ];
 
 @NgModule({
