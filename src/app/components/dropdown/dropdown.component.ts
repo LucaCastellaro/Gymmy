@@ -21,7 +21,7 @@ export class DropdownComponent implements OnInit {
     }
 
     public selectValue(event: any) {
-        this.selectedValue = event.target.textContent;
+        this.selectedValue = event.target.textContent.trim();
         this.onSelect.emit(this.selectedValue);
     }
 }

@@ -35,7 +35,7 @@ export class ExerciseListComponent implements OnInit {
     }
 
     public addExercise(value: any){
-        this.exercises.push(value);
+        this.onSelectDay.emit(this.selectedDay);
     }
 
     public async markAllAsDone(): Promise<void> {

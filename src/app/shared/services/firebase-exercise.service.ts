@@ -49,12 +49,12 @@ export class FirebaseExerciseService {
         return new Map<number, ExerciseDTO>();
     }
 
-    public async getDaily(userId: string, day: Days): Promise<ExerciseDTO[]> {
+    public async getDaily(userId: string, day: string): Promise<ExerciseDTO[]> {
         const allExercises = await this.getAll(userId);
 
         const result: ExerciseDTO[] = [];
         for(let item of allExercises.values()) {
-            if(item.days.some(exerciseDay => exerciseDay == Days[day])) result.push(item);
+            if(item.days.some(exerciseDay => exerciseDay == day)) result.push(item);
         }
 
         return result;

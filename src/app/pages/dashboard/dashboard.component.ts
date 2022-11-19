@@ -24,7 +24,7 @@ export class DashboardComponent implements OnInit {
     this.loadExercises();
   }
 
-  private async loadExercises(selectedDay?: Days): Promise<void> {
+  private async loadExercises(selectedDay?: string): Promise<void> {
     this.isLoading = true;
 
     const user: User = this.localStorageService
@@ -37,13 +37,16 @@ export class DashboardComponent implements OnInit {
     else {
         let today: string = new Date().toLocaleString('it-IT', {weekday:'long'}); 
         today = today.charAt(0).toUpperCase() + today.slice(1);
-        this.exercises = await this.exerciseService.getDaily(user.uid, Days[today as unknown as Days]);
+        selectedDay = today;
     }
+
+    this.exercises = await this.exerciseService.getDaily(user.uid, selectedDay );
+
     this.isLoading = false;
   }
 
   public async onSelectDay(day: string) {
-    this.loadExercises(day as unknown as Days);
+    this.loadExercises(day);
   }
 
 }
