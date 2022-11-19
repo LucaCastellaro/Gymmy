@@ -136,3 +136,26 @@ html, body {
 .ant-drawer-footer {
     border-top: 1px solid @accent-dark;
 }
+
+.ant-dropdown-trigger {
+    @apply flex items-center;
+
+    .anticon {
+        @apply px-4;
+    }
+}
+
+.ant-dropdown-menu {
+    @apply rounded-md shadow-md shadow-black;
+    background: @accent-dark !important;
+}
+
+.ant-dropdown-menu-item {
+    @apply text-lg;
+    color: @accent-light !important;
+}
+
+.ant-dropdown-menu-item-selected {
+    background: @accent-dark !important;
+    color: @accent-light !important;
+}

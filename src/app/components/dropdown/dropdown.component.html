@@ -5,6 +5,10 @@
 
 <nz-dropdown-menu #menu="nzDropdownMenu">
     <ul nz-menu nzSelectable>
-        <li nz-menu-item *ngFor="let value of values" (click)="selectValue($event)">{{value}}</li>
+        <li nz-menu-item 
+            *ngFor="let value of values" 
+            (click)="selectValue($event)">
+                {{value}}
+        </li>
     </ul>
 </nz-dropdown-menu>

@@ -16,6 +16,8 @@ export class DropdownComponent implements OnInit {
     ngOnInit() { 
         if(!!this.preSelected) this.selectedValue = this.preSelected;
         else this.selectedValue = this.values[0];
+
+        this.onSelect.emit(this.selectedValue);
     }
 
     public selectValue(event: any) {
