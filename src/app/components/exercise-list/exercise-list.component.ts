@@ -1,8 +1,10 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { NzMessageService } from 'ng-zorro-antd/message';
+import { LocalStorageConstants } from 'src/app/shared/constants/localStorage.constants';
 import { ExerciseDTO } from 'src/app/shared/models/DTO/ExerciseDTO';
 import { Days } from 'src/app/shared/models/enums/days.enum';
 import { FirebaseExerciseService } from 'src/app/shared/services/firebase-exercise.service';
+import { LocalStorageService } from 'src/app/shared/services/localStorage.service';
 
 @Component({
     selector: 'app-exercise-list',
@@ -22,12 +24,20 @@ export class ExerciseListComponent implements OnInit {
 
     constructor(
         private readonly exerciseService: FirebaseExerciseService,
-        private readonly message: NzMessageService
+        private readonly message: NzMessageService,
+        private readonly localStorageService: LocalStorageService
     ) { }
     
     ngOnInit(): void {
         this.days = Object.keys(Days);
-        this.selectedDay = this.days[new Date().getDay() - 1];
+        this.calculateSelectedDay();
+    }
+
+    private calculateSelectedDay(): void {
+        const temp = this.localStorageService.get<string>(LocalStorageConstants.SelectedDay);
+
+        if(!!temp) this.selectedDay = temp;
+        else this.selectedDay = this.days[new Date().getDay() - 1];
     }
 
     public openDrawer(): void {
