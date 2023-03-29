@@ -6,10 +6,21 @@ import { SeriesDTO } from 'src/app/shared/models/DTO/SeriesDTO';
   selector: 'app-series-list',
   templateUrl: './series-list.component.html',
 })
-export class SeriesListComponent {
+export class SeriesListComponent implements OnInit {
   @Input() exercise!: ExerciseDTO;
 
+  public done!: boolean[];
+  public keys!: number[];
+
   constructor( ) { }
+
+  ngOnInit(): void {
+    this.keys = Object
+      .keys(this.exercise.series)
+      .map(item => +item);
+
+    this.done = this.keys.map(xx => false);
+  }
 
   public async editSeries(value: SeriesDTO): Promise<void> {
     this.exercise.series[value.id] = value;
@@ -18,12 +29,6 @@ export class SeriesListComponent {
   public get hasSeries(): boolean {
     return this.exercise.series
       && Object.keys(this.exercise.series).length > 0;
-  }
-
-  public get keys(): number[] {
-    return Object
-      .keys(this.exercise.series)
-      .map(item => +item);
   }
 
   public deleteSeries(value: SeriesDTO): void {
@@ -37,5 +42,9 @@ export class SeriesListComponent {
     }
     
     this.exercise.series = newSeries;
+  }
+
+  public toggleDone(index: number): void {
+    this.done[index] = !this.done[index];
   }
 }

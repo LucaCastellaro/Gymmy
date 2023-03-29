@@ -1,16 +1,36 @@
 <div 
-    class="lg:grid lg:grid-cols-4 mx-4" 
+    class="flex justify-center mx-4" 
     *ngIf="hasSeries;else noData"
 >
-    <app-series-list-item
-        *ngFor="let key of keys; let i = index"
-        class="w-full mb-4" 
-        [ngClass]="{'lg:pr-4': (i+1)%4!=0}"
-        [series]="exercise.series[key]" 
-        [index]="i"
-        (onEdit)="editSeries($event)"
-        (onDelete)="deleteSeries($event)">
-    </app-series-list-item>
+    <nz-card class="w-full">
+        <div class="grid grid-cols-4 mr-4">
+            <div class="text-center">
+                <div class="font-bold">Set</div>
+                <div (click)="toggleDone(i)" [ngClass]="{'accent-light-transparent': done[i]}" class="exercise-property" *ngFor="let key of keys; let i = index">
+                    {{i + 1}}
+                </div>
+            </div>
+            <div class="text-center">
+                <div class="font-bold">Reps</div>
+                <div (click)="toggleDone(i)" [ngClass]="{'accent-light-transparent': done[i]}" class="exercise-property" *ngFor="let key of keys; let i = index">
+                    {{exercise.series[key].reps}}
+                </div>
+            </div>
+            <div class="text-center">
+                <div class="font-bold">Kg</div>
+                <div (click)="toggleDone(i)" [ngClass]="{'accent-light-transparent': done[i]}" class="exercise-property" *ngFor="let key of keys; let i = index">
+                    {{exercise.series[key].weight}}
+                </div>
+            </div>
+            <div class="text-center">
+                <div class="font-bold">Pausa</div>
+                <div (click)="toggleDone(i)" [ngClass]="{'accent-light-transparent': done[i]}" class="exercise-property" *ngFor="let key of keys; let i = index">
+                    {{exercise.series[key].pause}}
+                </div>
+            </div>
+        </div>
+    </nz-card>
+
 </div>
 
 <ng-template #noData>

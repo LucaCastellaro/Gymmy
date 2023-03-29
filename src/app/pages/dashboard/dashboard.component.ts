@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { User } from '@angular/fire/auth';
 import { LocalStorageConstants } from 'src/app/shared/constants/localStorage.constants';
 import { ExerciseDTO } from 'src/app/shared/models/DTO/ExerciseDTO';
-import { Days } from 'src/app/shared/models/enums/days.enum';
 import { FirebaseExerciseService } from 'src/app/shared/services/firebase-exercise.service';
 import { LocalStorageService } from 'src/app/shared/services/localStorage.service';
 

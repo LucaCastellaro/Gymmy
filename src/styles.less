@@ -16,6 +16,7 @@
 @accent-dark: #393837;
 @primary-color: #FCA311;
 @accent-light: #E5E5E5;
+@accent-light-transparent: #e5e5e55e;
 @highlight: #FFFFFF;
 
 html, body {
@@ -158,4 +159,16 @@ html, body {
 .ant-dropdown-menu-item-selected {
     background: @accent-dark !important;
     color: @accent-light !important;
+}
+
+.border-t-1 {
+    border-top-width: 1px;
+}
+
+.accent-light-transparent {
+    color: @accent-light-transparent;
+}
+
+.exercise-property {
+    @apply py-2 pt-4 duration-100 cursor-pointer;
 }
