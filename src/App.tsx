@@ -1,12 +1,15 @@
-import React from 'react';
-import logo from './logo.svg';
 import './App.css';
 
-function App() {
+import { Counter } from './components/counter';
+
+const App = (): JSX.Element => {
   return (
-    <h1 className="text-3xl font-bold underline">
-      Hello world!
-    </h1>
+    <>
+      <h1 className="text-3xl font-bold underline">
+        Hello world!
+      </h1>
+      <Counter></Counter>
+    </>
   );
 }
 
