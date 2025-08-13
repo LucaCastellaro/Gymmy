@@ -1,0 +1,244 @@
+﻿@page "/"
+@using Gymmy.Components.Pages.Home.Components
+
+@inject DataAccess.Repositories.IDayRepository dayService
+@inject Business.Services.IWorkoutService workoutService
+@inject Business.Services.IDataService dataService
+@inject NavigationManager navigationManager
+@inject IDialogService dialogService
+
+<div class="d-flex justify-content-between">
+    <FluentLabel Typo="Typography.H1">Allenamenti</FluentLabel>
+
+    <FluentCounterBadge BackgroundColor="Color.Accent"
+                        Color="Color.Fill"
+                        Dot=@(editMode)>
+        <CustomButton Icon=@(new Icons.Regular.Size16.Edit())
+                      Disabled=@isLoading
+                      OnClick=@ToggleEdit />
+    </FluentCounterBadge>
+</div>
+@if (days.Count == 0 && !isLoading)
+{
+    <FluentLabel Typo="Typography.Body">
+        Nessun dato da mostrare.
+    </FluentLabel>
+}
+@if (editMode)
+{
+    <ActionBar Actions=@editActions />
+}
+@foreach (var day in days)
+{
+    <div class="d-flex mt-2">
+        @if (editMode)
+        {
+            <FluentCheckbox Class="me-2"
+                            ThreeState="true"
+                            CheckState=@selectedDays.Contains(day.Id)
+                            CheckStateChanged=@(() => ToggleSelectedDay(day.Id)) />
+        }
+        <FluentCard Class="p-0">
+            <div class="d-flex justify-content-between align-items-center">
+                <div onclick="@(() => GoToTraining(day))"
+                     class="w-100 px-3 py-3">
+                    <FluentLabel Typo="Typography.H5">
+                        @day.Description
+                    </FluentLabel>
+                </div>
+                @if (editMode)
+                {
+                    <div class="me-3">
+                        <CustomButton Icon=@(new Icons.Regular.Size20.PanelRight())
+                                      OnClick=@(async () => await Edit(day)) />
+                    </div>
+                }
+            </div>
+        </FluentCard>
+    </div>
+}
+
+<div class="pb-5">
+    <FluentSpacer />
+</div>
+
+@code {
+    private List<DataAccess.DTOs.DayDto> days = [];
+    private bool isLoading = false;
+    private IDialogReference? dialog;
+    private bool editMode = false;
+    private List<Guid> selectedDays = [];
+
+    private List<Gymmy.Components.Pages.Components.ActionBar.Action> editActions = [];
+
+    protected override async Task OnInitializedAsync()
+    {
+        isLoading = true;
+
+        await dataService.CleanDb();
+
+        days = (await dayService.Get())
+            .OrderBy(xx => xx.Priority)
+            .ToList();
+
+        var workout = await workoutService.GetCurrentWorkout();
+        if (workout is not null && await workoutService.IsInactive(workout.Id))
+        {
+            await workoutService.CloseWorkoutForInactivity(workout.Id);
+        }
+
+        selectedDays = [];
+        editMode = false;
+
+        editActions = [
+            new("Elimina", new Icons.Regular.Size20.Delete(), DeleteSelected, () => selectedDays.Count < 1 || isLoading, () => true),
+            new("Aggiungi", new Icons.Regular.Size20.AddCircle(), Add, () => isLoading, () => true)
+        ];
+
+        isLoading = false;
+    }
+
+    private async Task Reload()
+    {
+        days = (await dayService.Get())
+            .OrderBy(xx => xx.Priority)
+            .ToList();
+
+        var workout = await workoutService.GetCurrentWorkout();
+        if (workout is not null && await workoutService.IsInactive(workout.Id))
+        {
+            await workoutService.CloseWorkoutForInactivity(workout.Id);
+        }
+    }
+
+    private void ToggleEdit()
+    {
+        editMode = !editMode;
+    }
+
+    private void GoToTraining(DataAccess.DTOs.DayDto day)
+    {
+        if (isLoading || editMode) return;
+        navigationManager.NavigateTo($"/training/{day.Id}");
+    }
+
+    private async Task Add()
+    {
+        if (isLoading) return;
+        isLoading = true;
+
+        var newDay = new DataAccess.DTOs.DayDto
+        {
+            Description = string.Empty,
+            Id = Guid.NewGuid(),
+            IsActive = true,
+        };
+        dialog = await dialogService.ShowPanelAsync<UpsertDayPanel>(newDay, new DialogParameters<DataAccess.DTOs.DayDto>()
+        {
+            Content = newDay,
+            Alignment = HorizontalAlignment.Right,
+            Title = "Aggiungi giornata",
+            PrimaryAction = "Salva",
+            SecondaryAction = "Annulla"
+        });
+
+        var dialogResult = await dialog.Result;
+        if (!dialogResult.Cancelled && dialogResult.Data is not null)
+        {
+            var result = dialogResult.Data as DataAccess.DTOs.DayDto;
+            if (result is not null)
+            {
+                {
+                    result.Description = result.Description.Trim().ToUpper();
+                    await dayService.Add(result);
+                }
+            }
+
+        }
+
+        await Reload();
+
+        isLoading = false;
+    }
+
+    private async Task Edit(DataAccess.DTOs.DayDto day)
+    {
+        if (isLoading) return;
+        isLoading = true;
+
+        dialog = await dialogService.ShowPanelAsync<UpsertDayPanel>(day, new DialogParameters<DataAccess.DTOs.DayDto>()
+        {
+            Content = day,
+            Alignment = HorizontalAlignment.Right,
+            Title = "Modifica giornata",
+            PrimaryAction = "Salva",
+            SecondaryAction = "Annulla"
+        });
+
+        var dialogResult = await dialog.Result;
+        if (!dialogResult.Cancelled && dialogResult.Data is not null)
+        {
+            var result = dialogResult.Data as DataAccess.DTOs.DayDto;
+            if (result is not null)
+            {
+                {
+                    result.Description = result.Description.Trim().ToUpper();
+                    await dayService.Upsert(result);
+                }
+            }
+
+        }
+
+        await Reload();
+
+        isLoading = false;
+    }
+
+    private async Task Delete(Guid dayId)
+    {
+        if (isLoading) return;
+        isLoading = true;
+
+        await dayService.Delete(dayId);
+
+        await Reload();
+
+        isLoading = false;
+    }
+
+    private async Task IncrementPriority(DataAccess.DTOs.DayDto day)
+    {
+        if (isLoading) return;
+        isLoading = true;
+
+        await dayService.IncrementPriority(day.Id);
+
+        await Reload();
+
+        isLoading = false;
+    }
+
+    private async Task DecrementPriority(DataAccess.DTOs.DayDto day)
+    {
+        if (isLoading) return;
+        isLoading = true;
+
+        await dayService.DecrementPriority(day.Id);
+
+        await Reload();
+
+        isLoading = false;
+    }
+
+    private void ToggleSelectedDay(Guid day)
+    {
+        if (selectedDays.Contains(day)) selectedDays.Remove(day);
+        else selectedDays.Add(day);
+    }
+
+    private async Task DeleteSelected()
+    {
+        foreach (var day in selectedDays) await Delete(day);
+        selectedDays.Clear();
+    }
+}

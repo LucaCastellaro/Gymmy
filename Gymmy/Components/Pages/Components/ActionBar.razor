@@ -1,0 +1,41 @@
+﻿<div class="pt-2 w-100">
+    <FluentHorizontalScroll Speed="600"
+                            Class="w-100"
+                            Easing=ScrollEasing.EaseInOut>
+        @if (Appearance == Microsoft.FluentUI.AspNetCore.Components.Appearance.Stealth)
+        {
+            @foreach (var item in Actions)
+            {
+                if (item.Visible())
+                {
+                    <CustomButton Icon=@item.Icon
+                                  Label=@item.Label
+                                  Disabled=@item.Disabled()
+                                  OnClick=@item.Callback />
+                }
+            }
+        }
+        else
+        {
+            @foreach (var item in Actions)
+            {
+                if (item.Visible())
+                {
+                    <FluentButton OnClick=@item.Callback
+                                  Appearance=@Appearance
+                                  Disabled=@item.Disabled()
+                                  IconStart=@item.Icon>
+                        @item.Label
+                    </FluentButton>
+                }
+            }
+        }
+    </FluentHorizontalScroll>
+</div>
+
+@code {
+    public sealed record Action(string Label, Microsoft.FluentUI.AspNetCore.Components.Icon Icon, Func<Task> Callback, Func<bool> Disabled, Func<bool> Visible);
+
+    [Parameter] public required List<Action> Actions { get; set; } = [];
+    [Parameter] public Microsoft.FluentUI.AspNetCore.Components.Appearance Appearance { get; set; } = Microsoft.FluentUI.AspNetCore.Components.Appearance.Outline;
+}

@@ -1,0 +1,445 @@
+﻿@page "/training/{DayId}"
+
+@using Business.Extensions
+@using Gymmy.Components.Pages.Components
+@using Gymmy.Components.Pages.Training.Exercise
+
+@inject IDialogService dialogService
+@inject DataAccess.Repositories.IDayRepository dayService
+@inject Business.Services.IExerciseService exerciseService
+@inject DataAccess.Repositories.ISetRepository setService
+@inject DataAccess.Repositories.ILastSelectedService lastSelectedService
+@inject Business.Services.IWorkoutService workoutService
+@inject NavigationManager navigationManager
+@inject IToastService toastService
+
+<div class="pt-2 d-flex justify-content-between">
+    <FluentLabel Typo="Typography.H1">
+        @day?.Description
+    </FluentLabel>
+
+    @if (exercises.Count > 0)
+    {
+        <FluentCounterBadge BackgroundColor="Color.Accent"
+                            Color="Color.Fill"
+                            Dot=@(editMode)>
+            <CustomButton Icon=@(new Icons.Regular.Size16.Edit())
+                          Disabled=@isLoading
+                          OnClick=@ToggleEdit />
+        </FluentCounterBadge>
+    }
+</div>
+@if (exercises.Count > 0)
+{
+    <Tags Data=@trainingTags />
+    <div class="w-100 d-flex justify-content-between">
+        @if (editMode)
+        {
+            <ActionBar Actions=@editActions />
+        }
+        else
+        {
+            <div class="pt-2 w-100">
+                @if (workoutId is null)
+                {
+                    <FluentButton Appearance="Appearance.Accent"
+                                  IconStart="@(new Icons.Filled.Size16.Play())"
+                                  Disabled=@isLoading
+                                  Class="w-100"
+                                  OnClick="@StartWorkout">
+                        Inizia allenamento
+                    </FluentButton>
+                }
+                else
+                {
+                    <FluentButton Appearance="Appearance.Accent"
+                                  IconStart="@(new Icons.Filled.Size16.Stop())"
+                                  Disabled=@isLoading
+                                  Class="w-100"
+                                  OnClick="@StopWorkout">
+                        Chiudi allenamento
+                    </FluentButton>
+                }
+            </div>
+        }
+    </div>
+}
+else
+{
+    <div class="pt-2 w-100 d-flex justify-content-around">
+        <FluentButton Appearance="Appearance.Outline"
+                      IconStart="@(new Icons.Filled.Size20.Sparkle())"
+                      Disabled=@isLoading
+                      OnClick=@Add>
+            Genera allenamento
+        </FluentButton>
+    </div>
+}
+@foreach (var item in exercises)
+{
+    <div class="d-flex">
+        @if (editMode)
+        {
+            <FluentCheckbox Class="me-2"
+                            ThreeState="true"
+                            CheckState=@selectedExercises.Contains(item.Id)
+                            CheckStateChanged=@(() => ToggleSelected(item.Id)) />
+        }
+        <FluentCard class="p-0 mt-2">
+            <div class="d-flex justify-content-between align-items-center">
+                @if (editMode)
+                {
+                    <div class="ps-4">
+                        <CustomButton Icon=@(new Microsoft.FluentUI.AspNetCore.Components.Icons.Regular.Size20.ArrowUp())
+                                      Disabled=@(exercises.IndexOf(item) <= 0)
+                                      OnClick=@(() => MoveUp(item)) />
+                    </div>
+
+                    <div>
+                        <CustomButton Icon=@(new Microsoft.FluentUI.AspNetCore.Components.Icons.Regular.Size20.ArrowDown())
+                                      Disabled=@(exercises.IndexOf(item) >= (exercises.Count - 1))
+                                      OnClick=@(() => MoveDown(item)) />
+                    </div>
+                }
+                else
+                {
+                    <div class="ps-4">
+                        @if (item.IsDone())
+                        {
+                            <CustomButton Icon=@(new Microsoft.FluentUI.AspNetCore.Components.Icons.Color.Size24.CheckmarkCircle())
+                                          OnClick=@(() => MarkAsUndone(item))
+                                          Disabled=@editMode />
+                        }
+                        else
+                        {
+                            <CustomButton Icon=@(new Microsoft.FluentUI.AspNetCore.Components.Icons.Regular.Size24.CheckmarkCircle())
+                                          OnClick=@(() => MarkAsDone(item))
+                                          Disabled=@editMode />
+                        }
+                    </div>
+                }
+                <div onclick="@(() => GoToDetail(item.Id))"
+                     class="w-100 px-3 py-3">
+                    <FluentLabel Typo="Typography.H5"
+                                 class="px-3 py-2">
+                        @item.Description
+                    </FluentLabel>
+                </div>
+                @if (editMode)
+                {
+                    <div class="me-3">
+                        <CustomButton Icon=@(new Icons.Regular.Size20.PanelRight())
+                                      OnClick=@(async () => await Edit(item)) />
+                    </div>
+                }
+            </div>
+        </FluentCard>
+    </div>
+}
+
+<div class="pb-5">
+    <FluentSpacer />
+</div>
+
+@code {
+    [Parameter]
+    public required string DayId { get; set; }
+
+    private List<DataAccess.DTOs.ExerciseDto> exercises = [];
+    private List<Guid> selectedExercises = [];
+    private List<DataAccess.DTOs.TagDto> trainingTags = [];
+    private DataAccess.DTOs.DayDto? day = null;
+    private bool isLoading = false;
+    private IDialogReference? dialog;
+    private Guid? workoutId = null;
+    private bool editMode = false;
+
+    private List<Gymmy.Components.Pages.Components.ActionBar.Action> editActions = [];
+
+    protected override async Task OnInitializedAsync()
+    {
+        isLoading = true;
+
+        var dayGuid = Guid.Parse(DayId);
+        day = await dayService.FindById(dayGuid);
+        isLoading = false;
+        if (day is null) return;
+
+        isLoading = true;
+
+        exercises = await exerciseService.Get(xx => day.Exercises.Contains(xx.Id));
+
+        trainingTags = exercises
+            .SelectMany(xx => xx.Tags)
+            .DistinctBy(xx => xx.Name)
+            .OrderBy(xx => xx.Name)
+            .ToList();
+
+        await SearchCurrentWorkout();
+
+        selectedExercises = [];
+        editMode = false;
+
+        editActions = [
+            new("Elimina", new Icons.Regular.Size20.Delete(), DeleteSelected, () => selectedExercises.Count < 1 || isLoading, () => true),
+            new("Genera scheda", new Icons.Regular.Size20.Sparkle(), Add, () => isLoading, () => exercises.Count > 0)
+        ];
+
+        isLoading = false;
+    }
+
+    private async Task Reload()
+    {
+        var dayGuid = Guid.Parse(DayId);
+        day = await dayService.FindById(dayGuid);
+        if (day is null) return;
+
+        exercises = await exerciseService.Get(xx => day.Exercises.Contains(xx.Id));
+
+        trainingTags = exercises
+            .SelectMany(xx => xx.Tags)
+            .DistinctBy(xx => xx.Name)
+            .OrderBy(xx => xx.Name)
+            .ToList();
+
+        await SearchCurrentWorkout();
+    }
+
+    private void ToggleEdit()
+    {
+        editMode = !editMode;
+    }
+
+    private async Task SearchCurrentWorkout()
+    {
+        var workout = await workoutService.GetCurrentWorkout();
+        if (workout is not null)
+        {
+            workoutId = workout.Id;
+        }
+    }
+
+    private void GoToDetail(Guid exerciseId)
+    {
+        navigationManager.NavigateTo($"/exercise/handle/{exerciseId}?WorkoutId={workoutId}");
+    }
+
+    private async Task Edit(DataAccess.DTOs.ExerciseDto exercise)
+    {
+        if (isLoading) return;
+        isLoading = true;
+
+        var result = await OpenUpsertDialog(exercise, "Modifica esercizio");
+
+        if (result is not null) exercise = result;
+
+        isLoading = false;
+    }
+
+    private async Task<DataAccess.DTOs.ExerciseDto?> OpenUpsertDialog(DataAccess.DTOs.ExerciseDto exercise, string title)
+    {
+        dialog = await dialogService.ShowPanelAsync<UpsertExercisePanel>(exercise, new DialogParameters<DataAccess.DTOs.ExerciseDto>()
+        {
+            Content = exercise,
+            Alignment = HorizontalAlignment.Right,
+            Title = title,
+            PrimaryAction = "Salva",
+            SecondaryAction = "Annulla"
+        });
+
+        var dialogResult = await dialog.Result;
+        if (!dialogResult.Cancelled && dialogResult.Data is not null)
+        {
+            var result = dialogResult.Data as DataAccess.DTOs.ExerciseDto;
+            if (result is not null && !string.IsNullOrWhiteSpace(result.Description))
+            {
+                result.Description = result.Description.Trim().ToUpper();
+                await exerciseService.Upsert(result);
+
+                var sets = await setService.Get(xx => result.Sets.Contains(xx.Id));
+                foreach (var set in sets)
+                {
+                    set.Rest = result.Rest;
+                    await setService.Upsert(set);
+                }
+
+                return result;
+            }
+        }
+
+        return null;
+    }
+
+    private async Task Delete(Guid exerciseId)
+    {
+        if (isLoading || day is null) return;
+        isLoading = true;
+
+        day.Exercises.Remove(exerciseId);
+        exercises = exercises.Where(xx => xx.Id == exerciseId).ToList();
+
+        await dayService.Upsert(day);
+
+        isLoading = false;
+
+        var dayGuid = Guid.Parse(DayId);
+        day = await dayService.FindById(dayGuid);
+
+        await Reload();
+    }
+
+    public async Task MarkAsDone(DataAccess.DTOs.ExerciseDto exercise)
+    {
+        if (isLoading) return;
+        isLoading = true;
+        exercise.LastDone = DateTime.Today;
+        await exerciseService.Upsert(exercise);
+
+        var sets = await setService.Get(xx => exercise.Sets.Contains(xx.Id));
+        foreach (var set in sets)
+        {
+            set.LastDone = DateTime.Today;
+            await setService.Upsert(set);
+
+            if (workoutId is not null)
+            {
+                await workoutService.AddSet(workoutId.Value, exercise.Id, set);
+            }
+        }
+        isLoading = false;
+    }
+
+    public async Task MarkAsUndone(DataAccess.DTOs.ExerciseDto exercise)
+    {
+        if (isLoading) return;
+        isLoading = true;
+
+        exercise.LastDone = null;
+        await exerciseService.Upsert(exercise);
+
+        var sets = await setService.Get(xx => exercise.Sets.Contains(xx.Id));
+        foreach (var set in sets)
+        {
+            set.LastDone = null;
+            await setService.Upsert(set);
+
+            if (workoutId is not null)
+            {
+                await workoutService.RemoveSet(workoutId.Value, exercise.Id, set);
+            }
+        }
+        isLoading = false;
+    }
+
+    public async Task StartWorkout()
+    {
+        if (isLoading) return;
+        isLoading = true;
+
+        workoutId = await workoutService.Start();
+
+        isLoading = false;
+    }
+
+    public async Task StopWorkout()
+    {
+        if (isLoading) return;
+        if (workoutId is null) return;
+
+        isLoading = true;
+
+        await workoutService.Stop(workoutId.Value);
+
+        workoutId = null;
+
+        isLoading = false;
+    }
+
+    public async Task Add()
+    {
+        if (isLoading || day is null) return;
+
+        dialog = await dialogService.ShowPanelAsync<AddExercisePanel>(
+            day,
+            new DialogParameters<DataAccess.DTOs.DayDto>()
+            {
+                Content = day,
+                Alignment = HorizontalAlignment.Right,
+                Title = $"Aggiungi esercizi",
+                PrimaryAction = "Salva",
+                SecondaryAction = "Annulla"
+            });
+
+        var dialogResult = await dialog.Result;
+        if (!dialogResult.Cancelled && dialogResult.Data is not null)
+        {
+            var updated = dialogResult.Data as DataAccess.DTOs.DayDto;
+            if (updated is not null)
+            {
+                day = updated;
+                await dayService.Upsert(day);
+                await Reload();
+            }
+        }
+    }
+
+    private async Task DeleteSelected()
+    {
+        foreach (var item in selectedExercises) await Delete(item);
+        selectedExercises.Clear();
+    }
+
+    private void ToggleSelected(Guid item)
+    {
+        if (selectedExercises.Contains(item)) selectedExercises.Remove(item);
+        else selectedExercises.Add(item);
+    }
+
+    private async Task MoveUp(DataAccess.DTOs.ExerciseDto item)
+    {
+        if (isLoading || day is null) return;
+        isLoading = true;
+
+        var currentIndex = exercises.IndexOf(item);
+        if (currentIndex > 0)
+        {
+            exercises = await exerciseService.MoveUp(day.Id, item.Id);
+            StateHasChanged();
+        }
+        else
+        {
+            toastService.ShowToast(
+                ToastIntent.Info,
+                "L'esercizio è già il primo della giornata",
+                3000,
+                "OK"
+            );
+        }
+
+        isLoading = false;
+    }
+
+    private async Task MoveDown(DataAccess.DTOs.ExerciseDto item)
+    {
+        if (isLoading || day is null) return;
+        isLoading = true;
+
+        var currentIndex = exercises.IndexOf(item);
+        if (currentIndex < (exercises.Count - 1))
+        {
+            exercises = await exerciseService.MoveDown(day.Id, item.Id);
+            StateHasChanged();
+        }
+        else
+        {
+            toastService.ShowToast(
+                ToastIntent.Info,
+                "L'esercizio è già l'ultimo della giornata",
+                3000,
+                "OK"
+            );
+        }
+
+        isLoading = false;
+    }
+}

@@ -1,0 +1,22 @@
+﻿@implements IDialogContentComponent<List<Option<DataAccess.DTOs.DayDto>>>
+
+@using static Gymmy.Components.Pages.Menu.Exercise.ExerciseList
+
+@inject DataAccess.Repositories.IDayRepository dayService
+
+<FluentDialogBody>
+    @foreach (var item in Content)
+    {
+        <div class="py-2 d-flex justify-content-between">
+            <FluentLabel Typo="Typography.Body">
+                @item.Value!.Description
+            </FluentLabel>
+            <FluentSwitch @bind-Value=item.Selected />
+        </div>
+    }
+</FluentDialogBody>
+
+@code {
+    [Parameter]
+    public required List<Option<DataAccess.DTOs.DayDto>> Content { get; set; }
+}

@@ -1,0 +1,85 @@
+﻿@page "/menu"
+
+@inject Business.Services.IDataService dataService
+@inject IToastService toastService
+
+@inject NavigationManager navigationManager
+
+<FluentNavMenu>
+    <FluentNavLink OnClick="@(() => navigationManager.NavigateTo("/exercise/list"))"
+                   Icon="@(new Icons.Regular.Size24.DocumentBulletList())"
+                   Class="pb-2">
+        <div class="ps-2 pe-5 py-3">
+            Gestisci esercizi
+        </div>
+    </FluentNavLink>
+    <FluentNavLink OnClick="@(() => navigationManager.NavigateTo("/tag/list"))"
+                   Icon="@(new Icons.Regular.Size24.TagMultiple())"
+                   Class="pb-2">
+        <div class="ps-2 pe-5 py-3">
+            Gestisci tag
+        </div>
+    </FluentNavLink>
+    <FluentNavLink OnClick="ExportData"
+                   Icon="@(new Icons.Regular.Size24.ArrowStepOut())"
+                   Class="pb-2">
+        <div class="ps-2 pe-5 py-3">
+            Esporta dati
+        </div>
+    </FluentNavLink>
+    <FluentNavLink OnClick="@(() => navigationManager.NavigateTo("/import"))"
+                   Icon="@(new Icons.Regular.Size24.ArrowStepIn())"
+                   Class="pb-2">
+        <div class="ps-2 pe-5 py-3">
+            Importa dati
+        </div>
+    </FluentNavLink>
+    <FluentNavLink OnClick="DeleteData"
+                   Icon="@(new Microsoft.FluentUI.AspNetCore.Components.Icons.Regular.Size24.Delete())">
+        <div class="ps-2 pe-5 py-3">
+            Cancella dati
+        </div>
+    </FluentNavLink>
+</FluentNavMenu>
+
+<div class="pb-5">
+    <FluentSpacer />
+</div>
+
+@code {
+    private bool isLoading = false;
+
+    private async Task ExportData()
+    {
+        if (isLoading) return;
+        isLoading = true;
+
+        await dataService.Export();
+
+        toastService.ShowToast(
+            ToastIntent.Success,
+            "Dati esportati",
+            3000,
+            "OK"
+        );
+
+        isLoading = false;
+    }
+
+    private async Task DeleteData()
+    {
+        if (isLoading) return;
+        isLoading = true;
+
+        await dataService.DeleteAllData();
+
+        toastService.ShowToast(
+            ToastIntent.Success,
+            "Tutti i dati sono stati cancellati",
+            3000,
+            "OK"
+        );
+
+        isLoading = false;
+    }
+}

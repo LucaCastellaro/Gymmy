@@ -1,0 +1,246 @@
+﻿@page "/statistics"
+
+@inject Business.Services.IStatisticService statisticService
+@inject NavigationManager navigationManager
+
+@using Business.Extensions
+
+@if (statistic is null)
+{
+    <FluentLabel Typo="Typography.H1">
+        Statistiche
+    </FluentLabel>
+    <FluentLabel Typo="Typography.Body">
+        Nessun dato da mostrare.
+    </FluentLabel>
+}
+else
+{
+    <div>
+        <div class="d-flex justify-content-between">
+            <FluentLabel Typo="Typography.H1">
+                Allenamenti
+            </FluentLabel>
+            <CustomButton Icon="@(new Icons.Regular.Size16.ArrowCircleRight())"
+                          OnClick="@SeeAllWorkouts"
+                          Label="Vedi tutti" />
+        </div>
+        <div class="d-flex justify-content-between w-100 py-2">
+            <FluentCard style="width:49%; height:10rem"
+                        class="d-flex flex-column justify-content-between">
+                <div class="d-flex justify-content-between w-100">
+                    <div style="font-size: 4rem"
+                         class="fw-bold ">
+                        @statistic.TotalWorkoutsPerWeek.Current
+                    </div>
+
+                    <div class="d-flex align-items-start">
+                        @if (statistic.TotalWorkoutsPerWeek.IsPositive())
+                        {
+                            <FluentIcon Value="@(new Microsoft.FluentUI.AspNetCore.Components.Icons.Regular.Size20.ArrowTrending())" Color="@Color.Success" />
+                        }
+                        else if (statistic.TotalWorkoutsPerWeek.IsNegative())
+                        {
+                            <FluentIcon Value="@(new Microsoft.FluentUI.AspNetCore.Components.Icons.Regular.Size20.ArrowTrendingDown())" Color="@Color.Error" />
+                        }
+                        <div class="ps-1">@PrintDiff(statistic.TotalWorkoutsPerWeek)</div>
+                    </div>
+                </div>
+                <FluentLabel Typo="Typography.Body">
+                    Questa settimana
+                </FluentLabel>
+            </FluentCard>
+            <FluentCard style="width:49%; height:10rem"
+                        class="d-flex flex-column justify-content-between">
+                <div class="d-flex justify-content-between w-100">
+                    <div style="font-size: 4rem"
+                         class="fw-bold ">
+                        @statistic.TotalWorkoutsPerMonth.Current
+                    </div>
+
+                    <div class="d-flex align-items-start">
+                        @if (statistic.TotalWorkoutsPerMonth.IsPositive())
+                        {
+                            <FluentIcon Value="@(new Microsoft.FluentUI.AspNetCore.Components.Icons.Regular.Size20.ArrowTrending())" Color="@Color.Success" />
+                        }
+                        else if (statistic.TotalWorkoutsPerMonth.IsNegative())
+                        {
+                            <FluentIcon Value="@(new Microsoft.FluentUI.AspNetCore.Components.Icons.Regular.Size20.ArrowTrendingDown())" Color="@Color.Error" />
+                        }
+                        <div class="ps-1">@PrintDiff(statistic.TotalWorkoutsPerMonth)</div>
+                    </div>
+                </div>
+                <FluentLabel Typo="Typography.Body">
+                    Questo mese
+                </FluentLabel>
+            </FluentCard>
+        </div>
+        <div class="d-flex justify-content-between w-100 pb-2">
+            <FluentCard style="width:49%; height:10rem"
+                        class="d-flex flex-column justify-content-between">
+                <div class="d-flex justify-content-between w-100">
+                    <div style="font-size: 4rem"
+                         class="fw-bold ">
+                        @statistic.TotalWorkoutsPerYear.Current
+                    </div>
+
+                    <div class="d-flex align-items-start">
+                        @if (@statistic.TotalWorkoutsPerYear.IsPositive())
+                        {
+                            <FluentIcon Value="@(new Microsoft.FluentUI.AspNetCore.Components.Icons.Regular.Size20.ArrowTrending())" Color="@Color.Success" />
+                        }
+                        else if (statistic.TotalWorkoutsPerYear.IsNegative())
+                        {
+                            <FluentIcon Value="@(new Microsoft.FluentUI.AspNetCore.Components.Icons.Regular.Size20.ArrowTrendingDown())" Color="@Color.Error" />
+                        }
+                        <div class="ps-1">@PrintDiff(statistic.TotalWorkoutsPerYear)</div>
+                    </div>
+                </div>
+                <FluentLabel Typo="Typography.Body">
+                    Quest'anno
+                </FluentLabel>
+            </FluentCard>
+            <FluentCard style="width:49%; height:10rem;"
+                        class="d-flex flex-column justify-content-between">
+                <div style="font-size: 4rem"
+                     class="fw-bold ">
+                    @statistic.TotalWorkouts
+                </div>
+                <FluentLabel Typo="Typography.Body">
+                    Totali
+                </FluentLabel>
+            </FluentCard>
+        </div>
+    </div>
+    <div class="pt-5">
+        <div class="d-flex justify-content-between">
+            <FluentLabel Typo="Typography.H1">
+                Durata
+            </FluentLabel>
+            @* <CustomButton Icon="@(new Icons.Regular.Size16.ArrowCircleRight())"
+                          OnClick="@SeeWorkoutTrends"
+                          Label="Vedi grafici" /> *@
+        </div>
+        <div class="d-flex justify-content-between w-100 py-2">
+            <FluentCard style="width:49%; height:10rem"
+                        class="d-flex flex-column justify-content-between">
+                <div class="d-flex align-items-baseline w-100 ">
+                    <div style="font-size: 4rem"
+                         class="fw-bold ">
+                        @statistic.AvgDuration.Hours
+                    </div>
+                    <div style="font-size: 2rem">
+                        @string.Format(":{0:D2}", statistic.AvgDuration.Minutes)
+                    </div>
+                    <div style="font-size: 1rem">
+                        @string.Format(":{0:D2}", statistic.AvgDuration.Seconds)
+                    </div>
+                </div>
+                <FluentLabel Typo="Typography.Body">
+                    Media
+                </FluentLabel>
+            </FluentCard>
+            <FluentCard style="width:49%; height:10rem"
+                        class="d-flex flex-column justify-content-between">
+                <div class="d-flex align-items-baseline w-100 ">
+                    <div style="font-size: 4rem"
+                         class="fw-bold ">
+                        @statistic.MaxDuration.Hours
+                    </div>
+                    <div style="font-size: 2rem">
+                        @string.Format(":{0:D2}", statistic.MaxDuration.Minutes)
+                    </div>
+                    <div style="font-size: 1rem">
+                        @string.Format(":{0:D2}", statistic.MaxDuration.Minutes)
+                    </div>
+                </div>
+                <FluentLabel Typo="Typography.Body">
+                    Massima
+                </FluentLabel>
+            </FluentCard>
+        </div>
+    </div>
+    <div class="py-5">
+        <div class="d-flex justify-content-between">
+            <FluentLabel Typo="Typography.H1">
+                Esercizi
+            </FluentLabel>
+            @* <CustomButton Icon="@(new Icons.Regular.Size16.ArrowCircleRight())"
+                          OnClick="@SeeExercisesTrends"
+                          Label="Vedi grafici" /> *@
+        </div>
+        <div class="d-flex justify-content-between w-100 py-2">
+            <FluentCard style="width:49%; height:10rem"
+                        class="d-flex flex-column justify-content-between">
+                <div class="d-flex align-items-baseline w-100">
+                    <div style="font-size: 4rem"
+                         class="fw-bold ">
+                        @statistic.ActiveExercises
+                    </div>
+                </div>
+                <FluentLabel Typo="Typography.Body">
+                    In scheda
+                </FluentLabel>
+            </FluentCard>
+            <FluentCard style="width:49%; height:10rem"
+                        class="d-flex flex-column justify-content-between">
+                <div class="d-flex align-items-baseline w-100">
+                    <div style="font-size: 4rem"
+                         class="fw-bold ">
+                        @statistic.TotalExercises
+                    </div>
+                </div>
+                <FluentLabel Typo="Typography.Body">
+                    Totali
+                </FluentLabel>
+            </FluentCard>
+        </div>
+    </div>
+}
+
+<div class="pb-5">
+    <FluentSpacer />
+</div>
+
+@code {
+    private bool isLoading = false;
+    private Business.Models.DTOs.StatisticDto? statistic;
+
+    protected override async Task OnInitializedAsync()
+    {
+        isLoading = true;
+
+        statistic = await statisticService.Get();
+
+        isLoading = false;
+    }
+
+    private void SeeAllWorkouts()
+    {
+        if (isLoading) return;
+        navigationManager.NavigateTo("/workout/handle");
+    }
+
+    private void SeeWorkoutTrends()
+    {
+        if (isLoading) return;
+        isLoading = true;
+        isLoading = false;
+    }
+
+    private void SeeExercisesTrends()
+    {
+        if (isLoading) return;
+        isLoading = true;
+        isLoading = false;
+    }
+
+    private string PrintDiff<TData>(Business.Models.DTOs.CompareDto<TData> source) where TData : System.Numerics.INumber<TData>
+    {
+        var diff = source.Diff();
+
+        if (diff is null || diff == TData.Zero) return "-";
+
+        return diff.ToString()!;
+    }
+}

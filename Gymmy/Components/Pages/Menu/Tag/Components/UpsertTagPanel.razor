@@ -1,0 +1,19 @@
+﻿@implements IDialogContentComponent<DataAccess.DTOs.TagDto>
+
+@inject DataAccess.Repositories.IDayRepository dayService
+
+<FluentDialogBody>
+    <FluentLabel Typo="Typography.H6"
+                 Class="w-100">
+        Descrizione
+    </FluentLabel>
+    <div class="px-2">
+        <FluentTextField Class="w-100"
+                         @bind-Value="@Content.Name" />
+    </div>
+</FluentDialogBody>
+
+@code {
+    [Parameter]
+    public required DataAccess.DTOs.TagDto Content { get; set; }
+}

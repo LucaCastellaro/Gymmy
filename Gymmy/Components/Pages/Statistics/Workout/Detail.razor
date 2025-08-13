@@ -1,0 +1,114 @@
+﻿@page "/workout/detail/{WorkoutId}"
+
+@using Business.Extensions
+
+@inject DataAccess.Repositories.IWorkoutRepository workoutService
+
+<FluentLabel Typo="Typography.H1">
+    Dettaglio
+</FluentLabel>
+
+@if (workout is null)
+{
+    <FluentLabel Typo="Typography.Body">
+        Nessun dato da visualizzare.
+    </FluentLabel>
+}
+else
+{
+    <div class="w-100 py-2 d-grid justify-content-between "
+         style="grid-template-columns: 49% 49%">
+        <FluentCard Class="py-2 px-3">
+            <div class="w-100 d-flex justify-content-end">
+                <FluentIcon Value=@(new Microsoft.FluentUI.AspNetCore.Components.Icons.Regular.Size20.Calendar())
+                            Color=@Color.Accent />
+            </div>
+            <div class="d-flex align-items-baseline w-100">
+                <div style="font-size: 4rem"
+                     class="fw-bold">
+                    @workout.Start.ToString("dd")
+                </div>
+                <div style="font-size: 2rem">
+                    @workout.Start.ToString("/MM")
+                </div>
+            </div>
+        </FluentCard>
+        <FluentCard Class="py-2 px-3">
+            <div class="w-100 d-flex justify-content-end">
+                <FluentIcon Value=@(new Microsoft.FluentUI.AspNetCore.Components.Icons.Regular.Size20.Timer())
+                            Color=@Color.Accent />
+            </div>
+            <div class="d-flex align-items-baseline w-100">
+                <div style="font-size: 4rem"
+                     class="fw-bold ">
+                    @duration.Hours
+                </div>
+                <div style="font-size: 2rem">
+                    @string.Format(":{0:D2}", duration.Minutes)
+                </div>
+                <div style="font-size: 1rem">
+                    @string.Format(":{0:D2}", duration.Seconds)
+                </div>
+            </div>
+        </FluentCard>
+    </div>
+
+    <div class="pt-3">
+        <FluentLabel Typo="Typography.H2">
+            Esercizi
+        </FluentLabel>
+    </div>
+    <div class="w-100">
+        <FluentSelect TOption="DataAccess.DTOs.WorkoutExerciseDto"
+                      Items=@exercises
+                      Class="w-100"
+                      Appearance="Appearance.Stealth"
+                      Placeholder="Scegli un esercizio..."
+                      OptionText="@(xx => xx.Name)"
+                      @bind-SelectedOption=@selectedExercise />
+        @if (selectedExercise is not null)
+        {
+            @foreach (var item in selectedExercise.Sets)
+            {
+                <FluentCard class="p-0 my-2">
+                    <div class="d-flex justify-content-around align-items-center">
+                        <SingleSet Reps=@item.Reps
+                                   Weight=@item.Weight />
+                    </div>
+                </FluentCard>
+            }
+        }
+    </div>
+}
+
+<div class="pb-5">
+    <FluentSpacer />
+</div>
+
+@code {
+    [Parameter]
+    public required string WorkoutId { get; set; }
+
+    private bool isLoading = false;
+    private DataAccess.DTOs.WorkoutDto? workout;
+    private Business.Models.DTOs.DurationDto duration = new(0, 0, 0);
+    private List<DataAccess.DTOs.WorkoutExerciseDto> exercises = [];
+
+    private DataAccess.DTOs.WorkoutExerciseDto? selectedExercise;
+
+    protected override async Task OnInitializedAsync()
+    {
+        isLoading = true;
+
+        var guid = Guid.Parse(WorkoutId);
+        workout = await workoutService.FindById(guid);
+        if (workout is not null)
+        {
+            duration = workout.GetDuration();
+            exercises = workout.Exercises.OrderBy(xx => xx.Name).ToList();
+            selectedExercise = exercises.FirstOrDefault();
+        }
+
+        isLoading = false;
+    }
+}

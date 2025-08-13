@@ -1,0 +1,35 @@
+﻿@if (!string.IsNullOrWhiteSpace(Label))
+{
+    <FluentButton OnClick="@OnClick"
+                  BackgroundColor="#FFF" Color="var(--info)"
+                  Loading=@IsLoading
+                  Disabled=@Disabled
+                  IconStart=@Icon>
+        @Label
+    </FluentButton>
+}
+else
+{
+    <FluentButton OnClick="@OnClick"
+                  BackgroundColor="#FFF" Color="var(--info)"
+                  Loading=@IsLoading
+                  Disabled=@Disabled
+                  IconEnd=@Icon />
+}
+
+@code {
+    [Parameter]
+    public bool IsLoading { get; set; } = false;
+
+    [Parameter]
+    public bool Disabled { get; set; } = false;
+
+    [Parameter]
+    public required Microsoft.FluentUI.AspNetCore.Components.Icon Icon { get; set; }
+
+    [Parameter]
+    public EventCallback<MouseEventArgs> OnClick { get; set; }
+
+    [Parameter]
+    public string? Label { get; set; }
+}

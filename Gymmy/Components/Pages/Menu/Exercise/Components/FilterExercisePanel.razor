@@ -1,0 +1,69 @@
+﻿@using static Gymmy.Components.Pages.Menu.Exercise.Components.FilterExercisePanel
+
+@implements IDialogContentComponent<ExerciseFilters>
+
+@inject Business.Services.ITagService tagService
+
+<FluentDialogBody>
+    <FluentLabel Typo="Typography.H6"
+                 Class="w-100">
+        Nome esercizio
+    </FluentLabel>
+    <div class="px-2">
+        <FluentTextField Class="w-100 mb-2"
+                         @bind-Value=@Content.Name />
+    </div>
+    @if (allTags.Count > 0)
+    {
+        <FluentLabel Typo="Typography.H6"
+                     Class="w-100">
+            Tags
+        </FluentLabel>
+        <div class="px-2">
+            <FluentAutocomplete Class="w-100"
+                                Id="tag-listbox"
+                                Label="Tag"
+                                Placeholder="Scegli..."
+                                MaxAutoHeight="true"
+                                TOption="DataAccess.DTOs.TagDto"
+                                Items=@tags
+                                Multiple="true"
+                                OptionText=@(xx => xx.Name)
+                                OnOptionsSearch=@OnSearch
+                                @bind-SelectedOptions=@Content.SelectedTags />
+        </div>
+    }
+</FluentDialogBody>
+
+@code {
+    public sealed record ExerciseFilters()
+    {
+        public IEnumerable<DataAccess.DTOs.TagDto> SelectedTags { get; set; } = [];
+        public required string Name { get; set; }
+    }
+
+    [Parameter]
+    public required ExerciseFilters Content { get; set; }
+
+    private List<DataAccess.DTOs.TagDto> tags = [];
+    private List<DataAccess.DTOs.TagDto> allTags = [];
+
+    protected override async Task OnInitializedAsync()
+    {
+        allTags = (await tagService.Get())
+            .OrderBy(xx => xx.Name)
+            .ToList();
+        tags = (await tagService.Get())
+            .OrderBy(xx => xx.Name)
+            .ToList();
+    }
+
+    private void OnSearch(OptionsSearchEventArgs<DataAccess.DTOs.TagDto> e)
+    {
+        if (string.IsNullOrWhiteSpace(e.Text)) tags = allTags;
+        else tags = allTags
+                .Where(i => i.Name.StartsWith(e.Text, StringComparison.OrdinalIgnoreCase))
+                .OrderBy(i => i.Name)
+                .ToList();
+    }
+}

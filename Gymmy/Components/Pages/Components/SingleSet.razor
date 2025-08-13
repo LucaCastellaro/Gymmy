@@ -1,0 +1,31 @@
+﻿<div class="w-100 px-3 py-3 d-flex align-items-center justify-content-center">
+    <div class="d-flex flex-column align-items-center justify-content-evenly">
+        <FluentLabel Typo="Typography.H5">
+            @Reps
+        </FluentLabel>
+        <FluentLabel Typo="Typography.Body">
+            reps
+        </FluentLabel>
+    </div>
+    <div class="px-4">
+        <FluentLabel Typo="Typography.Body">
+            x
+        </FluentLabel>
+    </div>
+    <div class="d-flex flex-column align-items-center justify-content-evenly">
+        <FluentLabel Typo="Typography.H5">
+            @Weight
+        </FluentLabel>
+        <FluentLabel Typo="Typography.Body">
+            Kg
+        </FluentLabel>
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public required int Reps { get; set; }
+
+    [Parameter]
+    public required decimal Weight { get; set; }
+}

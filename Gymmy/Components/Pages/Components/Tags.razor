@@ -1,0 +1,29 @@
+﻿<div class="d-flex">
+    <FluentIcon Value="@(new Microsoft.FluentUI.AspNetCore.Components.Icons.Regular.Size16.TagMultiple())" />
+    @foreach (var tag in Data.Take(5))
+    {
+        <FluentBadge Appearance="Appearance.Lightweight"
+                     Class="ms-1">
+            @tag.Name
+        </FluentBadge>
+    }
+    @if (Data.Count() > 5)
+    {
+        <FluentBadge Appearance="Appearance.Lightweight"
+                     Class="ms-1">
+            ...
+        </FluentBadge>
+    }
+    else if (Data.Count() < 1)
+    {
+        <FluentLabel Typo="Typography.Body"
+                     Class="ps-2">
+            Nessun tag
+        </FluentLabel>
+    }
+</div>
+
+@code {
+    [Parameter]
+    public required IEnumerable<DataAccess.DTOs.TagDto> Data { get; set; }
+}

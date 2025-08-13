@@ -1,0 +1,206 @@
+﻿@implements IDialogContentComponent<DataAccess.DTOs.DayDto>
+
+@inject Business.Services.ITagService tagService
+@inject DataAccess.Repositories.IDayRepository dayService
+@inject Business.Services.IExerciseService exerciseService
+@inject IToastService toastService
+
+<FluentDialogBody>
+    <FluentLabel Typo="Typography.H5">
+        Cosa vuoi allenare?
+    </FluentLabel>
+
+    <div class="px-2">
+        <FluentAutocomplete Class="w-100 pt-2"
+                            Id="tag-listbox"
+                            Placeholder="Scegli tag..."
+                            MaxAutoHeight="true"
+                            OnOptionsSearch=@OnSearch
+                            TOption="DataAccess.DTOs.TagDto"
+                            Items=@tags
+                            Position=@SelectPosition.Below
+                            Multiple="true"
+                            OptionText=@(xx => xx.Name)
+                            @bind-SelectedOptions=@selectedTags />
+    </div>
+
+    <div class="py-2 px-2 d-flex">
+        <FluentIcon id="info"
+                    Class="me-1"
+                    Value="@(new Microsoft.FluentUI.AspNetCore.Components.Icons.Regular.Size20.Info())" />
+        <FluentTooltip Anchor="info"
+                       HideTooltipOnCursorLeave="false"
+                       Position=TooltipPosition.Right
+                       MaxWidth="10rem"
+                       Delay=100>
+            <p><b>ATTIVO</b>: vengono cercati solo gli esercizi che contengono <u>TUTTI</u> i tag selezionati.</p>
+            <b>NON ATTIVO</b>: vengono cercati gli esercizi che contengono <u>ALMENO UNO</u> dei tag selezionati.
+        </FluentTooltip>
+
+        <FluentSwitch Label="Corrispondenza esatta"
+                      @bind-Value=@exactMatch />
+    </div>
+
+    <div class="d-flex justify-content-end pb-2 px-2">
+        <FluentButton Appearance="Appearance.Accent"
+                      id="generate"
+                      IconStart=@(new Microsoft.FluentUI.AspNetCore.Components.Icons.Filled.Size20.Sparkle())
+                      Disabled=@(isLoading)
+                      OnClick=@Generate>
+            Genera scheda
+        </FluentButton>
+    </div>
+
+    @if (isLoading)
+    {
+        <FluentSkeleton Class="w-25"
+                        Style="height:1rem;"
+                        Shimmer="true" />
+        <FluentSkeleton Class="w-75 my-2"
+                        Style="height:1rem;"
+                        Shimmer="true" />
+        <FluentSkeleton Class="w-50"
+                        Style="height:1rem;"
+                        Shimmer="true" />
+        <FluentSkeleton Class="w-100 my-2"
+                        Style="height:1rem;"
+                        Shimmer="true" />
+        <FluentSkeleton Class="w-25"
+                        Style="height:1rem;"
+                        Shimmer="true" />
+        <FluentSkeleton Class="w-75 my-2"
+                        Style="height:1rem;"
+                        Shimmer="true" />
+        <FluentSkeleton Class="w-50"
+                        Style="height:1rem;"
+                        Shimmer="true" />
+        <FluentSkeleton Class="w-100 my-2"
+                        Style="height:1rem;"
+                        Shimmer="true" />
+        <FluentSkeleton Class="w-25"
+                        Style="height:1rem;"
+                        Shimmer="true" />
+        <FluentSkeleton Class="w-75 my-2"
+                        Style="height:1rem;"
+                        Shimmer="true" />
+        <FluentSkeleton Class="w-50"
+                        Style="height:1rem;"
+                        Shimmer="true" />
+        <FluentSkeleton Class="w-100 my-2"
+                        Style="height:1rem;"
+                        Shimmer="true" />
+    }
+    else if (found.Count > 0)
+    {
+        <FluentLabel Typo="Typography.H5">
+            Ho trovato questi esercizi:
+        </FluentLabel>
+        <div class="py-2 px-2">
+            @foreach (var item in found)
+            {
+                <div class="pb-2">
+                    <FluentCard>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div class="w-100">
+                                <FluentLabel Typo="Typography.H5">
+                                    @item.Description
+                                </FluentLabel>
+                            </div>
+                            <div>
+                                <CustomButton Icon=@(new Icons.Regular.Size16.Delete())
+                                              OnClick=@(() => Delete(item)) />
+                            </div>
+                        </div>
+                    </FluentCard>
+                </div>
+            }
+        </div>
+    }
+    else if (hasLoadedOnce)
+    {
+        <FluentLabel Typo="Typography.Body">
+            Non ho trovato altri esercizi.
+        </FluentLabel>
+    }
+
+    <div class="pb-5">
+        <FluentSpacer />
+    </div>
+</FluentDialogBody>
+
+@code {
+    [Parameter]
+    public required DataAccess.DTOs.DayDto Content { get; set; }
+
+    private List<DataAccess.DTOs.ExerciseDto> found = [];
+    private List<DataAccess.DTOs.ExerciseDto> alreadyInDay = [];
+    private IEnumerable<DataAccess.DTOs.TagDto> selectedTags = [];
+    private IEnumerable<DataAccess.DTOs.TagDto> allTags = [];
+    private IEnumerable<DataAccess.DTOs.TagDto> tags = [];
+    private bool isLoading = false;
+    private bool hasLoadedOnce = false;
+    private bool exactMatch = true;
+
+    private Business.Models.Enums.MatchStrategy matchStrategy
+    {
+        get
+        {
+            return exactMatch
+                ? Business.Models.Enums.MatchStrategy.And
+                : Business.Models.Enums.MatchStrategy.Or;
+        }
+    }
+
+    override protected async Task OnInitializedAsync()
+    {
+        alreadyInDay = await exerciseService.GetAllByDay(Content);
+        selectedTags = alreadyInDay
+            .SelectMany(xx => xx.Tags)
+            .Distinct()
+            .OrderBy(xx => xx.Name)
+            .ToList();
+        allTags = await tagService.Get();
+        tags = allTags;
+    }
+
+    private void OnSearch(OptionsSearchEventArgs<DataAccess.DTOs.TagDto> e)
+    {
+        hasLoadedOnce = false;
+        tags = allTags
+            .Where(i => i.Name.StartsWith(e.Text, StringComparison.OrdinalIgnoreCase))
+            ?.OrderBy(i => i.Name)
+            ?.ToList() ?? [];
+    }
+
+    private async Task Generate()
+    {
+        if (isLoading) return;
+
+        if (selectedTags.Count() < 1)
+        {
+            toastService.ShowError("Devi selezionare almeno un tag.");
+            return;
+        }
+
+        isLoading = true;
+        hasLoadedOnce = true;
+
+        found = (await exerciseService.GetAllByTags(selectedTags, matchStrategy))
+            .Where(ex => !alreadyInDay.Select(xx => xx.Id).Contains(ex.Id))
+            .ToList();
+
+        Content.Exercises.AddRange(found.Select(xx => xx.Id));
+        Content.Exercises = Content.Exercises.Distinct().ToList();
+
+        await Task.Delay(TimeSpan.FromSeconds(2));
+        isLoading = false;
+    }
+
+    private void Delete(DataAccess.DTOs.ExerciseDto item)
+    {
+        if (isLoading) return;
+
+        found.Remove(item);
+        Content.Exercises.Remove(item.Id);
+    }
+}

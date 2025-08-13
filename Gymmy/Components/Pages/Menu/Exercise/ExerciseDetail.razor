@@ -1,0 +1,243 @@
+﻿@page "/exercise/{ExerciseId}"
+
+@inject DataAccess.Repositories.IExerciseRepository exerciseService
+@inject DataAccess.Repositories.ISetRepository setService
+@inject IDialogService dialogService
+
+@if (exercise is null)
+{
+    <FluentLabel Typo="Typography.Body">
+        Nessun dato da mostrare.
+    </FluentLabel>
+}
+else
+{
+    <div class="d-flex justify-content-between">
+        <FluentLabel Typo="Typography.H1">
+            @exercise.Description
+        </FluentLabel>
+        <FluentCounterBadge BackgroundColor="Color.Accent"
+                            Color="Color.Fill"
+                            Dot=@(editMode)>
+            <CustomButton Icon=@(new Icons.Regular.Size16.Edit())
+                          Disabled=@isLoading
+                          OnClick=@ToggleEdit />
+        </FluentCounterBadge>
+    </div>
+    <Tags Data=@exercise.Tags />
+}
+
+
+@if (editMode)
+{
+    <ActionBar Actions=@editActions />
+}
+@if (sets.Count < 1)
+{
+    <FluentLabel Typo="Typography.Body">
+        Nessun dato da mostrare.
+    </FluentLabel>
+}
+else
+{
+    @foreach (var item in sets)
+    {
+        <div class="d-flex">
+            @if (editMode)
+            {
+                <FluentCheckbox Class="me-2"
+                                ThreeState="true"
+                                CheckState=@selectedSets.Contains(item.Id)
+                                CheckStateChanged=@(() => ToggleSelected(item.Id)) />
+            }
+            <FluentCard class="p-0 my-2">
+                <div class="d-flex justify-content-between align-items-center">
+                    <SingleSet Reps=@item.Reps
+                               Weight=@item.Weight />
+                    @if (editMode)
+                    {
+                        <div class="me-3">
+                            <CustomButton Icon=@(new Icons.Regular.Size20.PanelRight())
+                                          OnClick=@(async () => await Edit(item)) />
+                        </div>
+                    }
+                </div>
+            </FluentCard>
+        </div>
+    }
+}
+
+<div class="pb-5">
+    <FluentSpacer />
+</div>
+
+@code {
+    [Parameter]
+    public required string ExerciseId { get; set; }
+
+    private bool isLoading = false;
+    private DataAccess.DTOs.ExerciseDto? exercise;
+    private List<DataAccess.DTOs.SetDto> sets = [];
+    private List<Guid> selectedSets = [];
+    private IDialogReference? dialog;
+
+    private bool editMode = false;
+    private List<Gymmy.Components.Pages.Components.ActionBar.Action> editActions = [];
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (!Guid.TryParse(ExerciseId, out var guid)) return;
+
+        exercise = await exerciseService.FindById(guid);
+        if (exercise is null) return;
+
+        sets = await setService.Get(xx => exercise.Sets.Contains(xx.Id));
+
+        editMode = false;
+        selectedSets = [];
+        editActions = [
+            new("Elimina", new Icons.Regular.Size20.Delete(), DeleteSelected, () => selectedSets.Count < 1 || isLoading, () => true),
+            new("Duplica", new Icons.Regular.Size20.Copy(), DuplicateSelected, () => selectedSets.Count < 1 || isLoading, () => true),
+            new("Aggiungi", new Icons.Regular.Size20.AddCircle(), Add, () => isLoading, () => true)
+        ];
+    }
+
+    private void ToggleEdit()
+    {
+        editMode = !editMode;
+    }
+
+    private async Task Reload()
+    {
+        if (!Guid.TryParse(ExerciseId, out var guid)) return;
+
+        exercise = await exerciseService.FindById(guid);
+        if (exercise is null) return;
+
+        sets = await setService.Get(xx => exercise.Sets.Contains(xx.Id));
+    }
+
+    private async Task Add()
+    {
+        if (isLoading || exercise is null) return;
+        isLoading = true;
+
+        var set = new DataAccess.DTOs.SetDto
+        {
+            Id = Guid.NewGuid(),
+            IsActive = true,
+            Reps = 0,
+            Rest = exercise.Rest,
+            Weight = 0,
+        };
+
+        dialog = await dialogService.ShowPanelAsync<UpsertSetPanel>(
+            set,
+            new DialogParameters<DataAccess.DTOs.SetDto>()
+            {
+                Content = set,
+                Alignment = HorizontalAlignment.Right,
+                Title = $"Aggiungi set",
+                PrimaryAction = "Salva",
+                SecondaryAction = "Annulla"
+            });
+
+        var dialogResult = await dialog.Result;
+        if (!dialogResult.Cancelled && dialogResult.Data is not null)
+        {
+            var newSet = dialogResult.Data as DataAccess.DTOs.SetDto;
+            if (newSet is not null)
+            {
+                await setService.Upsert(newSet);
+
+                exercise.Sets.Add(newSet.Id);
+                await exerciseService.Upsert(exercise);
+            }
+        }
+
+        await Reload();
+
+        isLoading = false;
+    }
+
+    private async Task Edit(DataAccess.DTOs.SetDto set)
+    {
+        if (isLoading) return;
+        isLoading = true;
+
+        dialog = await dialogService.ShowPanelAsync<UpsertSetPanel>(
+            set,
+            new DialogParameters<DataAccess.DTOs.SetDto>()
+            {
+                Content = set,
+                Alignment = HorizontalAlignment.Right,
+                Title = $"Modifica set",
+                PrimaryAction = "Salva",
+                SecondaryAction = "Annulla"
+            });
+
+        var dialogResult = await dialog.Result;
+        if (!dialogResult.Cancelled && dialogResult.Data is not null)
+        {
+            var updatedSet = dialogResult.Data as DataAccess.DTOs.SetDto;
+            if (updatedSet is not null)
+            {
+                await setService.Upsert(updatedSet);
+            }
+        }
+
+        await Reload();
+
+        isLoading = false;
+    }
+
+    private async Task Duplicate(Guid setId)
+    {
+        if (isLoading || exercise is null) return;
+        isLoading = true;
+
+        var set = sets.First(xx => xx.Id == setId);
+
+        var newSet = set with { Id = Guid.NewGuid() };
+        await setService.Upsert(newSet);
+
+        exercise.Sets.Add(newSet.Id);
+        await exerciseService.Upsert(exercise);
+
+        await Reload();
+
+        isLoading = false;
+    }
+
+    private async Task Delete(Guid setId)
+    {
+        if (isLoading || exercise is null) return;
+        isLoading = true;
+
+        sets = sets.Where(xx => xx.Id != setId).ToList();
+        await setService.Delete(setId);
+
+        exercise.Sets.Remove(setId);
+        await exerciseService.Upsert(exercise);
+
+        isLoading = false;
+    }
+
+    private void ToggleSelected(Guid item)
+    {
+        if (selectedSets.Contains(item)) selectedSets.Remove(item);
+        else selectedSets.Add(item);
+    }
+
+    private async Task DeleteSelected()
+    {
+        foreach (var item in selectedSets) await Delete(item);
+        selectedSets.Clear();
+    }
+
+    private async Task DuplicateSelected()
+    {
+        foreach (var item in selectedSets) await Duplicate(item);
+        selectedSets.Clear();
+    }
+}

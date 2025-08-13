@@ -1,0 +1,173 @@
+﻿@page "/tag/list"
+@using Gymmy.Components.Pages.Menu.Tag.Components
+
+@inject Business.Services.ITagService tagService
+@inject IDialogService dialogService
+
+<div class="d-flex justify-content-between">
+    <FluentLabel Typo="Typography.H1">
+        Tags
+    </FluentLabel>
+
+    <FluentCounterBadge BackgroundColor="Color.Accent"
+                        Color="Color.Fill"
+                        Dot=@(editMode)>
+        <CustomButton Icon=@(new Icons.Regular.Size16.Edit())
+                      Disabled=@isLoading
+                      OnClick=@ToggleEdit />
+    </FluentCounterBadge>
+</div>
+@if (editMode)
+{
+    <ActionBar Actions=@editActions />
+}
+@if (tags.Count == 0)
+{
+    <FluentLabel Typo="Typography.Body">
+        Nessun dato trovato.
+    </FluentLabel>
+}
+else
+{
+    @foreach (var item in tags)
+    {
+        <div class="d-flex">
+            @if (editMode)
+            {
+                <FluentCheckbox Class="me-2"
+                                ThreeState="true"
+                                CheckState=@selectedTags.Contains(item.Id)
+                                CheckStateChanged=@(() => ToggleSelected(item.Id)) />
+            }
+            <FluentCard class="p-0 my-2">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div class="w-100 px-3 py-3">
+                        <FluentLabel Typo="Typography.H5">
+                            @item.Name
+                        </FluentLabel>
+                    </div>
+                    @if (editMode)
+                    {
+                        <div class="me-3">
+                            <CustomButton Icon=@(new Icons.Regular.Size20.PanelRight())
+                                          OnClick=@(async () => await Edit(item)) />
+                        </div>
+                    }
+                </div>
+            </FluentCard>
+        </div>
+    }
+}
+
+<div class="pb-5">
+    <FluentSpacer />
+</div>
+
+@code {
+    private bool isLoading = false;
+    private List<DataAccess.DTOs.TagDto> tags = [];
+    private List<Guid> selectedTags = [];
+    private FluentMenuButton menuButton = new();
+    private IDialogReference? dialog;
+    private bool editMode = false;
+
+    private List<Gymmy.Components.Pages.Components.ActionBar.Action> editActions = [];
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (isLoading) return;
+        isLoading = true;
+
+        tags = (await tagService.Get())
+            .OrderBy(xx => xx.Name)
+            .ToList();
+
+        editMode = false;
+        selectedTags = [];
+
+        editActions = [
+            new("Elimina", new Icons.Regular.Size20.Delete(), DeleteSelected, () => selectedTags.Count < 1 || isLoading, () => true),
+            new("Aggiungi", new Icons.Regular.Size20.AddCircle(), Add, () => isLoading, () => true)
+        ];
+
+        isLoading = false;
+    }
+
+    private async Task Reload()
+    {
+        tags = (await tagService.Get())
+            .OrderBy(xx => xx.Name)
+            .ToList();
+    }
+
+    private void ToggleEdit()
+    {
+        editMode = !editMode;
+    }
+
+    private async Task Delete(Guid itemId)
+    {
+        if (isLoading) return;
+        isLoading = true;
+
+        await tagService.Delete(itemId);
+
+        isLoading = false;
+
+        await Reload();
+    }
+
+    private async Task Add()
+    {
+        var newTag = new DataAccess.DTOs.TagDto
+        {
+            Id = Guid.NewGuid(),
+            IsActive = true,
+            Name = string.Empty,
+        };
+
+        await Edit(newTag, "Crea tag");
+    }
+
+    private async Task Edit(DataAccess.DTOs.TagDto item, string title = "Aggiungi tag")
+    {
+        if (isLoading) return;
+        isLoading = true;
+
+        dialog = await dialogService.ShowPanelAsync<UpsertTagPanel>(item, new DialogParameters<DataAccess.DTOs.TagDto>()
+        {
+            Content = item,
+            Alignment = HorizontalAlignment.Right,
+            Title = title,
+            PrimaryAction = "Salva",
+            SecondaryAction = "Annulla",
+        });
+
+        var dialogResult = await dialog.Result;
+        if (!dialogResult.Cancelled && dialogResult.Data is not null)
+        {
+            var result = dialogResult.Data as DataAccess.DTOs.TagDto;
+            if (result is not null && !string.IsNullOrWhiteSpace(result.Name))
+            {
+                result.Name = result.Name.Trim().ToUpper();
+                await tagService.Upsert(result);
+            }
+        }
+
+        isLoading = false;
+
+        await Reload();
+    }
+
+    private void ToggleSelected(Guid item)
+    {
+        if (selectedTags.Contains(item)) selectedTags.Remove(item);
+        else selectedTags.Add(item);
+    }
+
+    private async Task DeleteSelected()
+    {
+        foreach (var item in selectedTags) await Delete(item);
+        selectedTags.Clear();
+    }
+}

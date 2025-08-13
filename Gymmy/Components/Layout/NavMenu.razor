@@ -1,0 +1,29 @@
+﻿@inject NavigationManager navigationManager
+
+<div class="d-flex justify-content-evenly vw-100 py-2">
+    <div>
+        <NavLink onclick="@(() => navigationManager.NavigateTo("statistics"))"
+                 href="statistics">
+            <FluentIcon Value="@(new Icons.Regular.Size28.DataTrending())"
+                        Color="Color.Custom"
+                        CustomColor="#fff" />
+        </NavLink>
+    </div>
+    <div>
+        <NavLink onclick="@(() => navigationManager.NavigateTo(""))"
+                 href=""
+                 Match="NavLinkMatch.All">
+            <FluentIcon Value="@(new Icons.Regular.Size28.Home())"
+                        Color="Microsoft.FluentUI.AspNetCore.Components.Color.Custom"
+                        CustomColor="#fff" />
+        </NavLink>
+    </div>
+    <div>
+        <NavLink onclick="@(() => navigationManager.NavigateTo("menu"))"
+                 href="menu">
+            <FluentIcon Value="@(new Icons.Regular.Size28.List())"
+                        Color="Microsoft.FluentUI.AspNetCore.Components.Color.Custom"
+                        CustomColor="#fff" />
+        </NavLink>
+    </div>
+</div>

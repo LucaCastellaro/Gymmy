@@ -1,0 +1,466 @@
+﻿@page "/exercise/list"
+@using Gymmy.Components.Pages.Menu.Exercise.Components
+
+@inject DataAccess.Repositories.IExerciseRepository exerciseService
+@inject DataAccess.Repositories.ISetRepository setService
+@inject DataAccess.Repositories.IDayRepository dayService
+@inject IDialogService dialogService
+@inject NavigationManager navigationManager
+
+
+<div class="d-flex justify-content-between">
+    <FluentLabel Typo="Typography.H1">
+        Esercizi
+    </FluentLabel>
+    <div class="d-flex align-items-baseline">
+        <div>
+            <FluentCounterBadge BackgroundColor="Color.Accent"
+                                Color="Color.Fill"
+                                Dot=@(filters.SelectedTags.Any() || !string.IsNullOrWhiteSpace(filters.Name))>
+                <CustomButton OnClick=@OpenFilterPanel
+                              Disabled=@isLoading
+                              Icon=@(new Microsoft.FluentUI.AspNetCore.Components.Icons.Regular.Size16.Filter()) />
+            </FluentCounterBadge>
+        </div>
+        <div class="ps-2">
+            <FluentCounterBadge BackgroundColor="Color.Accent"
+                                Color="Color.Fill"
+                                Dot=@(editMode)>
+                <CustomButton Icon=@(new Icons.Regular.Size16.Edit())
+                              Disabled=@isLoading
+                              OnClick=@ToggleEdit />
+            </FluentCounterBadge>
+        </div>
+    </div>
+</div>
+
+<FluentTabs Class="p-0 m-0">
+    <FluentTab Label="In scheda"
+               Icon="@(new Icons.Regular.Size24.DocumentCheckmark())"
+               Id="in-scheda">
+        @if (editMode)
+        {
+            <ActionBar Actions=@activeActions />
+        }
+        @if (activeExercises.Count < 1)
+        {
+            <FluentLabel Typo="Typography.Body">
+                Nessun esercizio trovato.
+            </FluentLabel>
+        }
+        @foreach (var item in activeExercises)
+        {
+            <div class="d-flex">
+                @if (editMode)
+                {
+                    <FluentCheckbox Class="me-2"
+                                    ThreeState="true"
+                                    CheckState=@selectedExercises.Contains(item.Id)
+                                    CheckStateChanged=@(() => ToggleSelected(item)) />
+                }
+                <FluentCard class="p-0 my-2">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div class="w-100 px-3 py-3"
+                             onclick=@(() => GoToDetail(item))>
+                            <FluentLabel Typo="Typography.H5">
+                                @item.Description
+                            </FluentLabel>
+
+                            <Tags Data=@item.Tags />
+                        </div>
+                        @if (editMode)
+                        {
+                            <div class="me-3">
+                                <CustomButton Icon=@(new Icons.Regular.Size20.PanelRight())
+                                              OnClick=@(async () => await Edit(item)) />
+                            </div>
+                        }
+                    </div>
+                </FluentCard>
+            </div>
+        }
+    </FluentTab>
+    <FluentTab Label="In archivio"
+               Icon="@(new Icons.Regular.Size24.DocumentDismiss())"
+               Id="in-archivio">
+        @if (editMode)
+        {
+            <ActionBar Actions=@archiveActions />
+        }
+        @if (archivedExercises.Count < 1)
+        {
+            <FluentLabel Typo="Typography.Body">
+                Nessun esercizio trovato.
+            </FluentLabel>
+        }
+        @foreach (var item in archivedExercises)
+        {
+            <div class="d-flex">
+                @if (editMode)
+                {
+                    <FluentCheckbox Class="me-2"
+                                    ThreeState="true"
+                                    CheckState=@selectedExercises.Contains(item.Id)
+                                    CheckStateChanged=@(() => ToggleSelected(item)) />
+                }
+                <FluentCard class="p-0 my-2">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div class="w-100 px-3 py-3"
+                             onclick=@(() => GoToDetail(item))>
+                            <FluentLabel Typo="Typography.H5">
+                                @item.Description
+                            </FluentLabel>
+
+                            <Tags Data=@item.Tags />
+                        </div>
+                        @if (editMode)
+                        {
+                            <div class="me-3">
+                                <CustomButton Icon=@(new Icons.Regular.Size20.PanelRight())
+                                              OnClick=@(async () => await Edit(item)) />
+                            </div>
+                        }
+                    </div>
+                </FluentCard>
+            </div>
+        }
+    </FluentTab>
+</FluentTabs>
+
+<div class="pb-5">
+    <FluentSpacer />
+</div>
+
+@code {
+    private bool isLoading = false;
+    private List<DataAccess.DTOs.ExerciseDto> archivedExercises = [];
+    private List<DataAccess.DTOs.ExerciseDto> activeExercises = [];
+    private List<Guid> selectedExercises = [];
+    private IDialogReference? dialog;
+    private FilterExercisePanel.ExerciseFilters filters = new()
+    {
+        Name = string.Empty,
+        SelectedTags = [],
+    };
+
+    private bool editMode = false;
+    private List<Gymmy.Components.Pages.Components.ActionBar.Action> activeActions = [];
+    private List<Gymmy.Components.Pages.Components.ActionBar.Action> archiveActions = [];
+
+    protected override async Task OnInitializedAsync()
+    {
+        isLoading = true;
+
+        activeExercises = (await exerciseService.Get()).OrderBy(xx => xx.Description).ToList();
+        archivedExercises = (await exerciseService.GetDeleted()).OrderBy(xx => xx.Description).ToList();
+
+        editMode = false;
+        activeActions = [
+            new("Elimina", new Icons.Regular.Size20.Delete(), DeleteSelected, () => selectedExercises.Count < 1 || isLoading, () => true),
+            new("Aggiungi", new Icons.Regular.Size20.AddCircle(), AddExercise, () => isLoading, () => true),
+            new("Archivia", new Icons.Regular.Size20.DocumentDismiss(), ArchiveSelected, () => selectedExercises.Count < 1 || isLoading, () => true),
+        ];
+        archiveActions = [
+            new("Elimina", new Icons.Regular.Size20.Delete(), DeleteSelected, () => selectedExercises.Count < 1 || isLoading, () => true),
+            new("Aggiungi", new Icons.Regular.Size20.AddCircle(), AddExercise, () => isLoading, () => true),
+            new("Attiva", new Icons.Regular.Size20.DocumentCheckmark(), ActivateSelected, () => selectedExercises.Count < 1 || isLoading, () => true),
+        ];
+        selectedExercises = [];
+
+        isLoading = false;
+    }
+
+    private void ToggleEdit()
+    {
+        editMode = !editMode;
+    }
+
+    private async Task OpenFilterPanel()
+    {
+        if (isLoading) return;
+        isLoading = true;
+
+        dialog = await dialogService.ShowPanelAsync<FilterExercisePanel>(
+        filters,
+        new DialogParameters<FilterExercisePanel.ExerciseFilters>()
+        {
+            Content = filters,
+            Alignment = HorizontalAlignment.Right,
+            Title = "Cerca esercizi",
+            PrimaryAction = "Cerca",
+            SecondaryAction = "Annulla"
+        });
+
+        var dialogResult = await dialog.Result;
+        if (!dialogResult.Cancelled && dialogResult.Data is not null)
+        {
+            var result = dialogResult.Data as FilterExercisePanel.ExerciseFilters;
+            if (result is not null)
+            {
+                await Reload();
+
+                // Filter by name
+                if (!string.IsNullOrWhiteSpace(result.Name))
+                {
+                    activeExercises = activeExercises
+                        .Where(ex => ex.Description.Contains(result.Name, StringComparison.InvariantCultureIgnoreCase))
+                        .OrderBy(xx => xx.Description)
+                        .ToList();
+
+                    archivedExercises = archivedExercises
+                        .Where(ex => ex.Description.Contains(result.Name, StringComparison.InvariantCultureIgnoreCase))
+                        .OrderBy(xx => xx.Description)
+                        .ToList();
+                }
+
+                // Filter by tag(s)
+                if (result.SelectedTags.Any())
+                {
+                    activeExercises = activeExercises
+                        .Where(ex => result.SelectedTags
+                            .All(tag => ex.Tags
+                                .Select(selected => selected.Name)
+                                .Contains(tag.Name)
+                            )
+                        ).ToList();
+                    archivedExercises = archivedExercises
+                        .Where(ex => result.SelectedTags
+                            .All(tag => ex.Tags
+                                .Select(selected => selected.Name)
+                                .Contains(tag.Name)
+                            )
+                        ).ToList();
+                }
+            }
+        }
+
+        isLoading = false;
+    }
+
+    private async Task AddExercise()
+    {
+        if (isLoading) return;
+        isLoading = true;
+
+        var newExercise = new DataAccess.DTOs.ExerciseDto
+        {
+            Description = string.Empty,
+            Id = Guid.NewGuid(),
+            IsActive = true,
+            Rest = 0
+        };
+
+        dialog = await dialogService.ShowPanelAsync<UpsertExercisePanel>(newExercise, new DialogParameters<DataAccess.DTOs.ExerciseDto>()
+        {
+            Content = newExercise,
+            Alignment = HorizontalAlignment.Right,
+            Title = "Aggiungi esercizio",
+            PrimaryAction = "Salva",
+            SecondaryAction = "Annulla",
+        });
+
+        var dialogResult = await dialog.Result;
+        if (!dialogResult.Cancelled && dialogResult.Data is not null)
+        {
+            var result = dialogResult.Data as DataAccess.DTOs.ExerciseDto;
+            if (result is not null)
+            {
+                result.Description = result.Description.Trim().ToUpper();
+                await exerciseService.Upsert(result);
+            }
+        }
+
+        await Reload();
+
+        isLoading = false;
+    }
+
+    private void GoToDetail(DataAccess.DTOs.ExerciseDto exercise)
+    {
+        navigationManager.NavigateTo($"/exercise/{exercise.Id}");
+    }
+
+    private async Task Assign(DataAccess.DTOs.ExerciseDto exercise)
+    {
+        if (isLoading) return;
+        isLoading = true;
+
+        var days = (await dayService.Get())
+            .OrderBy(xx => xx.Priority)
+            .Select(xx => new Option<DataAccess.DTOs.DayDto>
+            {
+                Selected = xx.Exercises.Contains(exercise.Id),
+                Value = xx
+            })
+            .ToList();
+
+        dialog = await dialogService.ShowPanelAsync<AssignExercisePanel>(
+            days,
+            new DialogParameters<List<Option<DataAccess.DTOs.DayDto>>>()
+            {
+                Content = days,
+                Alignment = HorizontalAlignment.Right,
+                Title = "Assegna esercizio",
+                PrimaryAction = "Salva",
+                SecondaryAction = "Annulla",
+            }
+        );
+
+        var dialogResult = await dialog.Result;
+        if (!dialogResult.Cancelled && dialogResult.Data is not null)
+        {
+            var result = dialogResult.Data as List<Option<DataAccess.DTOs.DayDto>>;
+            var assigned = result?
+                .Where(xx => xx.Selected)
+                .Select(xx => xx.Value!.Id)
+                .ToList() ?? [];
+
+            var daysToAssign = await dayService.Get(xx => assigned.Contains(xx.Id));
+            foreach (var item in daysToAssign)
+            {
+                if (!item.Exercises.Contains(exercise.Id))
+                {
+                    item.Exercises.Add(exercise.Id);
+                    await dayService.Upsert(item);
+                }
+            }
+
+            var notAssigned = days
+                .Where(xx => !xx.Selected)
+                .Select(xx => xx.Value!.Id)
+                .ToList();
+            var daysToUnassign = await dayService.Get(xx => notAssigned.Contains(xx.Id));
+            foreach (var item in daysToUnassign)
+            {
+                if (item.Exercises.Contains(exercise.Id))
+                {
+                    item.Exercises.Remove(exercise.Id);
+                    await dayService.Upsert(item);
+                }
+            }
+        }
+
+        await Reload();
+
+        isLoading = false;
+    }
+
+    private async Task Edit(DataAccess.DTOs.ExerciseDto exercise)
+    {
+        if (isLoading) return;
+        isLoading = true;
+
+        dialog = await dialogService.ShowPanelAsync<UpsertExercisePanel>(
+            exercise,
+            new DialogParameters<DataAccess.DTOs.ExerciseDto>()
+            {
+                Content = exercise,
+                Alignment = HorizontalAlignment.Right,
+                Title = "Modifica esercizio",
+                PrimaryAction = "Salva",
+                SecondaryAction = "Annulla"
+            }
+        );
+
+        var dialogResult = await dialog.Result;
+        if (!dialogResult.Cancelled && dialogResult.Data is not null)
+        {
+            var result = dialogResult.Data as DataAccess.DTOs.ExerciseDto;
+            if (result is not null && !string.IsNullOrWhiteSpace(result.Description))
+            {
+                result.Description = result.Description.Trim().ToUpper();
+                await exerciseService.Upsert(result);
+
+                var sets = await setService.Get(xx => exercise.Sets.Contains(xx.Id));
+                foreach (var set in sets)
+                {
+                    set.Rest = result.Rest;
+                    await setService.Upsert(set);
+                }
+            }
+        }
+
+        await Reload();
+
+        isLoading = false;
+    }
+
+    private async Task Archive(Guid exerciseId)
+    {
+        if (isLoading) return;
+        isLoading = true;
+
+        await exerciseService.Delete(exerciseId);
+        archivedExercises = archivedExercises.Where(xx => xx.Id != exerciseId).ToList();
+
+        await Reload();
+
+        isLoading = false;
+    }
+
+    private async Task Delete(Guid exerciseId)
+    {
+        if (isLoading) return;
+        isLoading = true;
+
+        await exerciseService.Remove(exerciseId);
+
+        if (archivedExercises.Select(xx => xx.Id).Contains(exerciseId)) archivedExercises = archivedExercises.Where(xx => xx.Id != exerciseId).ToList();
+        else activeExercises = activeExercises.Where(xx => xx.Id != exerciseId).ToList();
+
+        await Reload();
+
+        isLoading = false;
+    }
+
+    private async Task Activate(Guid exerciseId)
+    {
+        if (isLoading) return;
+        isLoading = true;
+
+        await exerciseService.Enable(exerciseId);
+        archivedExercises = archivedExercises.Where(xx => xx.Id != exerciseId).ToList();
+
+        await Reload();
+
+        isLoading = false;
+    }
+
+    private async Task Reload()
+    {
+        activeExercises = (await exerciseService.Get()).OrderBy(xx => xx.Description).ToList();
+        archivedExercises = (await exerciseService.GetDeleted()).OrderBy(xx => xx.Description).ToList();
+    }
+
+    private async Task ArchiveSelected()
+    {
+        foreach (var item in selectedExercises)
+        {
+            if (archivedExercises.Select(xx => xx.Id).Contains(item)) continue;
+            await Archive(item);
+        }
+        selectedExercises.Clear();
+    }
+
+    private async Task ActivateSelected()
+    {
+        foreach (var item in selectedExercises)
+        {
+            if (activeExercises.Select(xx => xx.Id).Contains(item)) continue;
+            await Activate(item);
+        }
+        selectedExercises.Clear();
+    }
+
+    private async Task DeleteSelected()
+    {
+        foreach (var item in selectedExercises) await Delete(item);
+        selectedExercises.Clear();
+    }
+
+    private void ToggleSelected(DataAccess.DTOs.ExerciseDto item)
+    {
+        if (selectedExercises.Contains(item.Id)) selectedExercises.Remove(item.Id);
+        else selectedExercises.Add(item.Id);
+    }
+}

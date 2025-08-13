@@ -1,0 +1,27 @@
+﻿@inherits LayoutComponentBase
+
+@inject Business.Services.IDataService dataService
+@inject IMenuService menuService
+
+<div class="page">
+    <main>
+        <article class="content px-4">
+            @Body
+        </article>
+        <FluentFooter class="fixed-bottom vw-100 bg-black">
+            <NavMenu />
+        </FluentFooter>
+
+        <FluentMenuProvider />
+        <FluentDialogProvider />
+        <FluentTooltipProvider />
+        <FluentToastProvider MaxToastCount="3" />
+    </main>
+</div>
+
+@code {
+    protected override async Task OnInitializedAsync()
+    {
+        await dataService.InitDb();
+    }
+}

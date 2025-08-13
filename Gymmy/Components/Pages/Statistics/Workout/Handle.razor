@@ -1,0 +1,103 @@
+﻿@page "/workout/handle"
+
+@using Business.Extensions
+
+@inject Business.Services.IWorkoutService workoutService
+@inject NavigationManager navigationManager
+
+<FluentLabel Typo="Typography.H1"
+             Class="mb-2">
+    Allenamenti
+</FluentLabel>
+
+@if (workouts.Count < 1)
+{
+    <FluentLabel Typo="Typography.Body">
+        Nessun dato da mostrare.
+    </FluentLabel>
+}
+else
+{
+    var lastMonth = -1;
+    @foreach (var workout in workouts)
+    {
+        var currentMonth = workout.Start.Month;
+        if(currentMonth != lastMonth)
+        {
+            lastMonth = currentMonth;
+
+            <FluentLabel Typo="Typography.H3"
+                         Class="mt-4 mb-1">
+                @(char.ToUpper(workout.Start.Date.ToString("MMMM", System.Globalization.CultureInfo.GetCultureInfo("it-IT"))[0])+workout.Start.Date.ToString("MMMM", System.Globalization.CultureInfo.GetCultureInfo("it-IT"))[1..])
+                @if (workout.Start.Year == DateTime.Now.Year)
+                {
+                    @($" {workout.Start.Year}")
+                }
+            </FluentLabel>
+        }
+        <FluentCard class="mb-2 py-0 px-3 w-100 d-flex flex-column justify-content-between"
+                    onclick="@(() => GoToDetail(workout.Id))">
+            <div class="d-flex justify-content-between w-100">
+                <div class="d-flex align-items-baseline w-100">
+                    <div style="font-size: 4rem"
+                         class="fw-bold py-0">
+                        @workout.Start.Date.ToString("dd")
+                    </div>
+                    <div style="font-size: 2rem">
+                        @workout.Start.Date.ToString("/MM")
+                    </div>
+                </div>
+                <div class="d-flex flex-column justify-content-evenly align-content-end">
+                    <div class="d-flex">
+                        <FluentIcon Value="@(new Microsoft.FluentUI.AspNetCore.Components.Icons.Regular.Size20.Timer())" />
+                        <FluentLabel Typo="Typography.Body"
+                                     Class="ms-1">
+                            @GetDuration(workout)
+                        </FluentLabel>
+                    </div>
+                    <div class="d-flex">
+                        <FluentIcon Value="@(new Microsoft.FluentUI.AspNetCore.Components.Icons.Regular.Size20.PersonRunning())" />
+                        <FluentLabel Typo="Typography.Body"
+                                     Class="ms-1">
+                            @workout.Exercises.Count
+                        </FluentLabel>
+                    </div>
+                </div>
+            </div>
+        </FluentCard>
+    }
+}
+
+<div class="pb-5">
+    <FluentSpacer />
+</div>
+
+@code {
+    private bool isLoading = false;
+    private List<DataAccess.DTOs.WorkoutDto> workouts = [];
+
+    protected override async Task OnInitializedAsync()
+    {
+        isLoading = true;
+
+        workouts = (await workoutService.GetClosedWorkouts())
+            .OrderByDescending(xx => xx.Start)
+            .ToList();
+
+        isLoading = false;
+    }
+
+    private string GetDuration(DataAccess.DTOs.WorkoutDto workout)
+    {
+        var duration = workout.GetDuration();
+
+        return $"{duration.Hours}:{duration.Minutes:D2}:{duration.Seconds:D2}";
+    }
+
+    private void GoToDetail(Guid id)
+    {
+        if (isLoading) return;
+        navigationManager.NavigateTo($"/workout/detail/{id}");
+
+    }
+}

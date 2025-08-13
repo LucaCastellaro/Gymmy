@@ -1,0 +1,94 @@
+﻿@page "/import"
+
+@inject Business.Services.IDataService dataService
+@inject IToastService toastService
+
+<div>
+    <FluentLabel Typo="Typography.H1">
+        Importa dati
+    </FluentLabel>
+</div>
+@if (files.Count < 1)
+{
+    <FluentLabel Typo="Typography.Body"
+                 Class="pt-2">
+        Nessun file trovato.
+    </FluentLabel>
+}
+else
+{
+    @foreach (var item in files)
+    {
+        <FluentCard class="p-0 my-2">
+            <div class="d-flex justify-content-between align-items-center">
+                <div class="w-100 px-3 py-3">
+                    <FluentLabel Typo="Typography.H5">
+                        @item.Name[7..(item.Name.Length - 5)].Replace('-', '/').Replace('_', ' ')
+                    </FluentLabel>
+                </div>
+                <div class="me-3 d-flex">
+                    <CustomButton Icon="@(new Icons.Regular.Size16.ArrowStepIn())"
+                                  Disabled=@isLoading
+                                  OnClick=@(async () => await RunImport(item)) />
+
+                    <CustomButton Icon="@(new Icons.Regular.Size16.Delete())"
+                                  Disabled=@isLoading
+                                  OnClick=@(async () => await Delete(item)) />
+                </div>
+            </div>
+        </FluentCard>
+    }
+}
+
+<div class="pb-5">
+    <FluentSpacer />
+</div>
+
+@code {
+    private bool isLoading = false;
+    private FluentMenuButton menuButton = new();
+    private List<FileInfo> files = [];
+
+    protected override async Task OnInitializedAsync()
+    {
+        await GetAllFiles();
+    }
+
+    private async Task GetAllFiles()
+    {
+        if (isLoading) return;
+        isLoading = true;
+
+        files = await dataService.GetExportedFiles();
+
+        isLoading = false;
+    }
+
+    private async Task RunImport(FileInfo file)
+    {
+        if (isLoading) return;
+        isLoading = true;
+
+        await dataService.Import(file);
+
+        toastService.ShowToast(
+            ToastIntent.Success,
+            "Dati importati",
+            3000,
+            "OK"
+        );
+
+
+        isLoading = false;
+    }
+
+    private async Task Delete(FileInfo file)
+    {
+        if (isLoading) return;
+        isLoading = true;
+
+        files = await dataService.DeleteExportFile(file);
+
+        isLoading = false;
+    }
+}

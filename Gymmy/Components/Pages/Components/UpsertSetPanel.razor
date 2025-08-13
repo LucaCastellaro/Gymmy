@@ -1,0 +1,42 @@
+﻿@implements IDialogContentComponent<DataAccess.DTOs.SetDto>
+
+<FluentDialogBody>
+    <FluentLabel Typo="Typography.H6"
+                 Class="w-100">
+        Ripetizioni
+    </FluentLabel>
+    <div class="px-2">
+        <FluentNumberField Class="w-100 "
+                           @bind-Value="@Content.Reps" />
+    </div>
+    <FluentLabel Typo="Typography.H6"
+                 Class="w-100">
+        Peso
+    </FluentLabel>
+    <div class="px-2">
+        <FluentNumberField Class="w-100 "
+                           @bind-Value="@Content.Weight" />
+    </div>
+    <FluentLabel Typo="Typography.H6"
+                 Class="w-100">
+        Pausa
+    </FluentLabel>
+    <div class="px-2">
+        <FluentNumberField Class="w-100 "
+                           @bind-Value="@Content.Rest" />
+    </div>
+    <FluentLabel Typo="Typography.H6"
+                 Class="w-100">
+        Note
+    </FluentLabel>
+    <div class="px-2">
+        <FluentTextArea Class="w-100"
+                        Rows="10"
+                        @bind-Value=@Content.Notes />
+    </div>
+</FluentDialogBody>
+
+@code {
+    [Parameter]
+    public required DataAccess.DTOs.SetDto Content { get; set; }
+}
