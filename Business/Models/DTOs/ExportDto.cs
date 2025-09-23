@@ -7,5 +7,6 @@ public sealed record ExportDto(
     List<ExerciseDto> Exercises,
     List<SetDto> Sets,
     List<WorkoutDto> Workouts,
-    List<LastSelectedDto> LastSelected
+    List<LastSelectedDto> LastSelected,
+    List<TagDto> Tags
 );

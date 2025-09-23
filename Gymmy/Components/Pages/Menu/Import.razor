@@ -2,11 +2,18 @@
 
 @inject Business.Services.IDataService dataService
 @inject IToastService toastService
+@inject IFilePicker filePicker
 
 <div>
     <FluentLabel Typo="Typography.H1">
         Importa dati
     </FluentLabel>
+</div>
+<div>
+    <CustomButton Icon="@(new Icons.Regular.Size16.ArrowImport())"
+                  Label="Carica file esterno"
+                  Disabled=@isLoading
+                  OnClick=@(async () => await CustomImport()) />
 </div>
 @if (files.Count < 1)
 {
@@ -17,13 +24,16 @@
 }
 else
 {
+    <FluentLabel Typo="Typography.H1">
+        File trovati:
+    </FluentLabel>
     @foreach (var item in files)
     {
         <FluentCard class="p-0 my-2">
             <div class="d-flex justify-content-between align-items-center">
                 <div class="w-100 px-3 py-3">
                     <FluentLabel Typo="Typography.H5">
-                        @item.Name[7..(item.Name.Length - 5)].Replace('-', '/').Replace('_', ' ')
+                        @item.Name[13..(item.Name.Length - 5)].Replace('-', '/').Replace('_', ' ')
                     </FluentLabel>
                 </div>
                 <div class="me-3 d-flex">
@@ -54,6 +64,37 @@ else
         await GetAllFiles();
     }
 
+    private async Task CustomImport()
+    {
+        if (isLoading) return;
+        isLoading = true;
+
+        var pickerResult = await filePicker.PickAsync();
+        if (!pickerResult!.FileName.EndsWith(".gym"))
+        {
+            toastService.ShowToast(
+                ToastIntent.Error,
+                "Tipo di file non supportato",
+                3000,
+                "OK"
+            );
+        }
+        else
+        {
+
+            await dataService.Import(pickerResult.FullPath);
+
+            toastService.ShowToast(
+                ToastIntent.Success,
+                "Dati importati",
+                3000,
+                "OK"
+            );
+
+        }
+
+        isLoading = false;
+    }
     private async Task GetAllFiles()
     {
         if (isLoading) return;

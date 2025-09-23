@@ -1,4 +1,5 @@
 ﻿using Business.Models.DTOs;
+using CommunityToolkit.Maui.Storage;
 using DataAccess;
 using DataAccess.Repositories;
 
@@ -6,9 +7,11 @@ namespace Business.Services;
 
 public interface IDataService
 {
-    Task Export();
+    Task Export(string? path = null);
 
     Task Import(FileInfo fileInfo);
+
+    Task Import(string filePath);
 
     Task<List<FileInfo>> DeleteExportFile(FileInfo fileInfo);
 
@@ -29,9 +32,10 @@ public sealed class DataService : IDataService
     private readonly IWorkoutRepository _workoutService;
     private readonly ILastSelectedService _lastSelectedService;
     private readonly ITagRepository _tagRepository;
+    private readonly IFileSaver _fileSaver;
     private readonly GymmyDatabase _dbContext;
 
-    public DataService(IDayRepository dayService, IExerciseRepository exerciseService, ISetRepository setService, IWorkoutRepository workoutService, ILastSelectedService lastSelectedService, ITagRepository tagRepository, GymmyDatabase dbContext)
+    public DataService(IDayRepository dayService, IExerciseRepository exerciseService, ISetRepository setService, IWorkoutRepository workoutService, ILastSelectedService lastSelectedService, ITagRepository tagRepository, GymmyDatabase dbContext, IFileSaver fileSaver)
     {
         _dayService = dayService;
         _exerciseService = exerciseService;
@@ -40,6 +44,7 @@ public sealed class DataService : IDataService
         _lastSelectedService = lastSelectedService;
         _tagRepository = tagRepository;
         _dbContext = dbContext;
+        _fileSaver = fileSaver;
     }
 
     public Task InitDb() => Task.Run(_dbContext.Init);
@@ -51,39 +56,65 @@ public sealed class DataService : IDataService
         await _setService.Drop();
         await _workoutService.Drop();
         await _lastSelectedService.Drop();
-        await _lastSelectedService.Drop();
         await _tagRepository.Drop();
     }
 
     public async Task<List<FileInfo>> DeleteExportFile(FileInfo fileInfo)
     {
-        if (File.Exists(fileInfo.FullName)) fileInfo.Delete();
+        var metadataFilePath = Path.Combine(Constants.AppDirectory, fileInfo.Name);
+        if (File.Exists(metadataFilePath))
+        {
+            var backupFilePath = await File.ReadAllTextAsync(metadataFilePath);
+            if (File.Exists(backupFilePath))
+            {
+                File.Delete(backupFilePath);
+                File.Delete(metadataFilePath);
+            }
+        }
+
         return await GetExportedFiles();
     }
 
-    public async Task Export()
+    public async Task Export(string? path = null)
     {
         var days = await _dayService.Get();
         var exercises = await _exerciseService.Get();
         var sets = await _setService.Get();
         var workouts = await _workoutService.Get();
         var lastSelected = await _lastSelectedService.Get();
+        var tags = await _tagRepository.Get();
 
-        var export = new ExportDto(days, exercises, sets, workouts, lastSelected);
+        var export = new ExportDto(days, exercises, sets, workouts, lastSelected, tags);
 
         var json = System.Text.Json.JsonSerializer.Serialize(export);
 
         var fileName = DateTime.Now.ToString("dd-MM-yyyy_HH:mm:ss");
 
-        if (!Directory.Exists(Constants.AppDirectory)) Directory.CreateDirectory(Constants.AppDirectory);
+        using var stream = new MemoryStream(System.Text.Encoding.UTF8.GetBytes(json));
 
-        var filePath = Path.Combine(Constants.AppDirectory, $"Export_{fileName}.json");
-        if (File.Exists(filePath)) File.Delete(filePath);
-
-        await using (var fw = new StreamWriter(filePath))
+        try
         {
-            await fw.WriteAsync(json);
-            await fw.DisposeAsync();
+            var fileSaverResult = await _fileSaver.SaveAsync($"Gimmy_Export_{fileName}.gym", stream);
+            if (!fileSaverResult.IsSuccessful)
+            {
+                throw new Exception($"The file was not saved successfully with error: {fileSaverResult.Exception.Message}");
+            }
+            //if (string.IsNullOrWhiteSpace(path)) path = Constants.AppDirectory;
+
+            if (!Directory.Exists(Constants.AppDirectory)) Directory.CreateDirectory(Constants.AppDirectory);
+
+            var filePath = Path.Combine(Constants.AppDirectory, $"Gimmy_Export_{fileName}.gym");
+            if (File.Exists(filePath)) File.Delete(filePath);
+
+            await using (var fw = new StreamWriter(filePath))
+            {
+                await fw.WriteAsync(fileSaverResult.FilePath);
+                await fw.DisposeAsync();
+            }
+        }
+        catch (Exception ex)
+        {
+            throw;
         }
     }
 
@@ -102,7 +133,24 @@ public sealed class DataService : IDataService
 
     public async Task Import(FileInfo fileInfo)
     {
-        var filePath = Path.Combine(Constants.AppDirectory, fileInfo.Name);
+        var metadataFilePath = Path.Combine(Constants.AppDirectory, fileInfo.Name);
+        if (!File.Exists(metadataFilePath)) return;
+
+        var backupFilePath = await File.ReadAllTextAsync(metadataFilePath);
+        if (!File.Exists(backupFilePath)) return;
+
+        await RunImport(backupFilePath);
+    }
+
+    public async Task Import(string filePath)
+    {
+        if (!File.Exists(filePath)) return;
+
+        await RunImport(filePath);
+    }
+
+    private async Task RunImport(string filePath)
+    {
         if (!File.Exists(filePath)) return;
 
         var json = await File.ReadAllTextAsync(filePath);
@@ -118,6 +166,8 @@ public sealed class DataService : IDataService
         foreach (var workout in data.Workouts) await _workoutService.Upsert(workout);
 
         foreach (var lastSelected in data.LastSelected) await _lastSelectedService.Upsert(lastSelected);
+
+        foreach (var tag in data.Tags) await _tagRepository.Upsert(tag);
     }
 
     public async Task CleanDb()
@@ -133,10 +183,6 @@ public sealed class DataService : IDataService
         {
             var deleted = await _lastSelectedService.GetDeleted();
             foreach (var item in deleted) await _lastSelectedService.Delete(item.Id);
-        }
-        {
-            var deleted = await _setService.GetDeleted();
-            foreach (var item in deleted) await _setService.Delete(item.Id);
         }
         {
             var deleted = await _setService.GetDeleted();

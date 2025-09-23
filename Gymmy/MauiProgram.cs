@@ -1,4 +1,6 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using CommunityToolkit.Maui.Core;
+using CommunityToolkit.Maui.Storage;
+using Microsoft.Extensions.Logging;
 using Microsoft.FluentUI.AspNetCore.Components;
 
 namespace Gymmy;
@@ -10,6 +12,7 @@ public static class MauiProgram
         var builder = MauiApp.CreateBuilder();
         builder
             .UseMauiApp<App>()
+            .UseMauiCommunityToolkitCore()
             .ConfigureFonts(fonts =>
             {
                 fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
@@ -33,6 +36,8 @@ public static class MauiProgram
             .AddSingleton<Business.Services.IExerciseService, Business.Services.ExerciseService>()
             .AddSingleton<Business.Services.IWorkoutService, Business.Services.WorkoutService>()
             .AddSingleton<Business.Services.ITagService, Business.Services.TagService>()
+            .AddSingleton<IFileSaver>(FileSaver.Default)
+            .AddSingleton<IFilePicker>(FilePicker.Default)
             ;
 
 #if DEBUG
